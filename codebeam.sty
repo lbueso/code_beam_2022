@@ -1,0 +1,97 @@
+\usepackage{anyfontsize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% These lines should usually go into a .sty file,
+% but I'll leave them here so that it's easier to
+% see how to customise a Beamer theme.
+% Remember, the Beamer manual is your friend!!
+% http://texdoc.net/pkg/beamer
+%
+%% So if your re-definitions have a @ somewhere, you
+%% _MUST_ put a \makeatletter before these lines and then
+%% \makeatother after them. This trick can only be done
+%% in the preamble! BUT if you're doing these re-definitions
+%% in a .sty file (so that you \usepackage it later), you
+%% don't need the \makeatletter and \makeatother.
+\makeatletter
+
+%% Set the left and right margins
+\setbeamersize{text margin left=1em,text margin right=1em}
+
+%% FONTS
+\setbeamerfont{title}{series=\bfseries,size=\LARGE}
+\setbeamerfont{subtitle}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{block title}{series=\bfseries,size=\normalsize}
+\setbeamerfont{footline}{size=\normalsize}
+
+%% COLOURS
+%% If you'd like everything to have the same colour
+%% \usebeamercolor{structure}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{normal text}{fg=white}
+\setbeamercolor{frametitle}{fg=white}
+
+%% Add a line after the frametitle
+\addtobeamertemplate{frametitle}{}{\vspace*{-1ex}\rule{\textwidth}{1pt}}
+
+%% Use circular discs as itemized list markers;
+%% there's an existing option in Beamer for it so I'll use it
+\setbeamertemplate{itemize items}[circle]
+
+%% Remove default navigation symbols (We'll add the ones we need in the footline
+\setbeamertemplate{navigation symbols}{}
+
+\usebackgroundtemplate{\includegraphics[width=\paperwidth]{./template/background1}}
+
+%% And before the footline... actually we'd like to re-define
+%% the footline
+\setbeamertemplate{footline}{%
+  %% Beamer headlines and footlines are always full-paperwidth, so if you want the horizontal line to
+  %% not span it entirely you'll need to do a bit of arithmetic
+  \centering
+  \begin{minipage}{\dimexpr\paperwidth-\beamer@leftmargin-\beamer@rightmargin\relax}
+    \centering
+    %%    \rule{\linewidth}{1pt}\vskip2pt
+    \usebeamerfont{footline}%
+    \usebeamercolor{footline}%
+    %% The frame number smack in the middle
+    %%    \hfill\insertpagenumber/\inserttotalframenumber
+    \hfill%
+    %% ONLY the navigation symbols we want at the far right.
+    %% We use an \llap so that it takes up zero width, and doesn't throw the page number off-centre!
+    \llap{\texttt{\#CodeBEAM}}\par
+
+  \end{minipage}\vskip8pt
+}
+
+\newcommand{\texturetheme}{
+  \setbeamercolor{title}{fg=white}
+  \setbeamercolor{normal text}{fg=white}
+  \setbeamercolor{frametitle}{fg=white}
+  \usebeamercolor[fg]{normal text}
+  \usebackgroundtemplate{\includegraphics[width=\paperwidth]{./template/background1}}
+  \setbeamertemplate{frametitle}{\insertframetitle}
+}
+
+\newcommand{\gradienttheme}{
+  \setbeamercolor{title}{fg=white}
+  \setbeamercolor{normal text}{fg=white}
+  \setbeamercolor{frametitle}{fg=white}
+  \usebeamercolor[fg]{normal text}
+  \usebackgroundtemplate{\includegraphics[width=\paperwidth]{./template/background2}}
+  \setbeamertemplate{frametitle}{\insertframetitle}
+  \logo{\includegraphics[width=.125\textwidth]{./template/logo-white}\vspace{\paperwidth}}
+}
+
+\newcommand{\whitetheme}{
+  \setbeamercolor{title}{fg=black}
+  \setbeamercolor{normal text}{fg=black}
+  \setbeamercolor{frametitle}{fg=black}
+  \usebeamercolor[fg]{normal text}
+  \usebackgroundtemplate{}
+  \setbeamertemplate{frametitle}{\insertframetitle}
+  \logo{\includegraphics[width=.125\textwidth]{./template/logo-colour-grad}\vspace{\paperwidth}}
+  }
+
+
+%%%% END STYLE CUSTOMISATION %%%%%%%%%%%%

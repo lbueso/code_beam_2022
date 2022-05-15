@@ -1,0 +1,24 @@
+#+options: H:2 toc:nil author:Luis Eduardo Bueso de Barrio
+#+latex_class: beamer
+#+latex_class_options: [aspectratio=169, 10pt]
+#+latex_header: \usepackage[english]{babel}
+#+latex_header: \usepackage[utf8]{inputenc}
+#+latex_header: \usepackage{roboto}
+#+latex_header: \usepackage[light,scaled=0.85]{roboto-mono}
+#+latex_header: \usepackage[T1]{fontenc}
+#+latex_header: \usepackage{codebeam}
+# tikz
+#+latex_header: \usepackage{tikz}
+#+latex_header: \usepackage{adjustbox}
+#+latex_header: \usetikzlibrary{arrows,automata,positioning}
+#+latex_header: \usetikzlibrary{overlay-beamer-styles}
+#+latex_header: \usepackage{pgfpages}
+# listings
+#+latex_header: \input{listings_elixir}
+#+latex_header: \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
+# #+latex_header: \lst@AddToHook{TextStyle}{\let\lst@basicstyle\ttfamily\small}
+#+latex_header: \lstset{morekeywords={state, command, invariants}}
+
+# Local Variables:
+# mode: org
+# End:

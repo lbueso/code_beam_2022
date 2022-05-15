@@ -1,0 +1,281 @@
+#+title: Improve your tests with Makina
+#+author: Luis Eduardo Bueso de Barrio
+#+setupfile: slides.setup
+#+options: title:nil
+
+\texturetheme
+
+#+begin_export latex
+\setbeamertemplate{title page}{
+    \begin{columns}
+      \begin{column}{0.55\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{./template/logo-white}
+      \end{column}
+      \begin{column}{0.40\textwidth}
+        \flushright
+            {\Huge STOCKHOLM}
+
+            \vspace{0.2cm}
+
+            {\large HYBRID CONFERENCE}
+
+            \vspace{1cm}
+
+            {\Large \texttt{Improve your tests with Makina}}
+
+            \vspace{1cm}
+
+            Luis Eduardo Bueso de Barrio
+
+            \vspace{0.5cm}
+
+            \texttt{May 20 | 2022}
+      \end{column}
+    \end{columns}
+}
+#+end_export
+
+\maketitle
+
+\whitetheme
+
+* Introduction
+
+** The problem
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+| files | blank | comment | code |
+|-------+-------+---------+------|
+|     4 |   760 |     383 | 4513 |
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+| files | blank | comment | code |
+|-------+-------+---------+------|
+|    18 |   500 |     408 | 1692 |
+
+
+** Introduction to PBT
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+Writing unit-tests is hard and time-consuming:
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  reverse([]) == []
+  reverse([1]) == [1]
+  reverse([1 ,2]) == [2 ,1]
+  ...
+#+end_src
+
+Property-Based Testing (PBT) philosophy:
+
+#+begin_quote
+Don't write tests, generate them.
+#+end_quote
+
+A test execution in PBT consists of:
+1. Data generation.
+2. Property checking.
+3. An shrinking strategy (if the property doesn't hold).
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+A property:
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  forall list <- list() do
+    list == reverse(reverse(list))
+  end
+#+end_src
+
+In each test:
+1. =list()= generates a random list:
+   #+attr_latex: :options style=display
+   #+begin_src elixir
+     [8 ,10 ,6] ...
+   #+end_src
+
+2. Checks the property:
+   #+attr_latex: :options style=display
+   #+begin_src elixir
+     [8, 10, 6] == reverse(reverse([8, 10, 6]))
+   #+end_src
+
+3. If the property doesn't hold returns a counter-example.
+
+
+** Testing /stateful/ programs
+
+*** column
+:properties:
+:beamer_col: 0.38
+:end:
+
+Imagine a simple counter:
+#+attr_latex: :align l l c
+| Command | Returns            |
+|---------+--------------------|
+| =start/1= | =:ok= $\vert$ =:error= |
+| =stop/0=  | =:ok= $\vert$ =:error= |
+| =inc/0=   | =:ok=                |
+| =get/0=   | =integer()=          |
+
+
+Unit test:
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  :ok = start(0)
+  :ok = inc()
+  1   = get()
+  :ok = stop()
+#+end_src
+
+*** column
+:properties:
+:beamer_col: 0.58
+:end:
+
+This test can be represented:
+#+begin_figure latex
+\begin{center}
+  \begin{adjustbox}{max width=\textwidth}
+    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
+
+      \node[initial,state] (0) {$0$};
+
+      \node[state] (1) [right of=0] {$1$};
+      \path[] (0) edge node {\lstinline{inc()}} (1);
+
+      \path[] (1) edge [loop right] node {\lstinline{get()}} (1);
+
+      \node[state, accepting] (2) [right of=0] {};
+    \end{tikzpicture}
+  \end{adjustbox}
+\end{center}
+#+end_figure
+
+To successfully test this program we need to:
+- Generate sequences of commands.
+- An internal state to track the changes in the program.
+- A way to interact with the program under test.
+
+
+** PBT of /stateful/ programs
+
+*** column
+:properties:
+:beamer_col: 0.58
+:end:
+
+Basic property of /stateful/ programs:
+#+attr_latex: :options style=display
+#+begin_src elixir
+  forall cmds <- commands(Counter) do
+    :ok == run_commands(Counter, cmds)
+  end
+#+end_src
+
+where:
+- =commands/1= generates sequences commands:
+  #+attr_latex: :options style=display
+  #+begin_src elixir
+    [start(0), inc(), get(), stop()]
+    ...
+  #+end_src
+
+- =run_commands= executes the generated sequence.
+
+
+*** column
+:properties:
+:beamer_col: 0.38
+:end:
+
+    #+begin_figure latex
+    \begin{center}
+      \begin{adjustbox}{max width=\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
+
+          \node[initial,state] (i0) {$0$};
+          \node[state] (i1) [below of=i0] {$1$};
+          \node[state] (i2) [below of=i1] {$1$};
+
+          \path []
+          (i0) edge node (inc)  [left] {\lstinline{inc()}} (i1)
+          (i1) edge node (get)  [left] {\lstinline{get()}} (i2);
+
+          % first call
+          \node[] (inc_res)  [right of=inc, xshift=0.5cm] {\lstinline{:ok}};
+          \path[] (inc) edge node (inc_call)  [sloped] {\lstinline{call}} (inc_res);
+          \path[](inc_res)  edge node (inc_post) [sloped, below] {\lstinline{post}} (i1);
+
+          % second call
+          \node[] (get_res)  [right of=get, xshift=0.5cm] {\lstinline{1}};
+          \path[] (get)  edge node (get_call)  [sloped] {\lstinline{call}} (get_res);
+          \path[] (get_res)  edge node (get_post) [sloped, below] {\lstinline{post}} (i2);
+
+          \node[state, accepting] (i3) [below of=i1]{};
+        \end{tikzpicture}
+      \end{adjustbox}
+    \end{center}
+    #+end_figure
+
+
+** Introduction to Makina
+
+=Makina= is a DSL to write PBT state machines.
+- Fully compatible with =Erlang QuickCheck= and =PropEr=.
+- 
+
+
+** Ethereum Blockchain
+
+* Makina features
+
+** Mining blocks
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+
+    state height: 0
+
+    invariants non_neg_height: height >= 0
+
+    command block_number() do
+      post {:ok, height} == result
+    end
+
+    command mine() do
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+
+** Consulting accounts
+
+** Generating transactions
+
+** An abstract model for contracts
+
+** A basic model to test a contract
