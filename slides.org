@@ -1000,3 +1000,88 @@ Commands are the union:
   Finished in 1.1 seconds (0.00s async, 1.1s sync)
   3 properties, 1 failure
 #+end_src
+
+
+** Fixing the transactions model
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+Our model does not consider gas consumption.
+
+\vspace{10pt}
+
+We need to change:
+1. A symbolic attribute to store transactions.
+2. =balances= needs to be symbolic.
+3. =get_balance/0= precondition.
+4. a new command =gas_cost/1=.
+
+   #+attr_latex: :options style=display
+   #+begin_src elixir
+defmodule Transactions do
+  ...   
+  state transactions: [] :: [symbolic(Type.hash())]
+
+  command get_balance() do
+    pre IO.inspect(transactions) == []
+  end
+
+  command transfer(...) do
+    ...
+    next transactions: [symbolic(elem(result, 1)) | transactions],
+         ...   
+  end
+      #+end_src
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+
+
+    command gas_cost(hash :: Type.hash()) :: {:ok, Type.quantity()} do
+      pre transactions != []
+      args hash: oneof(transactions)
+      valid_args hash in transactions
+      next do
+        from = symbolic(Kernel.elem(result, 0))
+        gas = symbolic(Kernel.elem(result, 1))
+        [
+          transactions: List.delete(transactions, hash),
+          balances: discount_gas(balances, from, gas)
+                    |> symbolic()
+        ]
+      end
+    end
+  end
+
+
+
+#+end_src
+
+
+** Runninge the tests
+
+   #+attr_latex: :options style=display
+#+begin_src elixir
+  $ mix test
+  Starting Quviq QuickCheck version 1.45.1
+
+  ....................................................................................................
+  OK, passed 100 tests
+
+  '25.5 Transactions.mine/0
+  '24.9 Transactions.block_number/0
+  '23.6 Transactions.transfer/3
+  '14.3 Transactions.gas_cost/1
+  '11.8 Transactions.get_balance/1
+
+  Finished in 15.8 seconds (0.00s async, 15.8s sync)
+  1 properties, 0 failures
+#+end_src
