@@ -209,48 +209,224 @@ where:
 :beamer_col: 0.38
 :end:
 
-    #+begin_figure latex
-    \begin{center}
-      \begin{adjustbox}{max width=\textwidth}
-        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
+#+begin_figure latex
+\begin{center}
+  \begin{adjustbox}{max width=\textwidth}
+    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
 
-          \node[initial,state] (i0) {$0$};
-          \node[state] (i1) [below of=i0] {$1$};
-          \node[state] (i2) [below of=i1] {$1$};
+      \node[initial,state] (i0) {$0$};
+      \node[state] (i1) [below of=i0] {$1$};
+      \node[state] (i2) [below of=i1] {$1$};
 
-          \path []
-          (i0) edge node (inc)  [left] {\lstinline{inc()}} (i1)
-          (i1) edge node (get)  [left] {\lstinline{get()}} (i2);
+      \path []
+      (i0) edge node (inc)  [left] {\lstinline{inc()}} (i1)
+      (i1) edge node (get)  [left] {\lstinline{get()}} (i2);
 
-          % first call
-          \node[] (inc_res)  [right of=inc, xshift=0.5cm] {\lstinline{:ok}};
-          \path[] (inc) edge node (inc_call)  [sloped] {\lstinline{call}} (inc_res);
-          \path[](inc_res)  edge node (inc_post) [sloped, below] {\lstinline{post}} (i1);
+      % first call
+      \node[] (inc_res)  [right of=inc, xshift=0.5cm] {\lstinline{:ok}};
+      \path[] (inc) edge node (inc_call)  [sloped] {\lstinline{call}} (inc_res);
+      \path[](inc_res)  edge node (inc_post) [sloped, below] {\lstinline{post}} (i1);
 
-          % second call
-          \node[] (get_res)  [right of=get, xshift=0.5cm] {\lstinline{1}};
-          \path[] (get)  edge node (get_call)  [sloped] {\lstinline{call}} (get_res);
-          \path[] (get_res)  edge node (get_post) [sloped, below] {\lstinline{post}} (i2);
+      % second call
+      \node[] (get_res)  [right of=get, xshift=0.5cm] {\lstinline{1}};
+      \path[] (get)  edge node (get_call)  [sloped] {\lstinline{call}} (get_res);
+      \path[] (get_res)  edge node (get_post) [sloped, below] {\lstinline{post}} (i2);
 
-          \node[state, accepting] (i3) [below of=i1]{};
-        \end{tikzpicture}
-      \end{adjustbox}
-    \end{center}
-    #+end_figure
+      \node[state, accepting] (i3) [below of=i1]{};
+    \end{tikzpicture}
+  \end{adjustbox}
+\end{center}
+#+end_figure
 
 
-** Introduction to Makina
+** PBT state machines
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+Introduced by =Erlang QuickCheck=.
+
+\vspace{10pt}
+
+Adopted by other PBT libraries such as =Proper=.
+
+\vspace{10pt}
+
+These libraries provide a DSL to model the system.
+
+\vspace{10pt}
+
+Proven effectiveness.
+
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+Very slow adoption.
+
+\vspace{10pt}
+
+Why?
+
+\vspace{10pt}
+
+Problems:
+- Hard to write.
+- Cryptic errors.
+- Usually buggy.
+- Code reuse is very hard.
+- Hard to maintain.
+
+
+** Makina
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
 
 =Makina= is a DSL to write PBT state machines.
 - Fully compatible with =Erlang QuickCheck= and =PropEr=.
-- 
+- Improved usability.
+- Better error messages.
+- Improved error detection in models.
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+A Makina model contains:
+- =state=
+- =command=
+- =invariants=
+
+\vspace{10pt}
+
+Provides code reuse mechanisms:
+- imports
+- =extends=
+- composition
 
 
 ** Ethereum Blockchain
 
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+A blockchain is a distributed ledger that enables peer-to-peer transactions.
+
+#+begin_figure latex
+\begin{adjustbox}{max width=\textwidth}
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node
+    distance=20,semithick, minimum width=70]
+
+    \node (block0name) {\begin{tabular}{c} Block 0 \\ Genesis Block \end{tabular}};
+    \node[rectangle, draw, below of=block0name] (block0index) {Index};
+    \node[rectangle, draw, below of=block0index] (block0timestamp) {Timestamp};
+    \node[rectangle, draw, below of=block0timestamp] (block0previoushash)
+    {Previous Hash};
+    \node[rectangle, draw, below of=block0previoushash] (block0hash)
+    {Hash};
+    \node[rectangle, draw, below of=block0hash] (block0data)
+    {Data};
+
+    \node [right of=block0name, yshift=-20, xshift=80] (block1name) {Block 1};
+    \node[rectangle, draw, below of=block1name] (block1index) {Index};
+    \node[rectangle, draw, below of=block1index] (block1timestamp) {Timestamp};
+    \node[rectangle, draw, below of=block1timestamp] (block1previoushash)
+    {Previous Hash};
+    \node[rectangle, draw, below of=block1previoushash] (block1hash)
+    {Hash};
+    \node[rectangle, draw, below of=block1hash] (block1data)
+    {Data};
+
+    % \node [right of=block1name, yshift=-20, xshift=80] (block2name) {Block 2};
+    % \node[rectangle, draw, below of=block2name] (block2index) {Index};
+    % \node[rectangle, draw, below of=block2index] (block2timestamp) {Timestamp};
+    % \node[rectangle, draw, below of=block2timestamp] (block2previoushash)
+    % {Previous Hash};
+    % \node[rectangle, draw, below of=block2previoushash] (block2hash)
+    % {Hash};
+    % \node[rectangle, draw, below of=block2hash] (block2data)
+    % {Data};
+
+    \node[right of=block1hash, xshift=40, minimum width=20] (block2previoushash)
+    {...};
+
+    \draw (block1previoushash) edge (block0hash);
+    \draw (block2previoushash) edge (block1hash);
+
+    \node[left  of=block0name, xshift=-20, yshift= 15] (block0a) {};
+    \node[right of=block0data, xshift= 20, yshift=-13] (block0b) {};
+    \draw[draw] (block0a) rectangle (block0b);
+
+    \node[left  of=block1name, xshift=-20, yshift= 10] (block1a) {};
+    \node[right of=block1data, xshift= 20, yshift=-13] (block1b) {};
+    \draw[draw] (block1a) rectangle (block1b);
+
+    % \node[left  of=block2name, xshift=-20, yshift= 10] (block2a) {};
+    % \node[right of=block2data, xshift= 20, yshift=-10] (block2b) {};
+    % \draw[draw] (block2a) rectangle (block2b);
+
+  \end{tikzpicture}
+\end{adjustbox}
+#+end_figure
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+Ethereum is one of the largest blockchains.
+
+\vspace{10pt}
+
+Introduced smart-contracts.
+
+\vspace{10pt}
+
+=etherex= a library to interact with Ethereum using Elixir.
+
+\vspace{10pt}
+
+The properties:
+1. Mining blocks.
+2. Account access.
+3. Transfers between accounts.
+
+
 * Makina features
 
 ** Mining blocks
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+The API:
+
+| Command        | Returns          |
+|----------------+------------------|
+| =block_number()= | ={:ok, integer()}= |
+| =mine()=         | =:ok=              |
+
+\vspace{0.5cm}
+
+1. state?
+2. invariants?
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
 
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -272,7 +448,194 @@ where:
   end
 #+end_src
 
-** Consulting accounts
+** Consulting callback documentation
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  iex> h Blocks.Command.Mine.post
+
+  # def post(state, arguments, result)
+
+  @spec post(dynamic_state(), arguments(), result()) :: boolean()
+
+  This callback contains a predicate that should be true after the execution of
+  mine
+
+  ## Available variables
+
+  ### State
+
+  - state contains the complete dynamic state of the model.
+  - height attribute defined in the state declaration.
+
+  ### Arguments
+
+  - arguments contains all the generated arguments of the command.
+
+  ### Result
+
+  - result variable that contains the result of the command execution.
+
+#+end_src
+
+** Adding type information
+
+*** column
+:properties:
+:beamer_col: 0.68
+:end:
+
+#+attr_latex: :options style=display, numbers=left
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+
+    state height: 0 :: integer()
+
+    invariants non_neg_height: height >= 0
+
+    command block_number() :: {:ok, integer()} do
+      post {:ok, height} == result
+    end
+
+    command mine() :: :ok do
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  $ mix gradient
+
+  The function call Etherex.block_number() on line 8 is expected
+  to have type result() but it has type {:ok, quantity()} | {:error, error()}
+#+end_src
+
+** Adding documentation
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+
+    @moduledoc """
+    Specifies the mining facilities of the blockchain.
+    """
+
+    state height: Etherex.block_number!() :: non_neg_integer()
+
+    invariants non_genesis_block: height >= 0
+
+    command block_number() :: {:ok, non_neg_integer()} do
+      @moduledoc "Retrieves the block number from the blockchain."
+      post {:ok, height} == result
+    end
+
+    command mine() :: :ok do
+      @moduledoc "Mines a new block."
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+
+** Consulting module documentation
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  iex> h Blocks
+
+  # Blocks
+
+  Contains a Makina model called Blocks.
+
+  Specifies the mining facilities of the blockchain.
+
+  ## Commands
+
+  - mine stored at Blocks.Command.Mine
+  - block_number stored at Blocks.Command.BlockNumber
+
+  Detailed information about each command can be accessed inside the interpreter:
+
+  iex> h Blocks.Command.NAME
+
+  ## State attributes
+
+  - height
+
+  ...
+#+end_src
+** Running the test
+
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  $ mix test
+  Starting Quviq QuickCheck version 1.45.1
+
+  Licence for University UPM Madrid reserved until {{2022,5,15},{19,36,12}}
+
+  ignoring property options [:long_result, :quiet, :verbose]
+  ....................................................................................................
+  OK, passed 100 tests
+
+  51.5 Blocks.mine()
+  48.5 Blocks.block_number()
+
+  Finished in 8.6 seconds (0.00s async, 8.6s sync)
+#+end_src
+** Account access
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Accounts do
+    use Makina, implemented_by: Etherex
+
+    alias Etherex.Type
+
+    state accounts: Etherex.accounts!(), :: [Type.address()],
+          balances: get_accounts() :: %{Type.address() => integer()}
+
+    command get_balance(account :: Type.address()) ::
+      {:ok, Type.quantity()} | {:error, Type.error()} do
+      pre accounts != []
+      valid_args account in accounts
+      post {:ok, balances[account]} == result
+    end
+
+    @spec get_accounts :: %{Type.address() => integer()}
+    def get_accounts do
+      Etherex.accounts!()
+      |> Enum.map(fn a -> {a, Etherex.get_balance!(a)} end)
+      |> Enum.into(%{})
+    end
+  end
+#+end_src
+
+** Running the tests
+
+#+attr_latex: :options style=display
+#+begin_src shell
+    Starting Quviq QuickCheck version 1.45.1
+
+    Licence for University UPM Madrid reserved until {{2022,5,16},{12,41,23}}
+
+      1) property Accounts (ExamplesTest)
+         test/examples_test.exs:12
+         ,** (Makina.Error) argument `account` missing in command get_balance
+         stacktrace:
+           (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
+           (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
+           (examples 0.1.0) lib/accounts.ex:1: Accounts.Behaviour.next_state/3
+         Finished in 0.1 seconds (0.00s async, 0.1s sync)
+
+    1 properties, 1 failure
+
+    Randomized with seed 763550
+#+end_src
 
 ** Generating transactions
 

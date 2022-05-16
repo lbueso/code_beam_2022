@@ -1,4 +1,4 @@
-% Created 2022-05-15 Sun 13:43
+% Created 2022-05-16 Mon 11:47
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt]{beamer}
 \usepackage[utf8]{inputenc}
@@ -77,9 +77,9 @@
 \whitetheme
 
 \section{Introduction}
-\label{sec:org0c60e7c}
+\label{sec:orgdb31402}
 
-\begin{frame}[label={sec:orgb48492f}]{The problem}
+\begin{frame}[label={sec:org192ec9d}]{The problem}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \begin{center}
@@ -104,7 +104,7 @@ files & blank & comment & code\\
 \end{frame}
 
 
-\begin{frame}[label={sec:orgf611dc7},fragile]{Introduction to PBT}
+\begin{frame}[label={sec:orgc178d0a},fragile]{Introduction to PBT}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Writing unit-tests is hard and time-consuming:
@@ -162,7 +162,7 @@ In each test:
 \end{frame}
 
 
-\begin{frame}[label={sec:org0b5bef9},fragile]{Testing \emph{stateful} programs}
+\begin{frame}[label={sec:org1aef7cd},fragile]{Testing \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 Imagine a simple counter:
@@ -220,7 +220,7 @@ To successfully test this program we need to:
 \end{frame}
 
 
-\begin{frame}[label={sec:org0a5f3d3},fragile]{PBT of \emph{stateful} programs}
+\begin{frame}[label={sec:orgcf16638},fragile]{PBT of \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.58\columnwidth}
 Basic property of \emph{stateful} programs:
@@ -279,23 +279,194 @@ where:
 \end{frame}
 
 
-\begin{frame}[label={sec:org2cb6ddc},fragile]{Introduction to Makina}
- \texttt{Makina} is a DSL to write PBT state machines.
+\begin{frame}[label={sec:org94f0c7f},fragile]{PBT state machines}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+Introduced by \texttt{Erlang QuickCheck}.
+
+\vspace{10pt}
+
+Adopted by other PBT libraries such as \texttt{Proper}.
+
+\vspace{10pt}
+
+These libraries provide a DSL to model the system.
+
+\vspace{10pt}
+
+Proven effectiveness.
+\end{column}
+
+
+\begin{column}{0.48\columnwidth}
+Very slow adoption.
+
+\vspace{10pt}
+
+Why?
+
+\vspace{10pt}
+
+Problems:
+\begin{itemize}
+\item Hard to write.
+\item Cryptic errors.
+\item Usually buggy.
+\item Code reuse is very hard.
+\item Hard to maintain.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[label={sec:orgf9883d7},fragile]{Makina}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+\texttt{Makina} is a DSL to write PBT state machines.
 \begin{itemize}
 \item Fully compatible with \texttt{Erlang QuickCheck} and \texttt{PropEr}.
-\item 
+\item Improved usability.
+\item Better error messages.
+\item Improved error detection in models.
 \end{itemize}
+\end{column}
+
+\begin{column}{0.48\columnwidth}
+A Makina model contains:
+\begin{itemize}
+\item \texttt{state}
+\item \texttt{command}
+\item \texttt{invariants}
+\end{itemize}
+
+\vspace{10pt}
+
+Provides code reuse mechanisms:
+\begin{itemize}
+\item imports
+\item \texttt{extends}
+\item composition
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
 
-\begin{frame}[label={sec:orgaef6427}]{Ethereum Blockchain}
+\begin{frame}[label={sec:org5e7e1c2},fragile]{Ethereum Blockchain}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+A blockchain is a distributed ledger that enables peer-to-peer transactions.
+
+\begin{figure}
+\begin{adjustbox}{max width=\textwidth}
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node
+    distance=20,semithick, minimum width=70]
+
+    \node (block0name) {\begin{tabular}{c} Block 0 \\ Genesis Block \end{tabular}};
+    \node[rectangle, draw, below of=block0name] (block0index) {Index};
+    \node[rectangle, draw, below of=block0index] (block0timestamp) {Timestamp};
+    \node[rectangle, draw, below of=block0timestamp] (block0previoushash)
+    {Previous Hash};
+    \node[rectangle, draw, below of=block0previoushash] (block0hash)
+    {Hash};
+    \node[rectangle, draw, below of=block0hash] (block0data)
+    {Data};
+
+    \node [right of=block0name, yshift=-20, xshift=80] (block1name) {Block 1};
+    \node[rectangle, draw, below of=block1name] (block1index) {Index};
+    \node[rectangle, draw, below of=block1index] (block1timestamp) {Timestamp};
+    \node[rectangle, draw, below of=block1timestamp] (block1previoushash)
+    {Previous Hash};
+    \node[rectangle, draw, below of=block1previoushash] (block1hash)
+    {Hash};
+    \node[rectangle, draw, below of=block1hash] (block1data)
+    {Data};
+
+    % \node [right of=block1name, yshift=-20, xshift=80] (block2name) {Block 2};
+    % \node[rectangle, draw, below of=block2name] (block2index) {Index};
+    % \node[rectangle, draw, below of=block2index] (block2timestamp) {Timestamp};
+    % \node[rectangle, draw, below of=block2timestamp] (block2previoushash)
+    % {Previous Hash};
+    % \node[rectangle, draw, below of=block2previoushash] (block2hash)
+    % {Hash};
+    % \node[rectangle, draw, below of=block2hash] (block2data)
+    % {Data};
+
+    \node[right of=block1hash, xshift=40, minimum width=20] (block2previoushash)
+    {...};
+
+    \draw (block1previoushash) edge (block0hash);
+    \draw (block2previoushash) edge (block1hash);
+
+    \node[left  of=block0name, xshift=-20, yshift= 15] (block0a) {};
+    \node[right of=block0data, xshift= 20, yshift=-13] (block0b) {};
+    \draw[draw] (block0a) rectangle (block0b);
+
+    \node[left  of=block1name, xshift=-20, yshift= 10] (block1a) {};
+    \node[right of=block1data, xshift= 20, yshift=-13] (block1b) {};
+    \draw[draw] (block1a) rectangle (block1b);
+
+    % \node[left  of=block2name, xshift=-20, yshift= 10] (block2a) {};
+    % \node[right of=block2data, xshift= 20, yshift=-10] (block2b) {};
+    % \draw[draw] (block2a) rectangle (block2b);
+
+  \end{tikzpicture}
+\end{adjustbox}
+\end{figure}
+\end{column}
+
+\begin{column}{0.48\columnwidth}
+Ethereum is one of the largest blockchains.
+
+\vspace{10pt}
+
+Introduced smart-contracts.
+
+\vspace{10pt}
+
+\texttt{etherex} a library to interact with Ethereum using Elixir.
+
+\vspace{10pt}
+
+The properties:
+\begin{enumerate}
+\item Mining blocks.
+\item Account access.
+\item Transfers between accounts.
+\end{enumerate}
+\end{column}
+\end{columns}
 \end{frame}
+
 
 \section{Makina features}
-\label{sec:org13fd8f6}
+\label{sec:org6ca025a}
 
-\begin{frame}[label={sec:org2afa1f8},fragile]{Mining blocks}
- \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org4f7f829},fragile]{Mining blocks}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+The API:
+
+\begin{center}
+\begin{tabular}{ll}
+Command & Returns\\
+\hline
+\texttt{block\_number()} & \texttt{\{:ok, integer()\}}\\
+\texttt{mine()} & \texttt{:ok}\\
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{enumerate}
+\item state?
+\item invariants?
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.48\columnwidth}
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
   use Makina, implemented_by: Etherex
@@ -314,17 +485,203 @@ defmodule Blocks do
   end
 end
 \end{lstlisting}
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgbbc06d6}]{Consulting accounts}
+\begin{frame}[label={sec:orge714a6c},fragile]{Consulting callback documentation}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+iex> h Blocks.Command.Mine.post
+
+# def post(state, arguments, result)
+
+@spec post(dynamic_state(), arguments(), result()) :: boolean()
+
+This callback contains a predicate that should be true after the execution of
+mine
+
+## Available variables
+
+### State
+
+- state contains the complete dynamic state of the model.
+- height attribute defined in the state declaration.
+
+### Arguments
+
+- arguments contains all the generated arguments of the command.
+
+### Result
+
+- result variable that contains the result of the command execution.
+
+\end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:orgeed3946}]{Generating transactions}
+\begin{frame}[label={sec:orgbde442c},fragile]{Adding type information}
+ \begin{columns}
+\begin{column}{0.68\columnwidth}
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
+\begin{lstlisting}
+defmodule Blocks do
+  use Makina, implemented_by: Etherex
+
+  state height: 0 :: integer()
+
+  invariants non_neg_height: height >= 0
+
+  command block_number() :: {:ok, integer()} do
+    post {:ok, height} == result
+  end
+
+  command mine() :: :ok do
+    call Etherex.Time.mine()
+    next height: height + 1
+  end
+end
+\end{lstlisting}
+
+\lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+$ mix gradient
+
+The function call Etherex.block_number() on line 8 is expected
+to have type result() but it has type {:ok, quantity()} | {:error, error()}
+\end{lstlisting}
+\end{column}
+\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb100e30}]{An abstract model for contracts}
+\begin{frame}[label={sec:org3bed62d},fragile]{Adding documentation}
+ \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Blocks do
+  use Makina, implemented_by: Etherex
+
+  @moduledoc """
+  Specifies the mining facilities of the blockchain.
+  """
+
+  state height: Etherex.block_number!() :: non_neg_integer()
+
+  invariants non_genesis_block: height >= 0
+
+  command block_number() :: {:ok, non_neg_integer()} do
+    @moduledoc "Retrieves the block number from the blockchain."
+    post {:ok, height} == result
+  end
+
+  command mine() :: :ok do
+    @moduledoc "Mines a new block."
+    call Etherex.Time.mine()
+    next height: height + 1
+  end
+end
+\end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org0d7ef1f}]{A basic model to test a contract}
+\begin{frame}[label={sec:orgb4f75c2},fragile]{Consulting module documentation}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+iex> h Blocks
+
+# Blocks
+
+Contains a Makina model called Blocks.
+
+Specifies the mining facilities of the blockchain.
+
+## Commands
+
+- mine stored at Blocks.Command.Mine
+- block_number stored at Blocks.Command.BlockNumber
+
+Detailed information about each command can be accessed inside the interpreter:
+
+iex> h Blocks.Command.NAME
+
+## State attributes
+
+- height
+
+...
+\end{lstlisting}
+\end{frame}
+\begin{frame}[label={sec:org5bdb433},fragile]{Running the test}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+$ mix test
+Starting Quviq QuickCheck version 1.45.1
+
+Licence for University UPM Madrid reserved until {{2022,5,15},{19,36,12}}
+
+ignoring property options [:long_result, :quiet, :verbose]
+....................................................................................................
+OK, passed 100 tests
+
+51.5 Blocks.mine()
+48.5 Blocks.block_number()
+
+Finished in 8.6 seconds (0.00s async, 8.6s sync)
+\end{lstlisting}
+\end{frame}
+\begin{frame}[label={sec:org89605a5},fragile]{Account access}
+ \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Accounts do
+  use Makina, implemented_by: Etherex
+
+  alias Etherex.Type
+
+  state accounts: Etherex.accounts!(), :: [Type.address()],
+	balances: get_accounts() :: %{Type.address() => integer()}
+
+  command get_balance(account :: Type.address()) ::
+    {:ok, Type.quantity()} | {:error, Type.error()} do
+    pre accounts != []
+    valid_args account in accounts
+    post {:ok, balances[account]} == result
+  end
+
+  @spec get_accounts :: %{Type.address() => integer()}
+  def get_accounts do
+    Etherex.accounts!()
+    |> Enum.map(fn a -> {a, Etherex.get_balance!(a)} end)
+    |> Enum.into(%{})
+  end
+end
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[label={sec:org0121bac},fragile]{Running the tests}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+Starting Quviq QuickCheck version 1.45.1
+
+Licence for University UPM Madrid reserved until {{2022,5,16},{12,41,23}}
+
+  1) property Accounts (ExamplesTest)
+     test/examples_test.exs:12
+     ** (Makina.Error) argument `account` missing in command get_balance
+     stacktrace:
+       (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
+       (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
+       (examples 0.1.0) lib/accounts.ex:1: Accounts.Behaviour.next_state/3
+     Finished in 0.1 seconds (0.00s async, 0.1s sync)
+
+1 properties, 1 failure
+
+Randomized with seed 763550
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[label={sec:org9985359}]{Generating transactions}
+\end{frame}
+
+\begin{frame}[label={sec:org87c7b6c}]{An abstract model for contracts}
+\end{frame}
+
+\begin{frame}[label={sec:orgcd540f2}]{A basic model to test a contract}
 \end{frame}
 \end{document}
