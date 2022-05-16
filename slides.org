@@ -405,7 +405,7 @@ The properties to test:
 2. Account access.
 3. Transfers between accounts.
 
-   
+
 * Blocks model
 
 ** Mining blocks
@@ -588,17 +588,17 @@ The API:
 
   Failed! After 1 tests.
   [
-    Blocks.block_number/0,
-    Blocks.mine/0,
+      Blocks.block_number/0,
+      Blocks.mine/0,
   ]
 
   ================================================================================
   Postcondition crashed:
-   ** (Makina.Error) invariant "non_neg_height" check failed
+  ,** (Makina.Error) invariant "non_neg_height" check failed
 
   Shrinking x.(1 times)
   [
-    Blocks.block_number/0
+      Blocks.block_number/0
   ]
 
   Last state: %{height: 0}
@@ -620,11 +620,11 @@ The error message:
 #+attr_latex: :options style=display
 #+begin_src shell
   Postcondition crashed:
-   ** invariant "non_neg_height" check failed
+  ,** invariant "non_neg_height" check failed
 
   Shrinking x.(1 times)
   [
-    Blocks.block_number/0
+      Blocks.block_number/0
   ]
 
   Last state: %{height: 0}
@@ -715,10 +715,10 @@ The API:
     alias Etherex.Type
 
     state accounts: Etherex.accounts!() :: [Type.address()],
-          balances: Etherex.balances!() :: %{Type.address() => integer()}
+      balances: Etherex.balances!() :: %{Type.address() => integer()}
 
     command get_balance(account :: Type.address())
-        :: {:ok, Type.quantity()} | {:error, Type.error()} do
+    :: {:ok, Type.quantity()} | {:error, Type.error()} do
       pre accounts != []
       post {:ok, balances[account]} == result
     end
@@ -733,7 +733,7 @@ The API:
   Starting Quviq QuickCheck version 1.45.1
 
   1) property Accounts (ExamplesTest)
-       ** (Makina.Error) argument `account` missing in command get_balance
+     ,** (Makina.Error) argument `account` missing in command get_balance
      stacktrace:
      (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
      (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
@@ -803,7 +803,6 @@ The API to generate and check transactions:
 | =block_number/0=    | ={:ok, integer()}= |
 | =get_balance/1=     | ={:ok, integer()}= |
 | =transfer/3=        | ={:ok, hash()}=    |
-| =get_transaction/1= | ={:ok, receipt()}= |
 
 We can compose =Blocks= and =Accounts=!
 
@@ -839,3 +838,165 @@ Commands are the union:
 - =mine/0=
 - =block_number/0=
 - =get_balance/1=
+
+
+** Generating transactions
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Transactions do
+    use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
+    alias Etherex.Type
+
+    command transfer(
+              from :: Type.address(),
+              to :: Type.address(),
+              value :: Type.quantity()
+            ) :: {:ok, Type.hash()} do
+      pre accounts != []
+      args from: oneof(accounts), to: oneof(accounts), value: pos_integer()
+      valid_args from in accounts and to in accounts
+
+      next balances: update_balances(balances, from, to, value)
+    end
+
+    def update_balances(balances, from, to, value) do
+      balances |> Map.update!(from, &(&1 - value)) |> Map.update!(to, &(&1 + value))
+    end
+  end
+#+end_src
+
+
+** Running the test
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  $ mix test
+  Starting Quviq QuickCheck version 1.45.1
+
+  Failed! After 1 tests.
+  [
+      Transactions.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
+                            "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+                            423319221061516289),
+      Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1"),
+      Transactions.mine(),
+      Transactions.mine(),
+      Transactions.block_number()
+  ]
+
+  ================================================================================
+  Postcondition failed.
+
+  ...
+
+  Shrinking xxx.xx.x.x.x(4 times)
+#+end_src
+
+
+** Running the test
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  [
+      Transaction.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
+                           "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+                           1),
+      Transactions.block_number()
+  ]
+
+  ================================================================================
+  Postcondition failed.
+
+  ...
+
+  Transactions.block_number() -> {:ok, 1}
+
+
+  Last state: %{height: 0, ...}
+
+  Finished in 0.8 seconds (0.00s async, 0.8s sync)
+  1 properties, 1 failure
+#+end_src
+
+
+** Fixing the transactions model
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Transactions do
+    use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
+    alias Etherex.Type
+
+    command transfer(
+      from :: Type.address(),
+      to :: Type.address(),
+      value :: Type.quantity()
+    ) :: {:ok, Type.hash()} do
+      pre accounts != []
+      args from: oneof(accounts), to: oneof(accounts), value: pos_integer()
+      valid_args from in accounts and to in accounts
+
+      next balances: update_balances(balances, from, to, value),
+           height: height + 1
+    end
+
+    def update_balances(balances, from, to, value) do
+      balances |> Map.update!(from, &(&1 - value)) |> Map.update!(to, &(&1 + value))
+    end
+  end
+#+end_src
+
+
+** Running the test
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  $ mix test --only transactions
+  Starting Quviq QuickCheck version 1.45.1
+
+  ..Failed! After 2 tests.
+  [
+      ...
+  ]
+
+  ================================================================================
+  Postcondition failed.
+
+  ...
+
+  Shrinking xxxx.x.x.x.x.xx.x(6 times)
+  [
+      Transactions.transfer("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+                            "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+                            1),
+      Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
+  ]
+
+  ================================================================================
+  Postcondition failed.
+#+end_src
+
+
+** Running the tests
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  Commands:
+
+  ...
+
+  Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
+    -> {:ok, 999999999999999999999999979000}
+
+  Last state:
+  %{
+    balances: %{
+      "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1" => 1000000000000000000000000000000,
+      ...
+    },
+    ...
+  }
+  Finished in 1.1 seconds (0.00s async, 1.1s sync)
+  3 properties, 1 failure
+#+end_src

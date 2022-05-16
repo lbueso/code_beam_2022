@@ -1,4 +1,4 @@
-% Created 2022-05-16 Mon 14:48
+% Created 2022-05-16 Mon 17:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt]{beamer}
 \usepackage[utf8]{inputenc}
@@ -77,9 +77,9 @@
 \whitetheme
 
 \section{Introduction}
-\label{sec:orgb6258e8}
+\label{sec:org6758649}
 
-\begin{frame}[label={sec:org57f6e69}]{The problem}
+\begin{frame}[label={sec:org49808be}]{The problem}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \begin{center}
@@ -105,9 +105,9 @@ files & blank & comment & code\\
 
 
 \section{Introduction to PBT}
-\label{sec:org2935671}
+\label{sec:org72efc5b}
 
-\begin{frame}[label={sec:org76fad05},fragile]{Introduction to PBT}
+\begin{frame}[label={sec:org7387bfd},fragile]{Introduction to PBT}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Writing unit-tests is hard and time-consuming:
@@ -165,7 +165,7 @@ In each test:
 \end{frame}
 
 
-\begin{frame}[label={sec:org8eaa43e},fragile]{Testing \emph{stateful} programs}
+\begin{frame}[label={sec:org083ee92},fragile]{Testing \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 Imagine a simple counter:
@@ -223,7 +223,7 @@ To successfully test this program we need to:
 \end{frame}
 
 
-\begin{frame}[label={sec:org0b1dbb5},fragile]{PBT of \emph{stateful} programs}
+\begin{frame}[label={sec:org7bdadb1},fragile]{PBT of \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.58\columnwidth}
 Basic property of \emph{stateful} programs:
@@ -282,7 +282,7 @@ where:
 \end{frame}
 
 
-\begin{frame}[label={sec:orgfd04eaf},fragile]{PBT state machines}
+\begin{frame}[label={sec:org0acc41e},fragile]{PBT state machines}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Introduced by \texttt{Erlang QuickCheck}.
@@ -324,9 +324,9 @@ Problems:
 
 
 \section{Introduction to Makina and running example}
-\label{sec:orgf279e60}
+\label{sec:org2002e40}
 
-\begin{frame}[label={sec:org21d0a59},fragile]{Makina}
+\begin{frame}[label={sec:orgd3da76d},fragile]{Makina}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \texttt{Makina} is a DSL to write PBT state machines.
@@ -359,7 +359,7 @@ Provides code reuse mechanisms:
 \end{frame}
 
 
-\begin{frame}[label={sec:org3c54c1e},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:org2e59aa4},fragile]{Ethereum Blockchain}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 A blockchain is a distributed ledger that enables peer-to-peer transactions.
@@ -447,9 +447,9 @@ The properties to test:
 
 
 \section{Blocks model}
-\label{sec:org201d28c}
+\label{sec:org9fec2d3}
 
-\begin{frame}[label={sec:orgd4374e8},fragile]{Mining blocks}
+\begin{frame}[label={sec:orgf45cff2},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API:
@@ -497,7 +497,7 @@ end
 \end{frame}
 
 
-\begin{frame}[label={sec:orgb23482b},fragile]{Consulting callback docs}
+\begin{frame}[label={sec:org88e1b52},fragile]{Consulting callback docs}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 iex> h Blocks.Command.Mine.post
@@ -528,7 +528,7 @@ mine
 \end{frame}
 
 
-\begin{frame}[label={sec:org33ed39b},fragile]{Adding type information}
+\begin{frame}[label={sec:org957f46e},fragile]{Adding type information}
  \begin{columns}
 \begin{column}{0.68\columnwidth}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
@@ -563,7 +563,7 @@ to have type result() but it has type {:ok, quantity()} | {:error, error()}
 \end{frame}
 
 
-\begin{frame}[label={sec:orgf76bff1},fragile]{Adding documentation}
+\begin{frame}[label={sec:org5071df2},fragile]{Adding documentation}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
@@ -592,7 +592,7 @@ end
 \end{frame}
 
 
-\begin{frame}[label={sec:org8b35479},fragile]{Consulting module docs}
+\begin{frame}[label={sec:org8ca63bd},fragile]{Consulting module docs}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 iex> h Blocks
@@ -621,7 +621,7 @@ iex> h Blocks.Command.NAME
 \end{frame}
 
 
-\begin{frame}[label={sec:org5431f3b},fragile]{Running the test}
+\begin{frame}[label={sec:org00953ab},fragile]{Running the test}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 $ mix test
@@ -629,17 +629,17 @@ Starting Quviq QuickCheck version 1.45.1
 
 Failed! After 1 tests.
 [
-  Blocks.block_number/0,
-  Blocks.mine/0,
+    Blocks.block_number/0,
+    Blocks.mine/0,
 ]
 
 ================================================================================
 Postcondition crashed:
- ** (Makina.Error) invariant "non_neg_height" check failed
+** (Makina.Error) invariant "non_neg_height" check failed
 
 Shrinking x.(1 times)
 [
-  Blocks.block_number/0
+    Blocks.block_number/0
 ]
 
 Last state: %{height: 0}
@@ -650,7 +650,7 @@ Finished in 0.1 seconds (0.00s async, 0.1s sync)
 \end{frame}
 
 
-\begin{frame}[label={sec:org2cc0975},fragile]{Fixing the model}
+\begin{frame}[label={sec:org8eeb2bf},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The error message:
@@ -658,11 +658,11 @@ The error message:
 \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 Postcondition crashed:
- ** invariant "non_neg_height" check failed
+** invariant "non_neg_height" check failed
 
 Shrinking x.(1 times)
 [
-  Blocks.block_number/0
+    Blocks.block_number/0
 ]
 
 Last state: %{height: 0}
@@ -701,7 +701,7 @@ end
 
 
 
-\begin{frame}[label={sec:orgc784ea9},fragile]{Running the test}
+\begin{frame}[label={sec:orgbf3e194},fragile]{Running the test}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 $ mix test
@@ -719,9 +719,9 @@ Finished in 8.6 seconds (0.00s async, 8.6s sync)
 
 
 \section{Accounts model}
-\label{sec:orgefa798e}
+\label{sec:orga301283}
 
-\begin{frame}[label={sec:org3b2707c},fragile]{Account access}
+\begin{frame}[label={sec:orgf997a46},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 The API:
@@ -752,10 +752,10 @@ defmodule Accounts do
   alias Etherex.Type
 
   state accounts: Etherex.accounts!() :: [Type.address()],
-	balances: Etherex.balances!() :: %{Type.address() => integer()}
+    balances: Etherex.balances!() :: %{Type.address() => integer()}
 
   command get_balance(account :: Type.address())
-      :: {:ok, Type.quantity()} | {:error, Type.error()} do
+  :: {:ok, Type.quantity()} | {:error, Type.error()} do
     pre accounts != []
     post {:ok, balances[account]} == result
   end
@@ -766,13 +766,13 @@ end
 \end{frame}
 
 
-\begin{frame}[label={sec:org16a71ae},fragile]{Running the tests}
+\begin{frame}[label={sec:orgf0088db},fragile]{Running the tests}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 Starting Quviq QuickCheck version 1.45.1
 
 1) property Accounts (ExamplesTest)
-     ** (Makina.Error) argument `account` missing in command get_balance
+   ** (Makina.Error) argument `account` missing in command get_balance
    stacktrace:
    (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
    (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
@@ -786,7 +786,7 @@ Starting Quviq QuickCheck version 1.45.1
 \end{frame}
 
 
-\begin{frame}[label={sec:org28105b4},fragile]{Fixing the accounts model}
+\begin{frame}[label={sec:orgfb6a0b3},fragile]{Fixing the accounts model}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Accounts do
@@ -809,7 +809,7 @@ end
 \end{frame}
 
 
-\begin{frame}[label={sec:orgb67cb52},fragile]{Running the test}
+\begin{frame}[label={sec:org09fb051},fragile]{Running the test}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 $ mix test
@@ -827,9 +827,9 @@ Finished in 4.6 seconds (0.00s async, 4.6s sync)
 
 
 \section{Transactions model}
-\label{sec:org320b11f}
+\label{sec:org08c13c9}
 
-\begin{frame}[label={sec:org8f813f3},fragile]{Generating transactions}
+\begin{frame}[label={sec:orgacb3159},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API to generate and check transactions:
@@ -842,7 +842,6 @@ Command & Returns\\
 \texttt{block\_number/0} & \texttt{\{:ok, integer()\}}\\
 \texttt{get\_balance/1} & \texttt{\{:ok, integer()\}}\\
 \texttt{transfer/3} & \texttt{\{:ok, hash()\}}\\
-\texttt{get\_transaction/1} & \texttt{\{:ok, receipt()\}}\\
 \end{tabular}
 \end{center}
 
@@ -885,5 +884,167 @@ Commands are the union:
 \end{itemize}
 \end{column}
 \end{columns}
+\end{frame}
+
+
+\begin{frame}[label={sec:org84e98a2},fragile]{Generating transactions}
+ \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Transactions do
+  use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
+  alias Etherex.Type
+
+  command transfer(
+	    from :: Type.address(),
+	    to :: Type.address(),
+	    value :: Type.quantity()
+	  ) :: {:ok, Type.hash()} do
+    pre accounts != []
+    args from: oneof(accounts), to: oneof(accounts), value: pos_integer()
+    valid_args from in accounts and to in accounts
+
+    next balances: update_balances(balances, from, to, value)
+  end
+
+  def update_balances(balances, from, to, value) do
+    balances |> Map.update!(from, &(&1 - value)) |> Map.update!(to, &(&1 + value))
+  end
+end
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:org36d43d2},fragile]{Running the test}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+$ mix test
+Starting Quviq QuickCheck version 1.45.1
+
+Failed! After 1 tests.
+[
+    Transactions.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
+			  "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+			  423319221061516289),
+    Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1"),
+    Transactions.mine(),
+    Transactions.mine(),
+    Transactions.block_number()
+]
+
+================================================================================
+Postcondition failed.
+
+...
+
+Shrinking xxx.xx.x.x.x(4 times)
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:org70d8fd4},fragile]{Running the test}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+[
+    Transaction.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
+			 "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+			 1),
+    Transactions.block_number()
+]
+
+================================================================================
+Postcondition failed.
+
+...
+
+Transactions.block_number() -> {:ok, 1}
+
+
+Last state: %{height: 0, ...}
+
+Finished in 0.8 seconds (0.00s async, 0.8s sync)
+1 properties, 1 failure
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:orgdb847ca},fragile]{Fixing the transactions model}
+ \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Transactions do
+  use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
+  alias Etherex.Type
+
+  command transfer(
+    from :: Type.address(),
+    to :: Type.address(),
+    value :: Type.quantity()
+  ) :: {:ok, Type.hash()} do
+    pre accounts != []
+    args from: oneof(accounts), to: oneof(accounts), value: pos_integer()
+    valid_args from in accounts and to in accounts
+
+    next balances: update_balances(balances, from, to, value),
+	 height: height + 1
+  end
+
+  def update_balances(balances, from, to, value) do
+    balances |> Map.update!(from, &(&1 - value)) |> Map.update!(to, &(&1 + value))
+  end
+end
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:orgf19adbd},fragile]{Running the test}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+$ mix test --only transactions
+Starting Quviq QuickCheck version 1.45.1
+
+..Failed! After 2 tests.
+[
+    ...
+]
+
+================================================================================
+Postcondition failed.
+
+...
+
+Shrinking xxxx.x.x.x.x.xx.x(6 times)
+[
+    Transactions.transfer("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+			  "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+			  1),
+    Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
+]
+
+================================================================================
+Postcondition failed.
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:org6a22205},fragile]{Running the tests}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+Commands:
+
+...
+
+Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
+  -> {:ok, 999999999999999999999999979000}
+
+Last state:
+%{
+  balances: %{
+    "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1" => 1000000000000000000000000000000,
+    ...
+  },
+  ...
+}
+Finished in 1.1 seconds (0.00s async, 1.1s sync)
+3 properties, 1 failure
+\end{lstlisting}
 \end{frame}
 \end{document}
