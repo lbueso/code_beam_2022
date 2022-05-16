@@ -4,7 +4,7 @@
 #+latex_header: \usepackage[english]{babel}
 #+latex_header: \usepackage[utf8]{inputenc}
 #+latex_header: \usepackage{roboto}
-#+latex_header: \usepackage[light,scaled=0.85]{roboto-mono}
+#+latex_header: \usepackage[scaled=0.90]{roboto-mono}
 #+latex_header: \usepackage[T1]{fontenc}
 #+latex_header: \usepackage{codebeam}
 # tikz
@@ -15,9 +15,9 @@
 #+latex_header: \usepackage{pgfpages}
 # listings
 #+latex_header: \input{listings_elixir}
+#+latex_header: \input{listings_bash}
 #+latex_header: \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
-# #+latex_header: \lst@AddToHook{TextStyle}{\let\lst@basicstyle\ttfamily\small}
-#+latex_header: \lstset{morekeywords={state, command, invariants}}
+#+latex_header: \lstdefinestyle{shell}{basicstyle=\footnotesize\ttfamily}
 
 # Local Variables:
 # mode: org

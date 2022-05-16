@@ -1,4 +1,4 @@
-% Created 2022-05-16 Mon 18:56
+% Created 2022-05-16 Mon 19:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt]{beamer}
 \usepackage[utf8]{inputenc}
@@ -17,7 +17,7 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{roboto}
-\usepackage[light,scaled=0.85]{roboto-mono}
+\usepackage[scaled=0.90]{roboto-mono}
 \usepackage[T1]{fontenc}
 \usepackage{codebeam}
 \usepackage{tikz}
@@ -26,8 +26,9 @@
 \usetikzlibrary{overlay-beamer-styles}
 \usepackage{pgfpages}
 \input{listings_elixir}
+\input{listings_bash}
 \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
-\lstset{morekeywords={state, command, invariants}}
+\lstdefinestyle{shell}{basicstyle=\footnotesize\ttfamily}
 \usetheme{default}
 \author{Luis Eduardo Bueso de Barrio}
 \date{\today}
@@ -77,9 +78,8 @@
 \whitetheme
 
 \section{Introduction}
-\label{sec:org5484b55}
-
-\begin{frame}[label={sec:org8b07f48}]{The problem}
+\label{sec:org105107a}
+\begin{frame}[label={sec:org08ef247}]{The problem}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \begin{center}
@@ -103,11 +103,9 @@ files & blank & comment & code\\
 \end{columns}
 \end{frame}
 
-
 \section{Introduction to PBT}
-\label{sec:org3a42349}
-
-\begin{frame}[label={sec:org252bde3},fragile]{Introduction to PBT}
+\label{sec:org41628fa}
+\begin{frame}[label={sec:org422a3de},fragile]{Introduction to PBT}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Writing unit-tests is hard and time-consuming:
@@ -164,8 +162,7 @@ In each test:
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org1989a4e},fragile]{Testing \emph{stateful} programs}
+\begin{frame}[label={sec:orge1d3435},fragile]{Testing \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 Imagine a simple counter:
@@ -222,8 +219,7 @@ To successfully test this program we need to:
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org58c3ae1},fragile]{PBT of \emph{stateful} programs}
+\begin{frame}[label={sec:org56ad14d},fragile]{PBT of \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.58\columnwidth}
 Basic property of \emph{stateful} programs:
@@ -281,8 +277,7 @@ where:
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgec1a085},fragile]{PBT state machines}
+\begin{frame}[label={sec:org004c5f3},fragile]{PBT state machines}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Introduced by \texttt{Erlang QuickCheck}.
@@ -322,11 +317,9 @@ Problems:
 \end{columns}
 \end{frame}
 
-
 \section{Introduction to Makina and running example}
-\label{sec:orgc19df83}
-
-\begin{frame}[label={sec:org3a6319d},fragile]{Makina}
+\label{sec:org75be24b}
+\begin{frame}[label={sec:orgbfeb711},fragile]{Makina}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \texttt{Makina} is a DSL to write PBT state machines.
@@ -358,8 +351,7 @@ Provides code reuse mechanisms:
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:orga4cf89c},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:orgac7193f},fragile]{Ethereum Blockchain}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 A blockchain is a distributed ledger that enables peer-to-peer transactions.
@@ -445,11 +437,9 @@ The properties to test:
 \end{columns}
 \end{frame}
 
-
 \section{Blocks model}
-\label{sec:org145f4e9}
-
-\begin{frame}[label={sec:org52bfa89},fragile]{Mining blocks}
+\label{sec:orgc428aec}
+\begin{frame}[label={sec:org18d2040},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API:
@@ -497,8 +487,8 @@ end
 \end{frame}
 
 
-\begin{frame}[label={sec:org4819404},fragile]{Consulting callback docs}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org82a69c7},fragile]{Consulting callback docs}
+ \lstset{language=markdown,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 iex> h Blocks.Command.Mine.post
 
@@ -527,8 +517,7 @@ mine
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgc21c283},fragile]{Adding type information}
+\begin{frame}[label={sec:org1a9de35},fragile]{Adding type information}
  \begin{columns}
 \begin{column}{0.68\columnwidth}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
@@ -551,7 +540,7 @@ defmodule Blocks do
 end
 \end{lstlisting}
 
-\lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix gradient
 
@@ -562,8 +551,7 @@ to have type result() but it has type {:ok, quantity()} | {:error, error()}
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgc9c38c4},fragile]{Adding documentation}
+\begin{frame}[label={sec:orgf5a984c},fragile]{Adding documentation}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
@@ -591,9 +579,8 @@ end
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgf481203},fragile]{Consulting module docs}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org527d4d6},fragile]{Consulting module docs}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 iex> h Blocks
 
@@ -620,9 +607,8 @@ iex> h Blocks.Command.NAME
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:org5511b72},fragile]{Running the test}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org127c2d8},fragile]{Running the test}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test
 Starting Quviq QuickCheck version 1.45.1
@@ -650,12 +636,12 @@ Finished in 0.1 seconds (0.00s async, 0.1s sync)
 \end{frame}
 
 
-\begin{frame}[label={sec:org7b10468},fragile]{Fixing the model}
+\begin{frame}[label={sec:orgc019c23},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The error message:
 
-\lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 Postcondition crashed:
 ** invariant "non_neg_height" check failed
@@ -699,10 +685,8 @@ end
 \end{columns}
 \end{frame}
 
-
-
-\begin{frame}[label={sec:orga7c7c03},fragile]{Running the test}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:orga73829b},fragile]{Running the test}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test
 Starting Quviq QuickCheck version 1.45.1
@@ -717,11 +701,9 @@ Finished in 8.6 seconds (0.00s async, 8.6s sync)
 \end{lstlisting}
 \end{frame}
 
-
 \section{Accounts model}
-\label{sec:org509de40}
-
-\begin{frame}[label={sec:org37f0338},fragile]{Account access}
+\label{sec:org12103d1}
+\begin{frame}[label={sec:org61813fc},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 The API:
@@ -765,9 +747,8 @@ end
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgfce22fd},fragile]{Running the tests}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org9e60420},fragile]{Running the tests}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 Starting Quviq QuickCheck version 1.45.1
 
@@ -785,8 +766,7 @@ Starting Quviq QuickCheck version 1.45.1
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:orga9f891c},fragile]{Fixing the accounts model}
+\begin{frame}[label={sec:org4ccfd26},fragile]{Fixing the accounts model}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Accounts do
@@ -808,9 +788,8 @@ end
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:org2318515},fragile]{Running the test}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:orge1c1cd6},fragile]{Running the test}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test
 Starting Quviq QuickCheck version 1.45.1
@@ -825,11 +804,9 @@ Finished in 4.6 seconds (0.00s async, 4.6s sync)
 \end{lstlisting}
 \end{frame}
 
-
 \section{Transactions model}
-\label{sec:orgb2c1cf3}
-
-\begin{frame}[label={sec:org7a999c2},fragile]{Generating transactions}
+\label{sec:orgd8965e7}
+\begin{frame}[label={sec:orga57eed2},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API to generate and check transactions:
@@ -886,8 +863,7 @@ Commands are the union:
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgb7818dd},fragile]{Generating transactions}
+\begin{frame}[label={sec:orgbb81241},fragile]{Generating transactions}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -913,9 +889,8 @@ end
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:org8c8056c},fragile]{Running the test}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org3401d62},fragile]{Running the test}
+ \lstset{language=display,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test
 Starting Quviq QuickCheck version 1.45.1
@@ -940,9 +915,8 @@ Shrinking xxx.xx.x.x.x(4 times)
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgd927c65},fragile]{Running the test}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org108f2b8},fragile]{Running the test}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 [
     Transaction.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
@@ -966,8 +940,7 @@ Finished in 0.8 seconds (0.00s async, 0.8s sync)
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:org2e106f7},fragile]{Fixing the transactions model}
+\begin{frame}[label={sec:orgbc97d8f},fragile]{Fixing the transactions model}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -994,9 +967,8 @@ end
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:org0e16033},fragile]{Running the test}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:orgf753671},fragile]{Running the test}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test --only transactions
 Starting Quviq QuickCheck version 1.45.1
@@ -1024,9 +996,8 @@ Postcondition failed.
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgaec69c1},fragile]{Running the tests}
- \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org8a8cd6f},fragile]{Running the tests}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 Commands:
 
@@ -1048,8 +1019,7 @@ Finished in 1.1 seconds (0.00s async, 1.1s sync)
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:org0630d18},fragile]{Fixing the transactions model}
+\begin{frame}[label={sec:org226cd63},fragile]{Fixing the transactions model}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Our model does not consider gas consumption.
@@ -1110,9 +1080,8 @@ end
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org9064465},fragile]{Runninge the tests}
- \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:orga2083bb},fragile]{Running the tests}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test
 Starting Quviq QuickCheck version 1.45.1
@@ -1130,4 +1099,8 @@ Finished in 15.8 seconds (0.00s async, 15.8s sync)
 1 properties, 0 failures
 \end{lstlisting}
 \end{frame}
+
+
+\section{Conclusions}
+\label{sec:org40d8a05}
 \end{document}
