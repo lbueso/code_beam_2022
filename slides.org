@@ -1,3 +1,10 @@
+# TODO: Introduction slide
+# TODO: Conclusion slide -> maybe conclusions + links to repos
+# FIX: PBT state machines -> should include definition and behaviour definition
+# FIX: Makina slide -> objectives? -> features? -> implementation?
+# FIX: Ethereum blockchain slide
+# FIX: change transfer -> transaction?
+
 #+title: Improve your tests with Makina
 #+author: Luis Eduardo Bueso de Barrio
 #+setupfile: slides.setup
@@ -62,7 +69,7 @@
 |    18 |   500 |     408 | 1692 |
 
 * Introduction to PBT
-** Introduction to PBT
+** Why Property-Based Testing?
 *** column
 :properties:
 :beamer_col: 0.48
@@ -466,7 +473,7 @@ The API:
 #+attr_latex: :options style=display
 #+begin_src elixir
     defmodule Blocks do #@ \onslide<5->
-      use Makina, implemented_by: Etherex
+      use Makina
       #@ \onslide<6->
       state height: 0
       #@ \onslide<7->
@@ -522,130 +529,6 @@ The API:
     end
     #@ \onslide<2->
     command mine() :: :ok do
-      next height: height + 1
-    end
-  end
-#+end_src
-
-** Auto generated documentation
-
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-When a model is compiled automatically generates documentation.
-#+beamer: \onslide<+->
-#+attr_latex: :options style=shell
-#+begin_src markdown
-  iex> h Blocks
-  #@ \onslide<+->
-  # Blocks
-
-  Contains a Makina model called Blocks.
-
-  Specifies the mining facilities of the blockchain.
-
-  ## Commands
-
-  - mine stored at Blocks.Command.Mine
-  - block_number stored at Blocks.Command.BlockNumber
-
-  Detailed information about each command can be accessed inside the interpreter:
-
-  iex> h Blocks.Command.NAME
-
-  ## State attributes
-
-  - height
-
-  ...
-#+end_src
-
-** Auto generated documentation
-
-When a model is compiled automatically generates documentation.
-#+attr_latex: :options style=shell
-#+begin_src markdown
-  iex> h Blocks
-  iex> h Blocks.Command.Mine.post
-  #@ \onslide<2->
-  ...
-  ## Available variables
-
-  ### State
-
-  - state contains the complete dynamic state of the model.
-  - height attribute defined in the state declaration.
-
-  ### Arguments
-
-  - arguments contains all the generated arguments of the command.
-
-  ### Result
-
-  - result variable that contains the result of the command execution.
-#+end_src
-
-** Adding type information
-
-*** column
-:properties:
-:beamer_col: 0.58
-:end:
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-#+attr_latex: :options style=display, numbers=left
-#+begin_src elixir
-  defmodule Blocks do
-    use Makina, implemented_by: Etherex
-
-    state height: 0 #@\onslide<3->{:: integer()}
-
-    invariants non_neg_height: height >= 0
-
-    command block_number() #@\onslide<4->{:: \{:ok, integer()\}} do
-      post {:ok, height} == result
-    end
-
-    command mine() #@\onslide<4->{:: :ok} do
-      call Etherex.Time.mine()
-      next height: height + 1
-    end
-  end
-#+end_src
-#+beamer: \onslide<5->
-#+attr_latex: :options style=shell
-#+begin_src bash
-  $ mix gradient
-  #@\onslide<6->
-  The function call Etherex.block_number() on line 8
-  is expected to have type {:ok, quantity()}
-  but it has type {:ok, quantity()} | {:error, error()}
-#+end_src
-
-** Adding documentation
-
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-#+attr_latex: :options style=display
-#+begin_src elixir
-  defmodule Blocks do
-    use Makina, implemented_by: Etherex
-    #@ \onslide<3->
-    @moduledoc """
-    Specifies the mining facilities of the blockchain.
-    """
-    #@ \onslide<2->
-    state height: Etherex.block_number!() :: non_neg_integer()
-
-    invariants non_genesis_block: height >= 0
-
-    command block_number() :: {:ok, non_neg_integer()} do     #@ \onslide<3->
-      @moduledoc "Retrieves the block number from the blockchain."    #@ \onslide<2->
-      post {:ok, height} == result
-    end
-
-    command mine() :: :ok do    #@ \onslide<3->
-      @moduledoc "Mines a new block."    #@ \onslide<2->
-      call Etherex.Time.mine()
       next height: height + 1
     end
   end
@@ -729,7 +612,6 @@ Invariant doesn't hold even on the initial state!
     end
 
     command mine() do
-      call Etherex.Time.mine()
       next height: height + 1
     end
   end
@@ -751,6 +633,130 @@ Invariant doesn't hold even on the initial state!
   48.5 Blocks.block_number/0
 
   Finished in 8.6 seconds (0.00s async, 8.6s sync)
+#+end_src
+
+** Auto generated documentation
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+When a model is compiled automatically generates documentation.
+#+beamer: \onslide<+->
+#+attr_latex: :options style=shell
+#+begin_src markdown
+  iex> h Blocks
+  #@ \onslide<+->
+  # Blocks
+
+  Contains a Makina model called Blocks.
+
+  Specifies the mining facilities of the blockchain.
+
+  ## Commands
+
+  - mine stored at Blocks.Command.Mine
+  - block_number stored at Blocks.Command.BlockNumber
+
+  Detailed information about each command can be accessed inside the interpreter:
+
+  iex> h Blocks.Command.NAME
+
+  ## State attributes
+
+  - height
+
+  ...
+#+end_src
+
+** Auto generated documentation
+
+When a model is compiled automatically generates documentation.
+#+attr_latex: :options style=shell
+#+begin_src markdown
+  iex> h Blocks
+  iex> h Blocks.Command.Mine.post
+  #@ \onslide<2->
+  ...
+  ## Available variables
+
+  ### State
+
+  - state contains the complete dynamic state of the model.
+  - height attribute defined in the state declaration.
+
+  ### Arguments
+
+  - arguments contains all the generated arguments of the command.
+
+  ### Result
+
+  - result variable that contains the result of the command execution.
+#+end_src
+\vspace{25pt}
+
+** Adding documentation
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+    #@ \onslide<3->
+    @moduledoc """
+    Specifies the mining facilities of the blockchain.
+    """
+    #@ \onslide<2->
+    state height: Etherex.block_number!() :: non_neg_integer()
+
+    invariants non_genesis_block: height >= 0
+
+    command block_number() :: {:ok, non_neg_integer()} do     #@ \onslide<3->
+      @moduledoc "Retrieves the block number from the blockchain."    #@ \onslide<2->
+      post {:ok, height} == result
+    end
+
+    command mine() :: :ok do    #@ \onslide<3->
+      @moduledoc "Mines a new block."    #@ \onslide<2->
+      next height: height + 1
+    end
+  end
+#+end_src
+
+** Adding type information
+
+*** column
+:properties:
+:beamer_col: 0.58
+:end:
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+#+attr_latex: :options style=display, numbers=left
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+
+    state height: 0 #@\onslide<3->{:: integer()}
+
+    invariants non_neg_height: height >= 0
+
+    command block_number() #@\onslide<4->{:: \{:ok, integer()\}} do
+      post {:ok, height} == result
+    end
+
+    command mine() #@\onslide<4->{:: :ok} do
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+#+beamer: \onslide<5->
+#+attr_latex: :options style=shell
+#+begin_src bash
+  $ mix gradient
+  #@\onslide<6->
+  The function call Etherex.block_number() on line 8
+  is expected to have type {:ok, quantity()}
+  but it has type {:ok, quantity()} | {:error, error()}
 #+end_src
 
 * Accounts model
@@ -1141,7 +1147,6 @@ We need to change:
   end
 
 #+end_src
-
 
 
 ** Running the tests
