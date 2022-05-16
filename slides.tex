@@ -1,4 +1,4 @@
-% Created 2022-05-16 Mon 19:26
+% Created 2022-05-16 Mon 22:13
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt]{beamer}
 \usepackage[utf8]{inputenc}
@@ -78,8 +78,8 @@
 \whitetheme
 
 \section{Introduction}
-\label{sec:org105107a}
-\begin{frame}[label={sec:org08ef247}]{The problem}
+\label{sec:orgff941b4}
+\begin{frame}[label={sec:org86d1a9d}]{The problem}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \begin{center}
@@ -104,12 +104,14 @@ files & blank & comment & code\\
 \end{frame}
 
 \section{Introduction to PBT}
-\label{sec:org41628fa}
-\begin{frame}[label={sec:org422a3de},fragile]{Introduction to PBT}
+\label{sec:org9143359}
+\begin{frame}[label={sec:org3804359},fragile]{Introduction to PBT}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
+\onslide<+->
+\onslide<+->
 Writing unit-tests is hard and time-consuming:
-
+\onslide<+->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 reverse([]) == []
@@ -117,54 +119,64 @@ reverse([1]) == [1]
 reverse([1 ,2]) == [2 ,1]
 ...
 \end{lstlisting}
-
+\vspace{10pt}
+\onslide<+->
 Property-Based Testing (PBT) philosophy:
-
+\onslide<+->
 \begin{quote}
 Don't write tests, generate them.
 \end{quote}
 
+
+\onslide<+->
 A test execution in PBT consists of:
+\onslide<+->
 \begin{enumerate}
 \item Data generation.
+\onslide<+->
 \item Property checking.
+\onslide<+->
 \item An shrinking strategy (if the property doesn't hold).
+\onslide<+->
 \end{enumerate}
 \end{column}
 
 \begin{column}{0.48\columnwidth}
 A property:
-
+\onslide<+->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 forall list <- list() do
   list == reverse(reverse(list))
 end
 \end{lstlisting}
-
+\onslide<+->
 In each test:
 \begin{enumerate}
 \item \texttt{list()} generates a random list:
+\onslide<+->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 [8 ,10 ,6] ...
 \end{lstlisting}
-
 \item Checks the property:
+\onslide<+->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 [8, 10, 6] == reverse(reverse([8, 10, 6]))
 \end{lstlisting}
-
+\onslide<+->
 \item If the property doesn't hold returns a counter-example.
 \end{enumerate}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orge1d3435},fragile]{Testing \emph{stateful} programs}
+\begin{frame}[label={sec:org923db94},fragile]{Testing \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
+\onslide<+->
+\onslide<+->
 Imagine a simple counter:
 \begin{center}
 \begin{tabular}{l l c}
@@ -177,7 +189,7 @@ Command & Returns\\
 \end{tabular}
 \end{center}
 
-
+\onslide<+->
 Unit test:
 
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
@@ -190,6 +202,7 @@ Unit test:
 \end{column}
 
 \begin{column}{0.58\columnwidth}
+\onslide<+->
 This test can be represented:
 \begin{figure}
 \begin{center}
@@ -208,20 +221,25 @@ This test can be represented:
   \end{adjustbox}
 \end{center}
 \end{figure}
-
+\onslide<+->
 To successfully test this program we need to:
+\onslide<+->
 \begin{itemize}
 \item Generate sequences of commands.
+\onslide<+->
 \item An internal state to track the changes in the program.
+\onslide<+->
 \item A way to interact with the program under test.
 \end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org56ad14d},fragile]{PBT of \emph{stateful} programs}
+\begin{frame}[label={sec:orgf65b94b},fragile]{PBT of \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.58\columnwidth}
+\onslide<+->
+\onslide<+->
 Basic property of \emph{stateful} programs:
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -229,8 +247,9 @@ forall cmds <- commands(Counter) do
   :ok == run_commands(Counter, cmds)
 end
 \end{lstlisting}
-
+\onslide<+->
 where:
+\onslide<+->
 \begin{itemize}
 \item \texttt{commands/1} generates sequences commands:
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
@@ -238,13 +257,13 @@ where:
 [start(0), inc(), get(), stop()]
 ...
 \end{lstlisting}
-
+\onslide<+->
 \item \texttt{run\_commands} executes the generated sequence.
 \end{itemize}
 \end{column}
 
-
 \begin{column}{0.38\columnwidth}
+\onslide<+->
 \begin{figure}
 \begin{center}
   \begin{adjustbox}{max width=\textwidth}
@@ -277,40 +296,48 @@ where:
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org004c5f3},fragile]{PBT state machines}
+\begin{frame}[label={sec:orgdccceda},fragile]{PBT state machines}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
+\onslide<+->
+\onslide<+->
 Introduced by \texttt{Erlang QuickCheck}.
-
+\onslide<+->
 \vspace{10pt}
+
 
 Adopted by other PBT libraries such as \texttt{Proper}.
-
+\onslide<+->
 \vspace{10pt}
 
-These libraries provide a DSL to model the system.
 
+These libraries provide a DSL to model the system.
+\onslide<+->
 \vspace{10pt}
 
 Proven effectiveness.
 \end{column}
-
-
 \begin{column}{0.48\columnwidth}
+\onslide<+->
 Very slow adoption.
-
 \vspace{10pt}
 
+\onslide<+->
 Why?
-
 \vspace{10pt}
 
+\onslide<+->
 Problems:
+\onslide<+->
 \begin{itemize}
 \item Hard to write.
+\onslide<+->
 \item Cryptic errors.
+\onslide<+->
 \item Usually buggy.
+\onslide<+->
 \item Code reuse is very hard.
+\onslide<+->
 \item Hard to maintain.
 \end{itemize}
 \end{column}
@@ -318,44 +345,59 @@ Problems:
 \end{frame}
 
 \section{Introduction to Makina and running example}
-\label{sec:org75be24b}
-\begin{frame}[label={sec:orgbfeb711},fragile]{Makina}
+\label{sec:org2d1a99b}
+\begin{frame}[label={sec:orga1b4e10},fragile]{Makina}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
+\onslide<+->
 \texttt{Makina} is a DSL to write PBT state machines.
+\onslide<+->
 \begin{itemize}
 \item Fully compatible with \texttt{Erlang QuickCheck} and \texttt{PropEr}.
+\onslide<+->
 \item Improved usability.
+\onslide<+->
 \item Better error messages.
+\onslide<+->
 \item Improved error detection in models.
 \end{itemize}
 \end{column}
 
 \begin{column}{0.48\columnwidth}
+\onslide<+->
 A Makina model contains:
+\onslide<+->
 \begin{itemize}
 \item \texttt{state}
+\onslide<+->
 \item \texttt{command}
+\onslide<+->
 \item \texttt{invariants}
+\onslide<+->
 \end{itemize}
 
 \vspace{10pt}
 
 Provides code reuse mechanisms:
+\onslide<+->
 \begin{itemize}
 \item imports
-\item \texttt{extends}
+\onslide<+->
+\item extends
+\onslide<+->
 \item composition
 \end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgac7193f},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:org257f21c},fragile]{Ethereum Blockchain}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
+\onslide<+->
+\onslide<+->
 A blockchain is a distributed ledger that enables peer-to-peer transactions.
-
+\onslide<+->
 \begin{figure}
 \begin{adjustbox}{max width=\textwidth}
   \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node
@@ -415,22 +457,26 @@ A blockchain is a distributed ledger that enables peer-to-peer transactions.
 \end{column}
 
 \begin{column}{0.48\columnwidth}
+\onslide<+->
 Ethereum is one of the largest blockchains.
-
+\onslide<+->
 \vspace{10pt}
 
 Introduced smart-contracts.
-
+\onslide<+->
 \vspace{10pt}
 
 \texttt{etherex} a library to interact with Ethereum using Elixir.
-
+\onslide<+->
 \vspace{10pt}
 
 The properties to test:
+\onslide<+->
 \begin{enumerate}
 \item Mining blocks.
+\onslide<+->
 \item Account access.
+\onslide<+->
 \item Transfers between accounts.
 \end{enumerate}
 \end{column}
@@ -438,8 +484,64 @@ The properties to test:
 \end{frame}
 
 \section{Blocks model}
-\label{sec:orgc428aec}
-\begin{frame}[label={sec:org18d2040},fragile]{Mining blocks}
+\label{sec:org0451f93}
+\begin{frame}[label={sec:org4841276},fragile]{Mining blocks}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+\onslide<+->
+\onslide<+->
+The API:
+\onslide<+->
+\begin{center}
+\begin{tabular}{ll}
+Command & Returns\\
+\hline
+\texttt{mine/0} & \texttt{:ok}\\
+\texttt{block\_number/0} & \texttt{\{:ok, integer()\}}\\
+\end{tabular}
+\end{center}
+\onslide<+->
+\vspace{10pt}
+\begin{enumerate}
+\item create module.
+\onslide<+->
+\item import \texttt{Makina}.
+\onslide<+->
+\item define state.
+\onslide<+->
+\item define invariants.
+\onslide<+->
+\item define commands.
+\onslide<+->
+\item introduce the callbacks.
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.48\columnwidth}
+\onslide<4->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Blocks do #@ \onslide<5->
+  use Makina, implemented_by: Etherex
+  #@ \onslide<6->
+  state height: 0
+  #@ \onslide<7->
+  invariants non_neg_height: height > 0
+  #@ \onslide<8->
+  command block_number() do #@ \onslide<9->
+    pre true #@ \onslide<10->
+    args [] #@ \onslide<11->
+    valid_args true #@ \onslide<12->
+    call Etherex.block_number #@ \onslide<13->
+    next [] #@ \onslide<14->
+    post {:ok, height} == result #@ \onslide<15->
+  end
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org0637cdf},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API:
@@ -453,12 +555,14 @@ Command & Returns\\
 \end{tabular}
 \end{center}
 
-\vspace{0.5cm}
-
+\vspace{10pt}
 \begin{enumerate}
-\item state?
-\item invariants?
-\item commands?
+\item create module.
+\item import \texttt{Makina}.
+\item define state.
+\item define invariants.
+\item define commands.
+\item introduce the callbacks.
 \end{enumerate}
 \end{column}
 
@@ -475,9 +579,8 @@ defmodule Blocks do
   command block_number() do
     post {:ok, height} == result
   end
-
-  command mine() do
-    call Etherex.Time.mine()
+  #@ \onslide<2->
+  command mine() :: :ok do
     next height: height + 1
   end
 end
@@ -486,104 +589,15 @@ end
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org82a69c7},fragile]{Consulting callback docs}
- \lstset{language=markdown,label= ,caption= ,captionpos=b,numbers=none,style=shell}
-\begin{lstlisting}
-iex> h Blocks.Command.Mine.post
-
-# def post(state, arguments, result)
-
-@spec post(dynamic_state(), arguments(), result()) :: boolean()
-
-This callback contains a predicate that should be true after the execution of
-mine
-
-## Available variables
-
-### State
-
-- state contains the complete dynamic state of the model.
-- height attribute defined in the state declaration.
-
-### Arguments
-
-- arguments contains all the generated arguments of the command.
-
-### Result
-
-- result variable that contains the result of the command execution.
-
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[label={sec:org1a9de35},fragile]{Adding type information}
- \begin{columns}
-\begin{column}{0.68\columnwidth}
-\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
-\begin{lstlisting}
-defmodule Blocks do
-  use Makina, implemented_by: Etherex
-
-  state height: 0 :: integer()
-
-  invariants non_neg_height: height >= 0
-
-  command block_number() :: {:ok, integer()} do
-    post {:ok, height} == result
-  end
-
-  command mine() :: :ok do
-    call Etherex.Time.mine()
-    next height: height + 1
-  end
-end
-\end{lstlisting}
-
-\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
-\begin{lstlisting}
-$ mix gradient
-
-The function call Etherex.block_number() on line 8 is expected
-to have type result() but it has type {:ok, quantity()} | {:error, error()}
-\end{lstlisting}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[label={sec:orgf5a984c},fragile]{Adding documentation}
- \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
-\begin{lstlisting}
-defmodule Blocks do
-  use Makina, implemented_by: Etherex
-
-  @moduledoc """
-  Specifies the mining facilities of the blockchain.
-  """
-
-  state height: Etherex.block_number!() :: non_neg_integer()
-
-  invariants non_genesis_block: height >= 0
-
-  command block_number() :: {:ok, non_neg_integer()} do
-    @moduledoc "Retrieves the block number from the blockchain."
-    post {:ok, height} == result
-  end
-
-  command mine() :: :ok do
-    @moduledoc "Mines a new block."
-    call Etherex.Time.mine()
-    next height: height + 1
-  end
-end
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[label={sec:org527d4d6},fragile]{Consulting module docs}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:org1d0cdc4},fragile]{Auto generated documentation}
+ \onslide<+->
+\onslide<+->
+When a model is compiled automatically generates documentation.
+\onslide<+->
+\lstset{language=markdown,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 iex> h Blocks
-
+#@ \onslide<+->
 # Blocks
 
 Contains a Makina model called Blocks.
@@ -607,12 +621,106 @@ iex> h Blocks.Command.NAME
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org127c2d8},fragile]{Running the test}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:orgc48a17d},fragile]{Auto generated documentation}
+ When a model is compiled automatically generates documentation.
+\lstset{language=markdown,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
-$ mix test
-Starting Quviq QuickCheck version 1.45.1
+iex> h Blocks
+iex> h Blocks.Command.Mine.post
+#@ \onslide<2->
+...
+## Available variables
 
+### State
+
+- state contains the complete dynamic state of the model.
+- height attribute defined in the state declaration.
+
+### Arguments
+
+- arguments contains all the generated arguments of the command.
+
+### Result
+
+- result variable that contains the result of the command execution.
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[label={sec:org644e6e8},fragile]{Adding type information}
+ \begin{columns}
+\begin{column}{0.58\columnwidth}
+\onslide<+->
+\onslide<+->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
+\begin{lstlisting}
+defmodule Blocks do
+  use Makina, implemented_by: Etherex
+
+  state height: 0 #@\onslide<3->{:: integer()}
+
+  invariants non_neg_height: height >= 0
+
+  command block_number() #@\onslide<4->{:: \{:ok, integer()\}} do
+    post {:ok, height} == result
+  end
+
+  command mine() #@\onslide<4->{:: :ok} do
+    call Etherex.Time.mine()
+    next height: height + 1
+  end
+end
+\end{lstlisting}
+\onslide<5->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{lstlisting}
+$ mix gradient
+#@\onslide<6->
+The function call Etherex.block_number() on line 8
+is expected to have type {:ok, quantity()}
+but it has type {:ok, quantity()} | {:error, error()}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org1f2ad73},fragile]{Adding documentation}
+ \onslide<+->
+\onslide<+->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Blocks do
+  use Makina, implemented_by: Etherex
+  #@ \onslide<3->
+  @moduledoc """
+  Specifies the mining facilities of the blockchain.
+  """
+  #@ \onslide<2->
+  state height: Etherex.block_number!() :: non_neg_integer()
+
+  invariants non_genesis_block: height >= 0
+
+  command block_number() :: {:ok, non_neg_integer()} do     #@ \onslide<3->
+    @moduledoc "Retrieves the block number from the blockchain."    #@ \onslide<2->
+    post {:ok, height} == result
+  end
+
+  command mine() :: :ok do    #@ \onslide<3->
+    @moduledoc "Mines a new block."    #@ \onslide<2->
+    call Etherex.Time.mine()
+    next height: height + 1
+  end
+end
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[label={sec:orgf18ed96},fragile]{Running the test}
+ \onslide<+->
+\onslide<+->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{lstlisting}
+$ mix test #@ \onslide<+->
+Starting Quviq QuickCheck version 1.45.1
+#@ \onslide<+->
 Failed! After 1 tests.
 [
     Blocks.block_number/0,
@@ -635,12 +743,11 @@ Finished in 0.1 seconds (0.00s async, 0.1s sync)
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[label={sec:orgc019c23},fragile]{Fixing the model}
+\begin{frame}[label={sec:orgb0eb6b1},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
-The error message:
-
+\onslide<+->
+\onslide<+->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 Postcondition crashed:
@@ -654,14 +761,16 @@ Shrinking x.(1 times)
 Last state: %{height: 0}
 \end{lstlisting}
 
+\onslide<+->
 What happened?
 
 \vspace{10pt}
-
+\onslide<+->
 Invariant doesn't hold even on the initial state!
 \end{column}
 
 \begin{column}{0.48\columnwidth}
+\onslide<2->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
@@ -669,7 +778,7 @@ defmodule Blocks do
 
   state height: 0
 
-  invariants non_neg_height: height >= 0
+  invariants non_neg_height: height >#@\onslide<5->{=} 0
 
   command block_number() do
     post {:ok, height} == result
@@ -685,12 +794,14 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orga73829b},fragile]{Running the test}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:org6246bbe},fragile]{Running the test}
+ \onslide<+->
+\onslide<+->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
-$ mix test
+$ mix test #@\onslide<+->
 Starting Quviq QuickCheck version 1.45.1
-
+#@\onslide<+->
 ....................................................................................................
 OK, passed 100 tests
 
@@ -702,10 +813,12 @@ Finished in 8.6 seconds (0.00s async, 8.6s sync)
 \end{frame}
 
 \section{Accounts model}
-\label{sec:org12103d1}
-\begin{frame}[label={sec:org61813fc},fragile]{Account access}
+\label{sec:org3a1b460}
+\begin{frame}[label={sec:orge0e3d10},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
+\onslide<+->
+\onslide<+->
 The API:
 
 \begin{center}
@@ -715,43 +828,52 @@ Command & Returns\\
 \texttt{get\_balance/1} & \texttt{:ok}\\
 \end{tabular}
 \end{center}
-
+\onslide<+->
 \vspace{0.5cm}
-
 \begin{enumerate}
-\item state?
-\item invariants?
-\item commands?
+\item create module.
+\onslide<+->
+\item import \texttt{Makina}.
+\onslide<+->
+\item define state.
+\onslide<+->
+\item define invariants.
+\onslide<+->
+\item define commands.
 \end{enumerate}
 \end{column}
 
 \begin{column}{0.68\columnwidth}
+\onslide<3->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
-defmodule Accounts do
+defmodule Accounts do #@\onslide<4->
   use Makina, implemented_by: Etherex
 
   alias Etherex.Type
-
+  #@\onslide<5->
   state accounts: Etherex.accounts!() :: [Type.address()],
-    balances: Etherex.balances!() :: %{Type.address() => integer()}
-
+	balances: Etherex.balances!() :: %{Type.address() => integer()}
+  #@\onslide<7->
   command get_balance(account :: Type.address())
-  :: {:ok, Type.quantity()} | {:error, Type.error()} do
+      :: {:ok, Type.quantity()} | {:error, Type.error()} do
     pre accounts != []
     post {:ok, balances[account]} == result
-  end
+  end #@\onslide<4->
 end
 \end{lstlisting}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9e60420},fragile]{Running the tests}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:orgbd3065c},fragile]{Running the test}
+ \onslide<+->
+\onslide<+->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
+$ mix test #@\onslide<+->
 Starting Quviq QuickCheck version 1.45.1
-
+#@\onslide<+->
 1) property Accounts (ExamplesTest)
    ** (Makina.Error) argument `account` missing in command get_balance
    stacktrace:
@@ -761,13 +883,13 @@ Starting Quviq QuickCheck version 1.45.1
    Finished in 0.1 seconds (0.00s async, 0.1s sync)
 
    1 properties, 1 failure
-
-   Randomized with seed 763550
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org4ccfd26},fragile]{Fixing the accounts model}
- \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:orgc045987},fragile]{Fixing the model}
+ \onslide<+->
+\onslide<+->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Accounts do
   use Makina, implemented_by: Etherex
@@ -775,12 +897,12 @@ defmodule Accounts do
   alias Etherex.Type
 
   state accounts: Etherex.accounts!() :: [Type.address()],
-    balances: Etherex.balances!() :: %{Type.address() => integer()}
+	balances: Etherex.balances!() :: %{Type.address() => integer()}
 
   command get_balance(account :: Type.address()) ::
-  {:ok, Type.quantity()} | {:error, Type.error()} do
+      {:ok, Type.quantity()} | {:error, Type.error()} do
     pre accounts != []
-    args account: oneof(accounts)
+    #@\onslide<3->{args account: oneof(accounts)}
     valid_args account in accounts
     post {:ok, balances[account]} == result
   end
@@ -788,12 +910,14 @@ end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:orge1c1cd6},fragile]{Running the test}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:org9944d10},fragile]{Running the test}
+ \onslide<+->
+\onslide<+->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
-$ mix test
+$ mix test #@\onslide<+->
 Starting Quviq QuickCheck version 1.45.1
-
+#@\onslide<+->
 ....................................................................................................
 OK, passed 100 tests
 
@@ -805,12 +929,14 @@ Finished in 4.6 seconds (0.00s async, 4.6s sync)
 \end{frame}
 
 \section{Transactions model}
-\label{sec:orgd8965e7}
-\begin{frame}[label={sec:orga57eed2},fragile]{Generating transactions}
+\label{sec:orgf3d4db9}
+\begin{frame}[label={sec:org100d503},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
+\onslide<+->
+\onslide<+->
 The API to generate and check transactions:
-
+\onslide<+->
 \begin{center}
 \begin{tabular}{ll}
 Command & Returns\\
@@ -821,9 +947,9 @@ Command & Returns\\
 \texttt{transfer/3} & \texttt{\{:ok, hash()\}}\\
 \end{tabular}
 \end{center}
-
+\onslide<+->
 We can compose \texttt{Blocks} and \texttt{Accounts}!
-
+\onslide<+->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -832,25 +958,26 @@ defmodule Transactions do
     implemented_by: Etherex
 end
 \end{lstlisting}
-
+\onslide<+->
 Generates a model \texttt{Transactions.Composed}.
 \end{column}
 
 \begin{column}{0.48\columnwidth}
+\onslide<+->
 State is the union:
 \begin{itemize}
 \item \texttt{:height}
 \item \texttt{:accounts}
 \item \texttt{:balances}
 \end{itemize}
-
+\onslide<+->
 \vspace{10pt}
 
 Invariants are the union:
 \begin{itemize}
 \item \texttt{:non\_genesis\_block}
 \end{itemize}
-
+\onslide<+->
 \vspace{10pt}
 
 Commands are the union:
@@ -863,38 +990,43 @@ Commands are the union:
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgbb81241},fragile]{Generating transactions}
- \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:orgff41bac},fragile]{Generating transactions}
+ \onslide<+->
+\onslide<+->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
   use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
   alias Etherex.Type
-
+  #@\onslide<+->
   command transfer(
-	    from :: Type.address(),
-	    to :: Type.address(),
-	    value :: Type.quantity()
-	  ) :: {:ok, Type.hash()} do
-    pre accounts != []
-    args from: oneof(accounts), to: oneof(accounts), value: pos_integer()
-    valid_args from in accounts and to in accounts
-
-    next balances: update_balances(balances, from, to, value)
+    from :: Type.address(),
+    to :: Type.address(),
+    value :: Type.quantity()
+  ) :: {:ok, Type.hash()} do #@\onslide<+->
+    pre accounts != []#@\onslide<+->
+    args from: oneof(accounts), to: oneof(accounts), value: pos_integer()#@\onslide<+->
+    valid_args from in accounts and to in accounts#@\onslide<+->
+    next balances: update_balances(balances, from, to, value) #@\onslide<3->
   end
-
+  #@\onslide<+->
   def update_balances(balances, from, to, value) do
-    balances |> Map.update!(from, &(&1 - value)) |> Map.update!(to, &(&1 + value))
-  end
+    balances
+    |> Map.update!(from, fn balance - value end)
+    |> Map.update!(to, fn balance + value end)
+  end#@\onslide<2->
 end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org3401d62},fragile]{Running the test}
- \lstset{language=display,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:org895bbe3},fragile]{Running the test}
+ \onslide<+->
+\onslide<+->
+\lstset{language=display,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
-$ mix test
+$ mix test #@\onslide<+->
 Starting Quviq QuickCheck version 1.45.1
-
+#@\onslide<+->
 Failed! After 1 tests.
 [
     Transactions.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
@@ -911,13 +1043,14 @@ Postcondition failed.
 
 ...
 
-Shrinking xxx.xx.x.x.x(4 times)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org108f2b8},fragile]{Running the test}
+\begin{frame}[label={sec:org1e03056},fragile]{Running the test}
  \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
+Shrinking xxx.xx.x.x.x(4 times)
+#@\onslide<+->\onslide<+->
 [
     Transaction.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
 			 "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
@@ -940,8 +1073,10 @@ Finished in 0.8 seconds (0.00s async, 0.8s sync)
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:orgbc97d8f},fragile]{Fixing the transactions model}
- \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{frame}[label={sec:org88dd8ed},fragile]{Fixing the transactions model}
+ \onslide<+->
+\onslide<+->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
   use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
@@ -957,7 +1092,7 @@ defmodule Transactions do
     valid_args from in accounts and to in accounts
 
     next balances: update_balances(balances, from, to, value),
-	 height: height + 1
+	 #@\onslide<+->{height: height + 1}
   end
 
   def update_balances(balances, from, to, value) do
@@ -967,12 +1102,14 @@ end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:orgf753671},fragile]{Running the test}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{frame}[label={sec:org08a6de3},fragile]{Running the test}
+ \onslide<+->
+\onslide<+->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
-$ mix test --only transactions
+$ mix test #@\onslide<+->
 Starting Quviq QuickCheck version 1.45.1
-
+#@\onslide<+->
 ..Failed! After 2 tests.
 [
     ...
@@ -983,7 +1120,14 @@ Postcondition failed.
 
 ...
 
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[label={sec:org637e603},fragile]{Running the tests}
+ \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{lstlisting}
 Shrinking xxxx.x.x.x.x.xx.x(6 times)
+#@\onslide<+->\onslide<+->
 [
     Transactions.transfer("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
 			  "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
@@ -993,99 +1137,99 @@ Shrinking xxxx.x.x.x.x.xx.x(6 times)
 
 ================================================================================
 Postcondition failed.
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[label={sec:org8a8cd6f},fragile]{Running the tests}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
-\begin{lstlisting}
-Commands:
-
-...
 
 Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
-  -> {:ok, 999999999999999999999999979000}
+-> {:ok, 999999999999999999999999979000}
 
 Last state:
-%{
-  balances: %{
-    "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1" => 1000000000000000000000000000000,
+%{ balances: %{ "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1" => 1000000000000000000000000000000,
+	...
+    },
     ...
-  },
-  ...
 }
 Finished in 1.1 seconds (0.00s async, 1.1s sync)
-3 properties, 1 failure
+1 properties, 1 failure
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org226cd63},fragile]{Fixing the transactions model}
+\begin{frame}[label={sec:org0d1c3a6},fragile]{Fixing the transactions model}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.38\columnwidth}
+\onslide<+->
+\onslide<+->
 Our model does not consider gas consumption.
 
 \vspace{10pt}
-
+\onslide<+->
 We need to change:
 \begin{enumerate}
 \item A symbolic attribute to store transactions.
+\onslide<+->
 \item \texttt{balances} needs to be symbolic.
+\onslide<+->
 \item \texttt{get\_balance/0} precondition.
-\item a new command \texttt{gas\_cost/1}.
+\onslide<+->
+\end{enumerate}
+\end{column}
 
+\begin{column}{0.58\columnwidth}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
-  ...   
+  ...
   state transactions: [] :: [symbolic(Type.hash())]
+	balances: super()
+	  :: symbolic(%{Type.address() => integer()})
 
   command get_balance() do
-    pre IO.inspect(transactions) == []
+    pre transactions == []
   end
 
   command transfer(...) do
     ...
-    next transactions: [symbolic(elem(result, 1)) | transactions],
-	 ...   
+    next transactions: [symbolic(elem(result, 1))
+			| transactions],
+	 ...
   end
-\end{lstlisting}
-\end{enumerate}
-\end{column}
-
-\begin{column}{0.48\columnwidth}
-\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
-\begin{lstlisting}
-
-
-  command gas_cost(hash :: Type.hash()) :: {:ok, Type.quantity()} do
-    pre transactions != []
-    args hash: oneof(transactions)
-    valid_args hash in transactions
-    next do
-      from = symbolic(Kernel.elem(result, 0))
-      gas = symbolic(Kernel.elem(result, 1))
-      [
-	transactions: List.delete(transactions, hash),
-	balances: discount_gas(balances, from, gas)
-		  |> symbolic()
-      ]
-    end
-  end
-end
-
-
-
 \end{lstlisting}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orga2083bb},fragile]{Running the tests}
- \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
-\begin{lstlisting}
-$ mix test
-Starting Quviq QuickCheck version 1.45.1
+\begin{frame}[label={sec:org757fd16},fragile]{Fixing the transactions model}
+ \onslide<+->
+\onslide<+->
+\texttt{gas\_cost/1} consults the consumed command and computes the new balances.
 
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+command gas_cost(hash :: Type.hash()) :: {Type.address(), Type.quantity()} do
+  pre transactions != []
+  args hash: oneof(transactions)
+  valid_args hash in transactions
+  next do
+    from = symbolic(elem(result, 0))
+    gas = symbolic(elem(result, 1))
+    [
+      transactions: List.delete(transactions, hash),
+      balances: discount_gas(balances, from, gas) |> symbolic()
+    ]
+  end
+end
+
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[label={sec:orgd5c3d32},fragile]{Running the tests}
+ \onslide<+->
+\onslide<+->
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{lstlisting}
+$ mix test #@\onslide<+->
+Starting Quviq QuickCheck version 1.45.1
+#@\onslide<+->
 ....................................................................................................
 OK, passed 100 tests
 
@@ -1100,7 +1244,6 @@ Finished in 15.8 seconds (0.00s async, 15.8s sync)
 \end{lstlisting}
 \end{frame}
 
-
 \section{Conclusions}
-\label{sec:org40d8a05}
+\label{sec:org5af9426}
 \end{document}

@@ -63,14 +63,14 @@
 
 * Introduction to PBT
 ** Introduction to PBT
-
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Writing unit-tests is hard and time-consuming:
-
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   reverse([]) == []
@@ -78,54 +78,61 @@ Writing unit-tests is hard and time-consuming:
   reverse([1 ,2]) == [2 ,1]
   ...
 #+end_src
-
+\vspace{10pt}
+#+beamer: \onslide<+->
 Property-Based Testing (PBT) philosophy:
-
+#+beamer: \onslide<+->
 #+begin_quote
 Don't write tests, generate them.
 #+end_quote
 
+
+#+beamer: \onslide<+->
 A test execution in PBT consists of:
-1. Data generation.
-2. Property checking.
-3. An shrinking strategy (if the property doesn't hold).
+#+beamer: \onslide<+->
+  1. Data generation.
+     #+beamer: \onslide<+->
+  2. Property checking.
+     #+beamer: \onslide<+->
+  3. An shrinking strategy (if the property doesn't hold).
+     #+beamer: \onslide<+->
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
 A property:
-
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   forall list <- list() do
     list == reverse(reverse(list))
   end
 #+end_src
-
+#+beamer: \onslide<+->
 In each test:
 1. =list()= generates a random list:
+   #+beamer: \onslide<+->
    #+attr_latex: :options style=display
    #+begin_src elixir
-     [8 ,10 ,6] ...
-   #+end_src
-
+  [8 ,10 ,6] ...
+#+end_src
 2. Checks the property:
+   #+beamer: \onslide<+->
    #+attr_latex: :options style=display
    #+begin_src elixir
      [8, 10, 6] == reverse(reverse([8, 10, 6]))
    #+end_src
-
+   #+beamer: \onslide<+->
 3. If the property doesn't hold returns a counter-example.
 
 ** Testing /stateful/ programs
-
 *** column
 :properties:
 :beamer_col: 0.38
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Imagine a simple counter:
 #+attr_latex: :align l l c
 | Command | Returns            |
@@ -135,7 +142,7 @@ Imagine a simple counter:
 | =inc/0=   | =:ok=                |
 | =get/0=   | =integer()=          |
 
-
+#+beamer: \onslide<+->
 Unit test:
 
 #+attr_latex: :options style=display
@@ -151,6 +158,7 @@ Unit test:
 :beamer_col: 0.58
 :end:
 
+#+beamer: \onslide<+->
 This test can be represented:
 #+begin_figure latex
 \begin{center}
@@ -169,19 +177,22 @@ This test can be represented:
   \end{adjustbox}
 \end{center}
 #+end_figure
-
+#+beamer: \onslide<+->
 To successfully test this program we need to:
+   #+beamer: \onslide<+->
 - Generate sequences of commands.
+   #+beamer: \onslide<+->
 - An internal state to track the changes in the program.
+   #+beamer: \onslide<+->
 - A way to interact with the program under test.
 
 ** PBT of /stateful/ programs
-
 *** column
 :properties:
 :beamer_col: 0.58
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Basic property of /stateful/ programs:
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -189,23 +200,23 @@ Basic property of /stateful/ programs:
     :ok == run_commands(Counter, cmds)
   end
 #+end_src
-
+#+beamer: \onslide<+->
 where:
+#+beamer: \onslide<+->
 - =commands/1= generates sequences commands:
   #+attr_latex: :options style=display
   #+begin_src elixir
     [start(0), inc(), get(), stop()]
     ...
   #+end_src
-
+  #+beamer: \onslide<+->
 - =run_commands= executes the generated sequence.
-
 
 *** column
 :properties:
 :beamer_col: 0.38
 :end:
-
+#+beamer: \onslide<+->
 #+begin_figure latex
 \begin{center}
   \begin{adjustbox}{max width=\textwidth}
@@ -236,45 +247,50 @@ where:
 #+end_figure
 
 ** PBT state machines
-
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Introduced by =Erlang QuickCheck=.
-
+#+beamer: \onslide<+->
 \vspace{10pt}
+
 
 Adopted by other PBT libraries such as =Proper=.
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
-These libraries provide a DSL to model the system.
 
+These libraries provide a DSL to model the system.
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 Proven effectiveness.
-
-
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
 Very slow adoption.
-
 \vspace{10pt}
 
+#+beamer: \onslide<+->
 Why?
-
 \vspace{10pt}
 
+#+beamer: \onslide<+->
 Problems:
+#+beamer: \onslide<+->
 - Hard to write.
+  #+beamer: \onslide<+->
 - Cryptic errors.
+  #+beamer: \onslide<+->
 - Usually buggy.
+  #+beamer: \onslide<+->
 - Code reuse is very hard.
+  #+beamer: \onslide<+->
 - Hard to maintain.
 
 * Introduction to Makina and running example
@@ -284,28 +300,39 @@ Problems:
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
 =Makina= is a DSL to write PBT state machines.
+#+beamer: \onslide<+->
 - Fully compatible with =Erlang QuickCheck= and =PropEr=.
+  #+beamer: \onslide<+->
 - Improved usability.
+  #+beamer: \onslide<+->
 - Better error messages.
+  #+beamer: \onslide<+->
 - Improved error detection in models.
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
 A Makina model contains:
+#+beamer: \onslide<+->
 - =state=
+  #+beamer: \onslide<+->
 - =command=
+  #+beamer: \onslide<+->
 - =invariants=
+  #+beamer: \onslide<+->
 
 \vspace{10pt}
 
 Provides code reuse mechanisms:
+#+beamer: \onslide<+->
 - imports
-- =extends=
+  #+beamer: \onslide<+->  
+- extends
+  #+beamer: \onslide<+->
 - composition
 
 ** Ethereum Blockchain
@@ -314,9 +341,10 @@ Provides code reuse mechanisms:
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 A blockchain is a distributed ledger that enables peer-to-peer transactions.
-
+#+beamer: \onslide<+->
 #+begin_figure latex
 \begin{adjustbox}{max width=\textwidth}
   \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node
@@ -378,25 +406,82 @@ A blockchain is a distributed ledger that enables peer-to-peer transactions.
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
 Ethereum is one of the largest blockchains.
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 Introduced smart-contracts.
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 =etherex= a library to interact with Ethereum using Elixir.
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 The properties to test:
+#+beamer: \onslide<+->
 1. Mining blocks.
+   #+beamer: \onslide<+->
 2. Account access.
+   #+beamer: \onslide<+->
 3. Transfers between accounts.
 
 * Blocks model
+** Mining blocks
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+The API:
+#+beamer: \onslide<+->
+| Command        | Returns          |
+|----------------+------------------|
+| =mine/0=         | =:ok=              |
+| =block_number/0= | ={:ok, integer()}= |
+#+beamer: \onslide<+->
+\vspace{10pt}
+1. create module.
+   #+beamer: \onslide<+->
+2. import =Makina=.
+   #+beamer: \onslide<+->
+3. define state.
+   #+beamer: \onslide<+->
+4. define invariants.
+   #+beamer: \onslide<+->
+5. define commands.
+   #+beamer: \onslide<+->
+6. introduce the callbacks.
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+#+beamer: \onslide<4->
+#+attr_latex: :options style=display
+#+begin_src elixir
+    defmodule Blocks do #@ \onslide<5->
+      use Makina, implemented_by: Etherex
+      #@ \onslide<6->
+      state height: 0
+      #@ \onslide<7->
+      invariants non_neg_height: height > 0
+      #@ \onslide<8->
+      command block_number() do #@ \onslide<9->
+        pre true #@ \onslide<10->
+        args [] #@ \onslide<11->
+        valid_args true #@ \onslide<12->
+        call Etherex.block_number #@ \onslide<13->
+        next [] #@ \onslide<14->
+        post {:ok, height} == result #@ \onslide<15->
+      end
+#+end_src
+
 ** Mining blocks
 
 *** column
@@ -411,17 +496,18 @@ The API:
 | =mine/0=         | =:ok=              |
 | =block_number/0= | ={:ok, integer()}= |
 
-\vspace{0.5cm}
-
-1. state?
-2. invariants?
-3. commands?
+\vspace{10pt}
+1. create module.
+2. import =Makina=.
+3. define state.
+4. define invariants.
+5. define commands.
+6. introduce the callbacks.
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Blocks do
@@ -434,114 +520,23 @@ The API:
     command block_number() do
       post {:ok, height} == result
     end
-
-    command mine() do
-      call Etherex.Time.mine()
+    #@ \onslide<2->
+    command mine() :: :ok do
       next height: height + 1
     end
   end
 #+end_src
 
+** Auto generated documentation
 
-** Consulting callback docs
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+When a model is compiled automatically generates documentation.
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src markdown
-  iex> h Blocks.Command.Mine.post
-
-  # def post(state, arguments, result)
-
-  @spec post(dynamic_state(), arguments(), result()) :: boolean()
-
-  This callback contains a predicate that should be true after the execution of
-  mine
-
-  ## Available variables
-
-  ### State
-
-  - state contains the complete dynamic state of the model.
-  - height attribute defined in the state declaration.
-
-  ### Arguments
-
-  - arguments contains all the generated arguments of the command.
-
-  ### Result
-
-  - result variable that contains the result of the command execution.
-
-#+end_src
-
-** Adding type information
-
-*** column
-:properties:
-:beamer_col: 0.68
-:end:
-
-#+attr_latex: :options style=display, numbers=left
-#+begin_src elixir
-  defmodule Blocks do
-    use Makina, implemented_by: Etherex
-
-    state height: 0 :: integer()
-
-    invariants non_neg_height: height >= 0
-
-    command block_number() :: {:ok, integer()} do
-      post {:ok, height} == result
-    end
-
-    command mine() :: :ok do
-      call Etherex.Time.mine()
-      next height: height + 1
-    end
-  end
-#+end_src
-
-#+attr_latex: :options style=shell
-#+begin_src bash
-  $ mix gradient
-
-  The function call Etherex.block_number() on line 8 is expected
-  to have type result() but it has type {:ok, quantity()} | {:error, error()}
-#+end_src
-
-** Adding documentation
-
-#+attr_latex: :options style=display
-#+begin_src elixir
-  defmodule Blocks do
-    use Makina, implemented_by: Etherex
-
-    @moduledoc """
-    Specifies the mining facilities of the blockchain.
-    """
-
-    state height: Etherex.block_number!() :: non_neg_integer()
-
-    invariants non_genesis_block: height >= 0
-
-    command block_number() :: {:ok, non_neg_integer()} do
-      @moduledoc "Retrieves the block number from the blockchain."
-      post {:ok, height} == result
-    end
-
-    command mine() :: :ok do
-      @moduledoc "Mines a new block."
-      call Etherex.Time.mine()
-      next height: height + 1
-    end
-  end
-#+end_src
-
-** Consulting module docs
-
-#+attr_latex: :options style=shell
-#+begin_src bash
   iex> h Blocks
-
+  #@ \onslide<+->
   # Blocks
 
   Contains a Makina model called Blocks.
@@ -564,13 +559,107 @@ The API:
   ...
 #+end_src
 
-** Running the test
+** Auto generated documentation
 
+When a model is compiled automatically generates documentation.
+#+attr_latex: :options style=shell
+#+begin_src markdown
+  iex> h Blocks
+  iex> h Blocks.Command.Mine.post
+  #@ \onslide<2->
+  ...
+  ## Available variables
+
+  ### State
+
+  - state contains the complete dynamic state of the model.
+  - height attribute defined in the state declaration.
+
+  ### Arguments
+
+  - arguments contains all the generated arguments of the command.
+
+  ### Result
+
+  - result variable that contains the result of the command execution.
+#+end_src
+
+** Adding type information
+
+*** column
+:properties:
+:beamer_col: 0.58
+:end:
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+#+attr_latex: :options style=display, numbers=left
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+
+    state height: 0 #@\onslide<3->{:: integer()}
+
+    invariants non_neg_height: height >= 0
+
+    command block_number() #@\onslide<4->{:: \{:ok, integer()\}} do
+      post {:ok, height} == result
+    end
+
+    command mine() #@\onslide<4->{:: :ok} do
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+#+beamer: \onslide<5->
 #+attr_latex: :options style=shell
 #+begin_src bash
-  $ mix test
-  Starting Quviq QuickCheck version 1.45.1
+  $ mix gradient
+  #@\onslide<6->
+  The function call Etherex.block_number() on line 8
+  is expected to have type {:ok, quantity()}
+  but it has type {:ok, quantity()} | {:error, error()}
+#+end_src
 
+** Adding documentation
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+    #@ \onslide<3->
+    @moduledoc """
+    Specifies the mining facilities of the blockchain.
+    """
+    #@ \onslide<2->
+    state height: Etherex.block_number!() :: non_neg_integer()
+
+    invariants non_genesis_block: height >= 0
+
+    command block_number() :: {:ok, non_neg_integer()} do     #@ \onslide<3->
+      @moduledoc "Retrieves the block number from the blockchain."    #@ \onslide<2->
+      post {:ok, height} == result
+    end
+
+    command mine() :: :ok do    #@ \onslide<3->
+      @moduledoc "Mines a new block."    #@ \onslide<2->
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+
+** Running the test
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+#+attr_latex: :options style=shell
+#+begin_src bash
+  $ mix test #@ \onslide<+->
+  Starting Quviq QuickCheck version 1.45.1
+  #@ \onslide<+->
   Failed! After 1 tests.
   [
       Blocks.block_number/0,
@@ -592,7 +681,6 @@ The API:
   1 properties, 1 failure
 #+end_src
 
-
 ** Fixing the model
 
 *** column
@@ -600,8 +688,8 @@ The API:
 :beamer_col: 0.48
 :end:
 
-The error message:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src bash
   Postcondition crashed:
@@ -615,17 +703,18 @@ The error message:
   Last state: %{height: 0}
 #+end_src
 
+#+beamer: \onslide<+->
 What happened?
 
 \vspace{10pt}
-
+#+beamer: \onslide<+->
 Invariant doesn't hold even on the initial state!
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<2->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Blocks do
@@ -633,7 +722,7 @@ Invariant doesn't hold even on the initial state!
 
     state height: 0
 
-    invariants non_neg_height: height >= 0
+    invariants non_neg_height: height >#@\onslide<5->{=} 0
 
     command block_number() do
       post {:ok, height} == result
@@ -648,11 +737,13 @@ Invariant doesn't hold even on the initial state!
 
 ** Running the test
 
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src bash
-  $ mix test
+  $ mix test #@\onslide<+->
   Starting Quviq QuickCheck version 1.45.1
-
+  #@\onslide<+->
   ....................................................................................................
   OK, passed 100 tests
 
@@ -669,49 +760,57 @@ Invariant doesn't hold even on the initial state!
 :properties:
 :beamer_col: 0.28
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 The API:
 
 | Command        | Returns          |
 |----------------+------------------|
 | =get_balance/1= | =:ok=              |
-
+#+beamer: \onslide<+->
 \vspace{0.5cm}
-
-1. state?
-2. invariants?
-3. commands?
+1. create module.
+   #+beamer: \onslide<+->
+2. import =Makina=.
+   #+beamer: \onslide<+->
+3. define state.
+   #+beamer: \onslide<+->
+4. define invariants.
+   #+beamer: \onslide<+->
+5. define commands.
 
 *** column
 :properties:
 :beamer_col: 0.68
 :end:
 
-
+#+beamer: \onslide<3->
 #+attr_latex: :options style=display
 #+begin_src elixir
-  defmodule Accounts do
-    use Makina, implemented_by: Etherex
+    defmodule Accounts do #@\onslide<4->
+      use Makina, implemented_by: Etherex
 
-    alias Etherex.Type
-
-    state accounts: Etherex.accounts!() :: [Type.address()],
-      balances: Etherex.balances!() :: %{Type.address() => integer()}
-
-    command get_balance(account :: Type.address())
-    :: {:ok, Type.quantity()} | {:error, Type.error()} do
-      pre accounts != []
-      post {:ok, balances[account]} == result
+      alias Etherex.Type
+      #@\onslide<5->
+      state accounts: Etherex.accounts!() :: [Type.address()],
+            balances: Etherex.balances!() :: %{Type.address() => integer()}
+      #@\onslide<7->
+      command get_balance(account :: Type.address())
+          :: {:ok, Type.quantity()} | {:error, Type.error()} do
+        pre accounts != []
+        post {:ok, balances[account]} == result
+      end #@\onslide<4->
     end
-  end
 #+end_src
 
-** Running the tests
-
+** Running the test
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src bash
+  $ mix test #@\onslide<+->
   Starting Quviq QuickCheck version 1.45.1
-
+  #@\onslide<+->
   1) property Accounts (ExamplesTest)
      ,** (Makina.Error) argument `account` missing in command get_balance
      stacktrace:
@@ -721,12 +820,11 @@ The API:
      Finished in 0.1 seconds (0.00s async, 0.1s sync)
 
      1 properties, 1 failure
-
-     Randomized with seed 763550
 #+end_src
 
-** Fixing the accounts model
-
+** Fixing the model
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Accounts do
@@ -735,12 +833,12 @@ The API:
     alias Etherex.Type
 
     state accounts: Etherex.accounts!() :: [Type.address()],
-      balances: Etherex.balances!() :: %{Type.address() => integer()}
+          balances: Etherex.balances!() :: %{Type.address() => integer()}
 
     command get_balance(account :: Type.address()) ::
-    {:ok, Type.quantity()} | {:error, Type.error()} do
+        {:ok, Type.quantity()} | {:error, Type.error()} do
       pre accounts != []
-      args account: oneof(accounts)
+      #@\onslide<3->{args account: oneof(accounts)}
       valid_args account in accounts
       post {:ok, balances[account]} == result
     end
@@ -748,12 +846,13 @@ The API:
 #+end_src
 
 ** Running the test
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src bash
-  $ mix test
+  $ mix test #@\onslide<+->
   Starting Quviq QuickCheck version 1.45.1
-
+  #@\onslide<+->
   ....................................................................................................
   OK, passed 100 tests
 
@@ -770,18 +869,19 @@ The API:
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 The API to generate and check transactions:
-
+#+beamer: \onslide<+->
 | Command           | Returns          |
 |-------------------+------------------|
 | =mine/0=            | =:ok=              |
 | =block_number/0=    | ={:ok, integer()}= |
 | =get_balance/1=     | ={:ok, integer()}= |
 | =transfer/3=        | ={:ok, hash()}=    |
-
+#+beamer: \onslide<+->
 We can compose =Blocks= and =Accounts=!
-
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
@@ -790,24 +890,24 @@ We can compose =Blocks= and =Accounts=!
       implemented_by: Etherex
   end
 #+end_src
-
+#+beamer: \onslide<+->
 Generates a model =Transactions.Composed=.
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
 State is the union:
 - =:height=
 - =:accounts=
 - =:balances=
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 Invariants are the union:
 - =:non_genesis_block=
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 Commands are the union:
@@ -816,38 +916,41 @@ Commands are the union:
 - =get_balance/1=
 
 ** Generating transactions
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
     use Makina, implemented_by: Etherex, extends: [Accounts, Blocks]
     alias Etherex.Type
-
+    #@\onslide<+->
     command transfer(
-              from :: Type.address(),
-              to :: Type.address(),
-              value :: Type.quantity()
-            ) :: {:ok, Type.hash()} do
-      pre accounts != []
-      args from: oneof(accounts), to: oneof(accounts), value: pos_integer()
-      valid_args from in accounts and to in accounts
-
-      next balances: update_balances(balances, from, to, value)
+      from :: Type.address(),
+      to :: Type.address(),
+      value :: Type.quantity()
+    ) :: {:ok, Type.hash()} do #@\onslide<+->
+      pre accounts != []#@\onslide<+->
+      args from: oneof(accounts), to: oneof(accounts), value: pos_integer()#@\onslide<+->
+      valid_args from in accounts and to in accounts#@\onslide<+->
+      next balances: update_balances(balances, from, to, value) #@\onslide<3->
     end
-
+    #@\onslide<+->
     def update_balances(balances, from, to, value) do
-      balances |> Map.update!(from, &(&1 - value)) |> Map.update!(to, &(&1 + value))
-    end
+      balances
+      |> Map.update!(from, fn balance - value end)
+      |> Map.update!(to, fn balance + value end)
+    end#@\onslide<2->
   end
 #+end_src
 
 ** Running the test
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src display
-  $ mix test
+  $ mix test #@\onslide<+->
   Starting Quviq QuickCheck version 1.45.1
-
+  #@\onslide<+->
   Failed! After 1 tests.
   [
       Transactions.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
@@ -864,13 +967,14 @@ Commands are the union:
 
   ...
 
-  Shrinking xxx.xx.x.x.x(4 times)
 #+end_src
 
 ** Running the test
 
 #+attr_latex: :options style=shell
 #+begin_src bash
+  Shrinking xxx.xx.x.x.x(4 times)
+  #@\onslide<+->\onslide<+->
   [
       Transaction.transfer("0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
                            "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
@@ -893,7 +997,8 @@ Commands are the union:
 #+end_src
 
 ** Fixing the transactions model
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
@@ -910,7 +1015,7 @@ Commands are the union:
       valid_args from in accounts and to in accounts
 
       next balances: update_balances(balances, from, to, value),
-           height: height + 1
+           #@\onslide<+->{height: height + 1}
     end
 
     def update_balances(balances, from, to, value) do
@@ -920,12 +1025,13 @@ Commands are the union:
 #+end_src
 
 ** Running the test
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src bash
-  $ mix test --only transactions
+  $ mix test #@\onslide<+->
   Starting Quviq QuickCheck version 1.45.1
-
+  #@\onslide<+->
   ..Failed! After 2 tests.
   [
       ...
@@ -936,7 +1042,14 @@ Commands are the union:
 
   ...
 
+#+end_src
+
+** Running the tests
+
+#+attr_latex: :options style=shell
+#+begin_src bash
   Shrinking xxxx.x.x.x.x.xx.x(6 times)
+  #@\onslide<+->\onslide<+->
   [
       Transactions.transfer("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
                             "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
@@ -946,101 +1059,99 @@ Commands are the union:
 
   ================================================================================
   Postcondition failed.
-#+end_src
-
-** Running the tests
-
-#+attr_latex: :options style=shell
-#+begin_src bash
-  Commands:
-
-  ...
 
   Transactions.get_balance("0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1")
-    -> {:ok, 999999999999999999999999979000}
+  -> {:ok, 999999999999999999999999979000}
 
   Last state:
-  %{
-    balances: %{
-      "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1" => 1000000000000000000000000000000,
+  %{ balances: %{ "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1" => 1000000000000000000000000000000,
+          ...
+      },
       ...
-    },
-    ...
   }
   Finished in 1.1 seconds (0.00s async, 1.1s sync)
-  3 properties, 1 failure
+  1 properties, 1 failure
 #+end_src
 
 ** Fixing the transactions model
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.38
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Our model does not consider gas consumption.
 
 \vspace{10pt}
-
+#+beamer: \onslide<+->
 We need to change:
 1. A symbolic attribute to store transactions.
+   #+beamer: \onslide<+->
 2. =balances= needs to be symbolic.
+   #+beamer: \onslide<+->
 3. =get_balance/0= precondition.
-4. a new command =gas_cost/1=.
-
-   #+attr_latex: :options style=display
-   #+begin_src elixir
-defmodule Transactions do
-  ...   
-  state transactions: [] :: [symbolic(Type.hash())]
-
-  command get_balance() do
-    pre IO.inspect(transactions) == []
-  end
-
-  command transfer(...) do
-    ...
-    next transactions: [symbolic(elem(result, 1)) | transactions],
-         ...   
-  end
-      #+end_src
+   #+beamer: \onslide<+->
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.58
 :end:
+
+   #+attr_latex: :options style=display
+   #+begin_src elixir
+     defmodule Transactions do
+       ...
+       state transactions: [] :: [symbolic(Type.hash())]
+             balances: super()
+               :: symbolic(%{Type.address() => integer()})
+
+       command get_balance() do
+         pre transactions == []
+       end
+
+       command transfer(...) do
+         ...
+         next transactions: [symbolic(elem(result, 1))
+                             | transactions],
+              ...
+       end
+   #+end_src
+
+** Fixing the transactions model
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+=gas_cost/1= consults the consumed command and computes the new balances.
 
 #+attr_latex: :options style=display
 #+begin_src elixir
-
-
-    command gas_cost(hash :: Type.hash()) :: {:ok, Type.quantity()} do
-      pre transactions != []
-      args hash: oneof(transactions)
-      valid_args hash in transactions
-      next do
-        from = symbolic(Kernel.elem(result, 0))
-        gas = symbolic(Kernel.elem(result, 1))
-        [
-          transactions: List.delete(transactions, hash),
-          balances: discount_gas(balances, from, gas)
-                    |> symbolic()
-        ]
-      end
+  command gas_cost(hash :: Type.hash()) :: {Type.address(), Type.quantity()} do
+    pre transactions != []
+    args hash: oneof(transactions)
+    valid_args hash in transactions
+    next do
+      from = symbolic(elem(result, 0))
+      gas = symbolic(elem(result, 1))
+      [
+        transactions: List.delete(transactions, hash),
+        balances: discount_gas(balances, from, gas) |> symbolic()
+      ]
     end
   end
 
-
-
 #+end_src
 
+
+
 ** Running the tests
-
-   #+attr_latex: :options style=shell
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+#+attr_latex: :options style=shell
 #+begin_src bash
-  $ mix test
+  $ mix test #@\onslide<+->
   Starting Quviq QuickCheck version 1.45.1
-
+  #@\onslide<+->
   ....................................................................................................
   OK, passed 100 tests
 
@@ -1054,6 +1165,4 @@ defmodule Transactions do
   1 properties, 0 failures
 #+end_src
 
-
 * Conclusions
-

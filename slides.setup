@@ -14,6 +14,7 @@
 #+latex_header: \usetikzlibrary{overlay-beamer-styles}
 #+latex_header: \usepackage{pgfpages}
 # listings
+# #+latex_header: \usepackage{lstlinebgrd}
 #+latex_header: \input{listings_elixir}
 #+latex_header: \input{listings_bash}
 #+latex_header: \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
