@@ -63,6 +63,8 @@
 |    18 |   500 |     408 | 1692 |
 
 
+* Introduction to PBT
+
 ** Introduction to PBT
 
 *** column
@@ -282,6 +284,8 @@ Problems:
 - Hard to maintain.
 
 
+* Introduction to Makina and running example
+
 ** Makina
 
 *** column
@@ -396,13 +400,13 @@ Introduced smart-contracts.
 
 \vspace{10pt}
 
-The properties:
+The properties to test:
 1. Mining blocks.
 2. Account access.
 3. Transfers between accounts.
 
-
-* Makina features
+   
+* Blocks model
 
 ** Mining blocks
 
@@ -415,13 +419,14 @@ The API:
 
 | Command        | Returns          |
 |----------------+------------------|
-| =block_number()= | ={:ok, integer()}= |
-| =mine()=         | =:ok=              |
+| =mine/0=         | =:ok=              |
+| =block_number/0= | ={:ok, integer()}= |
 
 \vspace{0.5cm}
 
 1. state?
 2. invariants?
+3. commands?
 
 *** column
 :properties:
@@ -435,7 +440,7 @@ The API:
 
     state height: 0
 
-    invariants non_neg_height: height >= 0
+    invariants non_neg_height: height > 0
 
     command block_number() do
       post {:ok, height} == result
@@ -448,7 +453,8 @@ The API:
   end
 #+end_src
 
-** Consulting callback documentation
+
+** Consulting callback docs
 
 #+attr_latex: :options style=display
 #+begin_src shell
@@ -477,6 +483,7 @@ The API:
   - result variable that contains the result of the command execution.
 
 #+end_src
+
 
 ** Adding type information
 
@@ -513,6 +520,7 @@ The API:
   to have type result() but it has type {:ok, quantity()} | {:error, error()}
 #+end_src
 
+
 ** Adding documentation
 
 #+attr_latex: :options style=display
@@ -541,7 +549,8 @@ The API:
   end
 #+end_src
 
-** Consulting module documentation
+
+** Consulting module docs
 
 #+attr_latex: :options style=display
 #+begin_src shell
@@ -568,26 +577,135 @@ The API:
 
   ...
 #+end_src
-** Running the test
 
+
+** Running the test
 
 #+attr_latex: :options style=display
 #+begin_src shell
   $ mix test
   Starting Quviq QuickCheck version 1.45.1
 
-  Licence for University UPM Madrid reserved until {{2022,5,15},{19,36,12}}
+  Failed! After 1 tests.
+  [
+    Blocks.block_number/0,
+    Blocks.mine/0,
+  ]
 
-  ignoring property options [:long_result, :quiet, :verbose]
+  ================================================================================
+  Postcondition crashed:
+   ** (Makina.Error) invariant "non_neg_height" check failed
+
+  Shrinking x.(1 times)
+  [
+    Blocks.block_number/0
+  ]
+
+  Last state: %{height: 0}
+
+  Finished in 0.1 seconds (0.00s async, 0.1s sync)
+  1 properties, 1 failure
+#+end_src
+
+
+** Fixing the model
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+The error message:
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  Postcondition crashed:
+   ** invariant "non_neg_height" check failed
+
+  Shrinking x.(1 times)
+  [
+    Blocks.block_number/0
+  ]
+
+  Last state: %{height: 0}
+#+end_src
+
+What happened?
+
+\vspace{10pt}
+
+Invariant doesn't hold even on the initial state!
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Blocks do
+    use Makina, implemented_by: Etherex
+
+    state height: 0
+
+    invariants non_neg_height: height >= 0
+
+    command block_number() do
+      post {:ok, height} == result
+    end
+
+    command mine() do
+      call Etherex.Time.mine()
+      next height: height + 1
+    end
+  end
+#+end_src
+
+
+
+** Running the test
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  $ mix test
+  Starting Quviq QuickCheck version 1.45.1
+
   ....................................................................................................
   OK, passed 100 tests
 
-  51.5 Blocks.mine()
-  48.5 Blocks.block_number()
+  51.5 Blocks.mine/0
+  48.5 Blocks.block_number/0
 
   Finished in 8.6 seconds (0.00s async, 8.6s sync)
 #+end_src
+
+
+* Accounts model
+
 ** Account access
+
+*** column
+:properties:
+:beamer_col: 0.28
+:end:
+
+The API:
+
+| Command        | Returns          |
+|----------------+------------------|
+| =get_balance/1= | =:ok=              |
+
+\vspace{0.5cm}
+
+1. state?
+2. invariants?
+3. commands?
+
+*** column
+:properties:
+:beamer_col: 0.68
+:end:
+
 
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -596,49 +714,128 @@ The API:
 
     alias Etherex.Type
 
-    state accounts: Etherex.accounts!(), :: [Type.address()],
-          balances: get_accounts() :: %{Type.address() => integer()}
+    state accounts: Etherex.accounts!() :: [Type.address()],
+          balances: Etherex.balances!() :: %{Type.address() => integer()}
 
-    command get_balance(account :: Type.address()) ::
-      {:ok, Type.quantity()} | {:error, Type.error()} do
+    command get_balance(account :: Type.address())
+        :: {:ok, Type.quantity()} | {:error, Type.error()} do
       pre accounts != []
-      valid_args account in accounts
       post {:ok, balances[account]} == result
-    end
-
-    @spec get_accounts :: %{Type.address() => integer()}
-    def get_accounts do
-      Etherex.accounts!()
-      |> Enum.map(fn a -> {a, Etherex.get_balance!(a)} end)
-      |> Enum.into(%{})
     end
   end
 #+end_src
+
 
 ** Running the tests
 
 #+attr_latex: :options style=display
 #+begin_src shell
-    Starting Quviq QuickCheck version 1.45.1
+  Starting Quviq QuickCheck version 1.45.1
 
-    Licence for University UPM Madrid reserved until {{2022,5,16},{12,41,23}}
+  1) property Accounts (ExamplesTest)
+       ** (Makina.Error) argument `account` missing in command get_balance
+     stacktrace:
+     (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
+     (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
+     (examples 0.1.0) lib/accounts.ex:1: Accounts.Behaviour.next_state/3
+     Finished in 0.1 seconds (0.00s async, 0.1s sync)
 
-      1) property Accounts (ExamplesTest)
-         test/examples_test.exs:12
-         ,** (Makina.Error) argument `account` missing in command get_balance
-         stacktrace:
-           (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
-           (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
-           (examples 0.1.0) lib/accounts.ex:1: Accounts.Behaviour.next_state/3
-         Finished in 0.1 seconds (0.00s async, 0.1s sync)
+     1 properties, 1 failure
 
-    1 properties, 1 failure
-
-    Randomized with seed 763550
+     Randomized with seed 763550
 #+end_src
+
+
+** Fixing the accounts model
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Accounts do
+    use Makina, implemented_by: Etherex
+
+    alias Etherex.Type
+
+    state accounts: Etherex.accounts!() :: [Type.address()],
+      balances: Etherex.balances!() :: %{Type.address() => integer()}
+
+    command get_balance(account :: Type.address()) ::
+    {:ok, Type.quantity()} | {:error, Type.error()} do
+      pre accounts != []
+      args account: oneof(accounts)
+      valid_args account in accounts
+      post {:ok, balances[account]} == result
+    end
+  end
+#+end_src
+
+
+** Running the test
+
+#+attr_latex: :options style=display
+#+begin_src shell
+  $ mix test
+  Starting Quviq QuickCheck version 1.45.1
+
+  ....................................................................................................
+  OK, passed 100 tests
+
+  '100.0 Accounts.get_balance/1
+
+  Finished in 4.6 seconds (0.00s async, 4.6s sync)
+  1 properties, 0 failures
+#+end_src
+
+
+* Transactions model
 
 ** Generating transactions
 
-** An abstract model for contracts
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
 
-** A basic model to test a contract
+The API to generate and check transactions:
+
+| Command           | Returns          |
+|-------------------+------------------|
+| =mine/0=            | =:ok=              |
+| =block_number/0=    | ={:ok, integer()}= |
+| =get_balance/1=     | ={:ok, integer()}= |
+| =transfer/3=        | ={:ok, hash()}=    |
+| =get_transaction/1= | ={:ok, receipt()}= |
+
+We can compose =Blocks= and =Accounts=!
+
+#+attr_latex: :options style=display
+#+begin_src elixir
+  defmodule Transactions do
+    use Makina,
+      extends: [Blocks, Accounts],
+      implemented_by: Etherex
+  end
+#+end_src
+
+Generates a model =Transactions.Composed=.
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+State is the union:
+- =:height=
+- =:accounts=
+- =:balances=
+
+\vspace{10pt}
+
+Invariants are the union:
+- =:non_genesis_block=
+
+\vspace{10pt}
+
+Commands are the union:
+- =mine/0=
+- =block_number/0=
+- =get_balance/1=

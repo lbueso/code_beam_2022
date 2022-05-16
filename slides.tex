@@ -1,4 +1,4 @@
-% Created 2022-05-16 Mon 11:47
+% Created 2022-05-16 Mon 14:48
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt]{beamer}
 \usepackage[utf8]{inputenc}
@@ -77,9 +77,9 @@
 \whitetheme
 
 \section{Introduction}
-\label{sec:orgdb31402}
+\label{sec:orgb6258e8}
 
-\begin{frame}[label={sec:org192ec9d}]{The problem}
+\begin{frame}[label={sec:org57f6e69}]{The problem}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \begin{center}
@@ -104,7 +104,10 @@ files & blank & comment & code\\
 \end{frame}
 
 
-\begin{frame}[label={sec:orgc178d0a},fragile]{Introduction to PBT}
+\section{Introduction to PBT}
+\label{sec:org2935671}
+
+\begin{frame}[label={sec:org76fad05},fragile]{Introduction to PBT}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Writing unit-tests is hard and time-consuming:
@@ -162,7 +165,7 @@ In each test:
 \end{frame}
 
 
-\begin{frame}[label={sec:org1aef7cd},fragile]{Testing \emph{stateful} programs}
+\begin{frame}[label={sec:org8eaa43e},fragile]{Testing \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 Imagine a simple counter:
@@ -220,7 +223,7 @@ To successfully test this program we need to:
 \end{frame}
 
 
-\begin{frame}[label={sec:orgcf16638},fragile]{PBT of \emph{stateful} programs}
+\begin{frame}[label={sec:org0b1dbb5},fragile]{PBT of \emph{stateful} programs}
  \begin{columns}
 \begin{column}{0.58\columnwidth}
 Basic property of \emph{stateful} programs:
@@ -279,7 +282,7 @@ where:
 \end{frame}
 
 
-\begin{frame}[label={sec:org94f0c7f},fragile]{PBT state machines}
+\begin{frame}[label={sec:orgfd04eaf},fragile]{PBT state machines}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 Introduced by \texttt{Erlang QuickCheck}.
@@ -320,7 +323,10 @@ Problems:
 \end{frame}
 
 
-\begin{frame}[label={sec:orgf9883d7},fragile]{Makina}
+\section{Introduction to Makina and running example}
+\label{sec:orgf279e60}
+
+\begin{frame}[label={sec:org21d0a59},fragile]{Makina}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \texttt{Makina} is a DSL to write PBT state machines.
@@ -353,7 +359,7 @@ Provides code reuse mechanisms:
 \end{frame}
 
 
-\begin{frame}[label={sec:org5e7e1c2},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:org3c54c1e},fragile]{Ethereum Blockchain}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 A blockchain is a distributed ledger that enables peer-to-peer transactions.
@@ -429,7 +435,7 @@ Introduced smart-contracts.
 
 \vspace{10pt}
 
-The properties:
+The properties to test:
 \begin{enumerate}
 \item Mining blocks.
 \item Account access.
@@ -440,10 +446,10 @@ The properties:
 \end{frame}
 
 
-\section{Makina features}
-\label{sec:org6ca025a}
+\section{Blocks model}
+\label{sec:org201d28c}
 
-\begin{frame}[label={sec:org4f7f829},fragile]{Mining blocks}
+\begin{frame}[label={sec:orgd4374e8},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API:
@@ -452,8 +458,8 @@ The API:
 \begin{tabular}{ll}
 Command & Returns\\
 \hline
-\texttt{block\_number()} & \texttt{\{:ok, integer()\}}\\
-\texttt{mine()} & \texttt{:ok}\\
+\texttt{mine/0} & \texttt{:ok}\\
+\texttt{block\_number/0} & \texttt{\{:ok, integer()\}}\\
 \end{tabular}
 \end{center}
 
@@ -462,6 +468,7 @@ Command & Returns\\
 \begin{enumerate}
 \item state?
 \item invariants?
+\item commands?
 \end{enumerate}
 \end{column}
 
@@ -473,7 +480,7 @@ defmodule Blocks do
 
   state height: 0
 
-  invariants non_neg_height: height >= 0
+  invariants non_neg_height: height > 0
 
   command block_number() do
     post {:ok, height} == result
@@ -489,7 +496,8 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orge714a6c},fragile]{Consulting callback documentation}
+
+\begin{frame}[label={sec:orgb23482b},fragile]{Consulting callback docs}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 iex> h Blocks.Command.Mine.post
@@ -519,7 +527,8 @@ mine
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:orgbde442c},fragile]{Adding type information}
+
+\begin{frame}[label={sec:org33ed39b},fragile]{Adding type information}
  \begin{columns}
 \begin{column}{0.68\columnwidth}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
@@ -553,7 +562,8 @@ to have type result() but it has type {:ok, quantity()} | {:error, error()}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org3bed62d},fragile]{Adding documentation}
+
+\begin{frame}[label={sec:orgf76bff1},fragile]{Adding documentation}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
@@ -581,7 +591,8 @@ end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:orgb4f75c2},fragile]{Consulting module documentation}
+
+\begin{frame}[label={sec:org8b35479},fragile]{Consulting module docs}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 iex> h Blocks
@@ -608,25 +619,174 @@ iex> h Blocks.Command.NAME
 ...
 \end{lstlisting}
 \end{frame}
-\begin{frame}[label={sec:org5bdb433},fragile]{Running the test}
+
+
+\begin{frame}[label={sec:org5431f3b},fragile]{Running the test}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 $ mix test
 Starting Quviq QuickCheck version 1.45.1
 
-Licence for University UPM Madrid reserved until {{2022,5,15},{19,36,12}}
+Failed! After 1 tests.
+[
+  Blocks.block_number/0,
+  Blocks.mine/0,
+]
 
-ignoring property options [:long_result, :quiet, :verbose]
+================================================================================
+Postcondition crashed:
+ ** (Makina.Error) invariant "non_neg_height" check failed
+
+Shrinking x.(1 times)
+[
+  Blocks.block_number/0
+]
+
+Last state: %{height: 0}
+
+Finished in 0.1 seconds (0.00s async, 0.1s sync)
+1 properties, 1 failure
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:org2cc0975},fragile]{Fixing the model}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+The error message:
+
+\lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+Postcondition crashed:
+ ** invariant "non_neg_height" check failed
+
+Shrinking x.(1 times)
+[
+  Blocks.block_number/0
+]
+
+Last state: %{height: 0}
+\end{lstlisting}
+
+What happened?
+
+\vspace{10pt}
+
+Invariant doesn't hold even on the initial state!
+\end{column}
+
+\begin{column}{0.48\columnwidth}
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Blocks do
+  use Makina, implemented_by: Etherex
+
+  state height: 0
+
+  invariants non_neg_height: height >= 0
+
+  command block_number() do
+    post {:ok, height} == result
+  end
+
+  command mine() do
+    call Etherex.Time.mine()
+    next height: height + 1
+  end
+end
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[label={sec:orgc784ea9},fragile]{Running the test}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+$ mix test
+Starting Quviq QuickCheck version 1.45.1
+
 ....................................................................................................
 OK, passed 100 tests
 
-51.5 Blocks.mine()
-48.5 Blocks.block_number()
+51.5 Blocks.mine/0
+48.5 Blocks.block_number/0
 
 Finished in 8.6 seconds (0.00s async, 8.6s sync)
 \end{lstlisting}
 \end{frame}
-\begin{frame}[label={sec:org89605a5},fragile]{Account access}
+
+
+\section{Accounts model}
+\label{sec:orgefa798e}
+
+\begin{frame}[label={sec:org3b2707c},fragile]{Account access}
+ \begin{columns}
+\begin{column}{0.28\columnwidth}
+The API:
+
+\begin{center}
+\begin{tabular}{ll}
+Command & Returns\\
+\hline
+\texttt{get\_balance/1} & \texttt{:ok}\\
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{enumerate}
+\item state?
+\item invariants?
+\item commands?
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.68\columnwidth}
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Accounts do
+  use Makina, implemented_by: Etherex
+
+  alias Etherex.Type
+
+  state accounts: Etherex.accounts!() :: [Type.address()],
+	balances: Etherex.balances!() :: %{Type.address() => integer()}
+
+  command get_balance(account :: Type.address())
+      :: {:ok, Type.quantity()} | {:error, Type.error()} do
+    pre accounts != []
+    post {:ok, balances[account]} == result
+  end
+end
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[label={sec:org16a71ae},fragile]{Running the tests}
+ \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+Starting Quviq QuickCheck version 1.45.1
+
+1) property Accounts (ExamplesTest)
+     ** (Makina.Error) argument `account` missing in command get_balance
+   stacktrace:
+   (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
+   (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
+   (examples 0.1.0) lib/accounts.ex:1: Accounts.Behaviour.next_state/3
+   Finished in 0.1 seconds (0.00s async, 0.1s sync)
+
+   1 properties, 1 failure
+
+   Randomized with seed 763550
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[label={sec:org28105b4},fragile]{Fixing the accounts model}
  \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Accounts do
@@ -634,54 +794,96 @@ defmodule Accounts do
 
   alias Etherex.Type
 
-  state accounts: Etherex.accounts!(), :: [Type.address()],
-	balances: get_accounts() :: %{Type.address() => integer()}
+  state accounts: Etherex.accounts!() :: [Type.address()],
+    balances: Etherex.balances!() :: %{Type.address() => integer()}
 
   command get_balance(account :: Type.address()) ::
-    {:ok, Type.quantity()} | {:error, Type.error()} do
+  {:ok, Type.quantity()} | {:error, Type.error()} do
     pre accounts != []
+    args account: oneof(accounts)
     valid_args account in accounts
     post {:ok, balances[account]} == result
-  end
-
-  @spec get_accounts :: %{Type.address() => integer()}
-  def get_accounts do
-    Etherex.accounts!()
-    |> Enum.map(fn a -> {a, Etherex.get_balance!(a)} end)
-    |> Enum.into(%{})
   end
 end
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org0121bac},fragile]{Running the tests}
+
+\begin{frame}[label={sec:orgb67cb52},fragile]{Running the test}
  \lstset{language=shell,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
+$ mix test
 Starting Quviq QuickCheck version 1.45.1
 
-Licence for University UPM Madrid reserved until {{2022,5,16},{12,41,23}}
+....................................................................................................
+OK, passed 100 tests
 
-  1) property Accounts (ExamplesTest)
-     test/examples_test.exs:12
-     ** (Makina.Error) argument `account` missing in command get_balance
-     stacktrace:
-       (makina 0.1.0) lib/makina/error.ex:9: Makina.Error.throw_error/1
-       (examples 0.1.0) lib/accounts.ex:13: Accounts.Command.GetBalance.check_args/1
-       (examples 0.1.0) lib/accounts.ex:1: Accounts.Behaviour.next_state/3
-     Finished in 0.1 seconds (0.00s async, 0.1s sync)
+'100.0 Accounts.get_balance/1
 
-1 properties, 1 failure
-
-Randomized with seed 763550
+Finished in 4.6 seconds (0.00s async, 4.6s sync)
+1 properties, 0 failures
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[label={sec:org9985359}]{Generating transactions}
-\end{frame}
 
-\begin{frame}[label={sec:org87c7b6c}]{An abstract model for contracts}
-\end{frame}
+\section{Transactions model}
+\label{sec:org320b11f}
 
-\begin{frame}[label={sec:orgcd540f2}]{A basic model to test a contract}
+\begin{frame}[label={sec:org8f813f3},fragile]{Generating transactions}
+ \begin{columns}
+\begin{column}{0.48\columnwidth}
+The API to generate and check transactions:
+
+\begin{center}
+\begin{tabular}{ll}
+Command & Returns\\
+\hline
+\texttt{mine/0} & \texttt{:ok}\\
+\texttt{block\_number/0} & \texttt{\{:ok, integer()\}}\\
+\texttt{get\_balance/1} & \texttt{\{:ok, integer()\}}\\
+\texttt{transfer/3} & \texttt{\{:ok, hash()\}}\\
+\texttt{get\_transaction/1} & \texttt{\{:ok, receipt()\}}\\
+\end{tabular}
+\end{center}
+
+We can compose \texttt{Blocks} and \texttt{Accounts}!
+
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Transactions do
+  use Makina,
+    extends: [Blocks, Accounts],
+    implemented_by: Etherex
+end
+\end{lstlisting}
+
+Generates a model \texttt{Transactions.Composed}.
+\end{column}
+
+\begin{column}{0.48\columnwidth}
+State is the union:
+\begin{itemize}
+\item \texttt{:height}
+\item \texttt{:accounts}
+\item \texttt{:balances}
+\end{itemize}
+
+\vspace{10pt}
+
+Invariants are the union:
+\begin{itemize}
+\item \texttt{:non\_genesis\_block}
+\end{itemize}
+
+\vspace{10pt}
+
+Commands are the union:
+\begin{itemize}
+\item \texttt{mine/0}
+\item \texttt{block\_number/0}
+\item \texttt{get\_balance/1}
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 \end{document}
