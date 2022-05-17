@@ -1,9 +1,9 @@
-# TODO: Introduction slide
-# TODO: Conclusion slide -> maybe conclusions + links to repos
-# FIX: PBT state machines -> should include definition and behaviour definition
-# FIX: Makina slide -> objectives? -> features? -> implementation?
-# FIX: Ethereum blockchain slide
-# FIX: change transfer -> transaction?
+# TODO: resumen de Makina (antes de ejemplos)
+# TODO: more time information in screen
+# TODO: explain more typing
+# TODO: justificar cryptic errors, buggy models
+# TODO: next as list?
+# TODO: next steps
 
 #+title: Improve your tests with Makina
 #+author: Luis Eduardo Bueso de Barrio
@@ -47,27 +47,6 @@
 
 \whitetheme
 
-* Introduction
-** The problem
-
-*** column
-:properties:
-:beamer_col: 0.48
-:end:
-
-| files | blank | comment | code |
-|-------+-------+---------+------|
-|     4 |   760 |     383 | 4513 |
-
-*** column
-:properties:
-:beamer_col: 0.48
-:end:
-
-| files | blank | comment | code |
-|-------+-------+---------+------|
-|    18 |   500 |     408 | 1692 |
-
 * Introduction to PBT
 ** Why Property-Based Testing?
 *** column
@@ -87,13 +66,9 @@ Writing unit-tests is hard and time-consuming:
 #+end_src
 \vspace{10pt}
 #+beamer: \onslide<+->
-Property-Based Testing (PBT) philosophy:
-#+beamer: \onslide<+->
 #+begin_quote
 Don't write tests, generate them.
 #+end_quote
-
-
 #+beamer: \onslide<+->
 A test execution in PBT consists of:
 #+beamer: \onslide<+->
@@ -116,7 +91,7 @@ A property:
     list == reverse(reverse(list))
   end
 #+end_src
-#+beamer: \onslide<+->
+#+bedfffbbqamer: \onslide<+->
 In each test:
 1. =list()= generates a random list:
    #+beamer: \onslide<+->
@@ -260,20 +235,30 @@ where:
 :end:
 #+beamer: \onslide<+->
 #+beamer: \onslide<+->
-Introduced by =Erlang QuickCheck=.
+A PBT state machine is a program that specifies the behaviour of the implementation.
 #+beamer: \onslide<+->
 \vspace{10pt}
 
+Behaviour:
+- precondition.
+  #+beamer: \onslide<+->
+- command generation.
+  #+beamer: \onslide<+->
+- next state.
+  #+beamer: \onslide<+->
+- postcondition
 
-Adopted by other PBT libraries such as =Proper=.
-#+beamer: \onslide<+->
 \vspace{10pt}
 
-
-These libraries provide a DSL to model the system.
 #+beamer: \onslide<+->
+Executed in two phases:
+#+beamer: \onslide<+->
+- symbolic test generation.
+  #+beamer: \onslide<+->
+- dynamic test execution.
 \vspace{10pt}
 
+#+beamer: \onslide<+->
 Proven effectiveness.
 *** column
 :properties:
@@ -289,8 +274,6 @@ Why?
 
 #+beamer: \onslide<+->
 Problems:
-#+beamer: \onslide<+->
-- Hard to write.
   #+beamer: \onslide<+->
 - Cryptic errors.
   #+beamer: \onslide<+->
@@ -309,15 +292,16 @@ Problems:
 :end:
 #+beamer: \onslide<+->
 =Makina= is a DSL to write PBT state machines.
+\vspace{10pt}
 #+beamer: \onslide<+->
 - Fully compatible with =Erlang QuickCheck= and =PropEr=.
   #+beamer: \onslide<+->
-- Improved usability.
-  #+beamer: \onslide<+->
 - Better error messages.
   #+beamer: \onslide<+->
-- Improved error detection in models.
-
+- Better error detection in models.
+  #+beamer: \onslide<+->
+- Improve code reuse.
+  
 *** column
 :properties:
 :beamer_col: 0.48
@@ -414,15 +398,18 @@ A blockchain is a distributed ledger that enables peer-to-peer transactions.
 :beamer_col: 0.48
 :end:
 #+beamer: \onslide<+->
-Ethereum is one of the largest blockchains.
+Why Ethereum?
 #+beamer: \onslide<+->
+- Big community.
+  #+beamer: \onslide<+->
+- Multiple implementations.
+  #+beamer: \onslide<+->
 \vspace{10pt}
 
-Introduced smart-contracts.
+To interact we will use =etherex=:
 #+beamer: \onslide<+->
-\vspace{10pt}
+https://gitlab.com/babel-upm/blockchain/etherex
 
-=etherex= a library to interact with Ethereum using Elixir.
 #+beamer: \onslide<+->
 \vspace{10pt}
 
@@ -432,7 +419,7 @@ The properties to test:
    #+beamer: \onslide<+->
 2. Account access.
    #+beamer: \onslide<+->
-3. Transfers between accounts.
+3. Transactions between accounts.
 
 * Blocks model
 ** Mining blocks
@@ -534,6 +521,63 @@ The API:
   end
 #+end_src
 
+** Auto generated documentation
+
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+When a model is compiled automatically generates documentation.
+#+beamer: \onslide<+->
+#+attr_latex: :options style=shell
+#+begin_src markdown
+  iex> h Blocks
+  #@ \onslide<+->
+  # Blocks
+
+  Contains a Makina model called Blocks.
+
+  Specifies the mining facilities of the blockchain.
+
+  ## Commands
+
+  - mine stored at Blocks.Command.Mine
+  - block_number stored at Blocks.Command.BlockNumber
+
+  Detailed information about each command can be accessed inside the interpreter:
+
+  iex> h Blocks.Command.NAME
+
+  ## State attributes
+
+  - height
+
+  ...
+#+end_src
+** Auto generated documentation
+
+When a model is compiled automatically generates documentation.
+#+attr_latex: :options style=shell
+#+begin_src markdown
+  iex> h Blocks
+  iex> h Blocks.Command.Mine.post
+  #@ \onslide<2->
+  ...
+  ## Available variables
+
+  ### State
+
+  - state contains the complete dynamic state of the model.
+  - height attribute defined in the state declaration.
+
+  ### Arguments
+
+  - arguments contains all the generated arguments of the command.
+
+  ### Result
+
+  - result variable that contains the result of the command execution.
+#+end_src
+\vspace{25pt}
+
 ** Running the test
 
 #+beamer: \onslide<+->
@@ -634,64 +678,6 @@ Invariant doesn't hold even on the initial state!
 
   Finished in 8.6 seconds (0.00s async, 8.6s sync)
 #+end_src
-
-** Auto generated documentation
-
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-When a model is compiled automatically generates documentation.
-#+beamer: \onslide<+->
-#+attr_latex: :options style=shell
-#+begin_src markdown
-  iex> h Blocks
-  #@ \onslide<+->
-  # Blocks
-
-  Contains a Makina model called Blocks.
-
-  Specifies the mining facilities of the blockchain.
-
-  ## Commands
-
-  - mine stored at Blocks.Command.Mine
-  - block_number stored at Blocks.Command.BlockNumber
-
-  Detailed information about each command can be accessed inside the interpreter:
-
-  iex> h Blocks.Command.NAME
-
-  ## State attributes
-
-  - height
-
-  ...
-#+end_src
-
-** Auto generated documentation
-
-When a model is compiled automatically generates documentation.
-#+attr_latex: :options style=shell
-#+begin_src markdown
-  iex> h Blocks
-  iex> h Blocks.Command.Mine.post
-  #@ \onslide<2->
-  ...
-  ## Available variables
-
-  ### State
-
-  - state contains the complete dynamic state of the model.
-  - height attribute defined in the state declaration.
-
-  ### Arguments
-
-  - arguments contains all the generated arguments of the command.
-
-  ### Result
-
-  - result variable that contains the result of the command execution.
-#+end_src
-\vspace{25pt}
 
 ** Adding documentation
 
@@ -904,22 +890,31 @@ Generates a model =Transactions.Composed=.
 :beamer_col: 0.48
 :end:
 #+beamer: \onslide<+->
-State is the union:
-- =:height=
-- =:accounts=
-- =:balances=
-#+beamer: \onslide<+->
-\vspace{10pt}
+#+attr_latex: :options style=shell
+#+begin_src bash
+  iex(1)> h Transactions.Composed
+  #@\onslide<+->
+  # Transactions.Composed
 
-Invariants are the union:
-- =:non_genesis_block=
-#+beamer: \onslide<+->
-\vspace{10pt}
+  Contains a Makina model called Transactions.Composed.
 
-Commands are the union:
-- =mine/0=
-- =block_number/0=
-- =get_balance/1=
+  ## Commands
+
+   - mine stored
+   - get_balance
+   - block_number
+
+  ## State attributes
+
+   - height
+   - balances
+   - accounts
+
+  ## Invariants
+
+   - non_neg_height
+
+#+end_src
 
 ** Generating transactions
 #+beamer: \onslide<+->
@@ -1171,3 +1166,33 @@ We need to change:
 #+end_src
 
 * Conclusions
+** Results and conclussions
+
+*** column
+:properties:
+:beamer_col: 0.38
+:end:
+
+Before Makina:
+| files | blank | comment | code |
+|-------+-------+---------+------|
+|     4 |   760 |     383 | 4513 |
+
+\vspace{10pt}
+
+After Makina:
+| files | blank | comment | code |
+|-------+-------+---------+------|
+|    18 |   500 |     408 | 1692 |
+
+*** column
+:properties:
+:beamer_col: 0.58
+:end:
+
+Libraries:
+- https://gitlab.com/babel-upm/makina/makina
+- https://gitlab.com/babel-upm/blockchain/etherex
+
+Slides and code:  
+- https://gitlab.com/babel-upm/makina/code_beam_2022
