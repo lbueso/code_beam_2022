@@ -1,6 +1,6 @@
 #+options: H:2 toc:nil author:Luis Eduardo Bueso de Barrio
 #+latex_class: beamer
-#+latex_class_options: [aspectratio=169, 10pt]
+#+latex_class_options: [aspectratio=169, 10pt, handout]
 #+latex_header: \usepackage[english]{babel}
 #+latex_header: \usepackage[utf8]{inputenc}
 #+latex_header: \usepackage{roboto}
