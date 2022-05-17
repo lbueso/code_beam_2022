@@ -1,10 +1,3 @@
-# TODO: resumen de Makina (antes de ejemplos)
-# TODO: more time information in screen
-# TODO: explain more typing
-# TODO: justificar cryptic errors, buggy models
-# TODO: next as list?
-# TODO: next steps
-
 #+title: Improve your tests with Makina
 #+author: Luis Eduardo Bueso de Barrio
 #+setupfile: slides.setup
@@ -48,13 +41,12 @@
 \whitetheme
 
 * Motivation
-** The problem
-** Makina
+** 
 *** column
 :properties:
 :beamer_col: 0.38
 :end:
-
+  
 Before:
 | files | blank | comment | code |
 |-------+-------+---------+------|
@@ -69,225 +61,90 @@ After:
 |-------+-------+---------+------|
 |    18 |   500 |     408 | 1692 |
 
+** PBT models
 
-** Testing /stateful/ programs
-*** column
-:properties:
-:beamer_col: 0.38
-:end:
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-Imagine a simple counter:
-#+attr_latex: :align l l c
-| Command | Returns            |
-|---------+--------------------|
-| =start/1= | =:ok= $\vert$ =:error= |
-| =stop/0=  | =:ok= $\vert$ =:error= |
-| =inc/0=   | =:ok=                |
-| =get/0=   | =integer()=          |
-
-#+beamer: \onslide<+->
-Unit test:
-
-#+attr_latex: :options style=display
-#+begin_src elixir
-  :ok = start(0)
-  :ok = inc()
-  1   = get()
-  :ok = stop()
-#+end_src
-
-*** column
-:properties:
-:beamer_col: 0.58
-:end:
-
-#+beamer: \onslide<+->
-This test can be represented:
-#+begin_figure latex
-\begin{center}
-  \begin{adjustbox}{max width=\textwidth}
-    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
-
-      \node[initial,state] (0) {$0$};
-
-      \node[state] (1) [right of=0] {$1$};
-      \path[] (0) edge node {\lstinline{inc()}} (1);
-
-      \path[] (1) edge [loop right] node {\lstinline{get()}} (1);
-
-      \node[state, accepting] (2) [right of=0] {};
-    \end{tikzpicture}
-  \end{adjustbox}
-\end{center}
-#+end_figure
-#+beamer: \onslide<+->
-To successfully test this program we need to:
-   #+beamer: \onslide<+->
-- Generate sequences of commands.
-   #+beamer: \onslide<+->
-- An internal state to track the changes in the program.
-   #+beamer: \onslide<+->
-- A way to interact with the program under test.
-
-** PBT of /stateful/ programs
-*** column
-:properties:
-:beamer_col: 0.58
-:end:
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-Basic property of /stateful/ programs:
-#+attr_latex: :options style=display
-#+begin_src elixir
-  forall cmds <- commands(Counter) do
-    :ok == run_commands(Counter, cmds)
-  end
-#+end_src
-#+beamer: \onslide<+->
-where:
-#+beamer: \onslide<+->
-- =commands/1= generates sequences commands:
-  #+attr_latex: :options style=display
-  #+begin_src elixir
-    [start(0), inc(), get(), stop()]
-    ...
-  #+end_src
-  #+beamer: \onslide<+->
-- =run_commands= executes the generated sequence.
-
-*** column
-:properties:
-:beamer_col: 0.38
-:end:
-#+beamer: \onslide<+->
-#+begin_figure latex
-\begin{center}
-  \begin{adjustbox}{max width=\textwidth}
-    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
-
-      \node[initial,state] (i0) {$0$};
-      \node[state] (i1) [below of=i0] {$1$};
-      \node[state] (i2) [below of=i1] {$1$};
-
-      \path []
-      (i0) edge node (inc)  [left] {\lstinline{inc()}} (i1)
-      (i1) edge node (get)  [left] {\lstinline{get()}} (i2);
-
-      % first call
-      \node[] (inc_res)  [right of=inc, xshift=0.5cm] {\lstinline{:ok}};
-      \path[] (inc) edge node (inc_call)  [sloped] {\lstinline{call}} (inc_res);
-      \path[](inc_res)  edge node (inc_post) [sloped, below] {\lstinline{post}} (i1);
-
-      % second call
-      \node[] (get_res)  [right of=get, xshift=0.5cm] {\lstinline{1}};
-      \path[] (get)  edge node (get_call)  [sloped] {\lstinline{call}} (get_res);
-      \path[] (get_res)  edge node (get_post) [sloped, below] {\lstinline{post}} (i2);
-
-      \node[state, accepting] (i3) [below of=i1]{};
-    \end{tikzpicture}
-  \end{adjustbox}
-\end{center}
-#+end_figure
-
-** PBT state machines
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-#+beamer: \onslide<+->
-#+beamer: \onslide<+->
-A PBT state machine is a program that specifies the behaviour of the implementation.
-#+beamer: \onslide<+->
-\vspace{10pt}
 
-Behaviour:
-- precondition.
-  #+beamer: \onslide<+->
-- command generation.
-  #+beamer: \onslide<+->
-- next state.
-  #+beamer: \onslide<+->
-- postcondition
+Proprety-Based Testing (PBT) is a great testing methodology.
 
 \vspace{10pt}
 
-#+beamer: \onslide<+->
-Executed in two phases:
-#+beamer: \onslide<+->
-- symbolic test generation.
-  #+beamer: \onslide<+->
-- dynamic test execution.
+Successful tools widely used:
+- Erlang QuickCheck (EQC)
+- PropEr
+
 \vspace{10pt}
 
-#+beamer: \onslide<+->
-Proven effectiveness.
+These tools are great for testing pure functions.
+
+\vspace{10pt}
+
+They have mechanisms to test stateful programs.
+
+\vspace{10pt}
+
+PBT state-machines or models.
+
+# TODO: figure
+
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-#+beamer: \onslide<+->
-Very slow adoption.
+
+A PBT model is like an oracle.
+
 \vspace{10pt}
 
-#+beamer: \onslide<+->
+** Problems with PBT models
+
+Despite their proven effectiveness:
+- Very slow adoption
+
+\vspace{10pt}
+
 Why?
+
 \vspace{10pt}
 
-#+beamer: \onslide<+->
-Problems:
-  #+beamer: \onslide<+->
-- Cryptic errors.
-  #+beamer: \onslide<+->
-- Usually buggy.
-  #+beamer: \onslide<+->
-- Code reuse is very hard.
-  #+beamer: \onslide<+->
-- Hard to maintain.
+1. Models are hard to reuse.
+2. Bugs in models are hard to detect.
+3. Errors are hard to understand.
+
+\vspace{10pt}
+
+All these problems made models hard to write and maintain.
 
 * Introduction to Makina and running example
-** Makina
+** Our solution: Makina
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+Makina is a DSL for writing PBT models.
+
+# TODO: diagram that shows that the user writes a model and then Makina translates it to a
+# EQC/PropEr state-machine.
+
+\vspace{10pt}
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
-#+beamer: \onslide<+->
-=Makina= is a DSL to write PBT state machines.
-\vspace{10pt}
-#+beamer: \onslide<+->
-- Fully compatible with =Erlang QuickCheck= and =PropEr=.
-  #+beamer: \onslide<+->
-- Better error messages.
-  #+beamer: \onslide<+->
-- Better error detection in models.
-  #+beamer: \onslide<+->
-- Improve code reuse.
-  
-*** column
-:properties:
-:beamer_col: 0.48
-:end:
-#+beamer: \onslide<+->
-A Makina model contains:
-#+beamer: \onslide<+->
-- =state=
-  #+beamer: \onslide<+->
-- =command=
-  #+beamer: \onslide<+->
-- =invariants=
-  #+beamer: \onslide<+->
 
-\vspace{10pt}
+1. Models are hard to reuse.
+   - Model refinement and composition. \vspace{10pt}
+2. Bugs in models are hard to detect.
+   - Automatic type and specs generation. \vspace{10pt}
+3. Errors are hard to understand.
+   - Automatic generation of runtime-checks. \vspace{10pt}
 
-Provides code reuse mechanisms:
-#+beamer: \onslide<+->
-- imports
-  #+beamer: \onslide<+->  
-- extends
-  #+beamer: \onslide<+->
-- composition
-
+** Introduction to Makina
 ** Ethereum Blockchain
 
 *** column
@@ -1226,7 +1083,6 @@ Generates a model =Transactions.Composed=.
            value: pos_integer()
       next height: height + 1,
            balances: update(balances, from, to, value)
-         
     end
   end
 #+end_src

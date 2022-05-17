@@ -13,6 +13,7 @@
 #+latex_header: \usetikzlibrary{arrows,automata,positioning}
 #+latex_header: \usetikzlibrary{overlay-beamer-styles}
 #+latex_header: \usepackage{pgfpages}
+#+latex_header: \usepackage{pgfplots}
 # listings
 # #+latex_header: \usepackage{lstlinebgrd}
 #+latex_header: \input{listings_elixir}

@@ -1,4 +1,4 @@
-% Created 2022-05-17 Tue 18:04
+% Created 2022-05-17 Tue 19:36
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt, handout]{beamer}
 \usepackage[utf8]{inputenc}
@@ -25,6 +25,7 @@
 \usetikzlibrary{arrows,automata,positioning}
 \usetikzlibrary{overlay-beamer-styles}
 \usepackage{pgfpages}
+\usepackage{pgfplots}
 \input{listings_elixir}
 \input{listings_bash}
 \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
@@ -78,10 +79,8 @@
 \whitetheme
 
 \section{Motivation}
-\label{sec:org1a579f9}
-\begin{frame}[label={sec:org374e706}]{The problem}
-\end{frame}
-\begin{frame}[label={sec:org19911e4}]{Makina}
+\label{sec:org90b48df}
+\begin{frame}[label={sec:org1d26db6}]{}
 \begin{columns}
 \begin{column}{0.38\columnwidth}
 Before:
@@ -106,240 +105,95 @@ files & blank & comment & code\\
 \end{columns}
 \end{frame}
 
-
-\begin{frame}[label={sec:org19e1062},fragile]{Testing \emph{stateful} programs}
- \begin{columns}
-\begin{column}{0.38\columnwidth}
-\onslide<+->
-\onslide<+->
-Imagine a simple counter:
-\begin{center}
-\begin{tabular}{l l c}
-Command & Returns\\
-\hline
-\texttt{start/1} & \texttt{:ok} \(\vert\) \texttt{:error}\\
-\texttt{stop/0} & \texttt{:ok} \(\vert\) \texttt{:error}\\
-\texttt{inc/0} & \texttt{:ok}\\
-\texttt{get/0} & \texttt{integer()}\\
-\end{tabular}
-\end{center}
-
-\onslide<+->
-Unit test:
-
-\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
-\begin{lstlisting}
-:ok = start(0)
-:ok = inc()
-1   = get()
-:ok = stop()
-\end{lstlisting}
-\end{column}
-
-\begin{column}{0.58\columnwidth}
-\onslide<+->
-This test can be represented:
-\begin{figure}
-\begin{center}
-  \begin{adjustbox}{max width=\textwidth}
-    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
-
-      \node[initial,state] (0) {$0$};
-
-      \node[state] (1) [right of=0] {$1$};
-      \path[] (0) edge node {\lstinline{inc()}} (1);
-
-      \path[] (1) edge [loop right] node {\lstinline{get()}} (1);
-
-      \node[state, accepting] (2) [right of=0] {};
-    \end{tikzpicture}
-  \end{adjustbox}
-\end{center}
-\end{figure}
-\onslide<+->
-To successfully test this program we need to:
-\onslide<+->
-\begin{itemize}
-\item Generate sequences of commands.
-\onslide<+->
-\item An internal state to track the changes in the program.
-\onslide<+->
-\item A way to interact with the program under test.
-\end{itemize}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[label={sec:orgd3a3d9f},fragile]{PBT of \emph{stateful} programs}
- \begin{columns}
-\begin{column}{0.58\columnwidth}
-\onslide<+->
-\onslide<+->
-Basic property of \emph{stateful} programs:
-\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
-\begin{lstlisting}
-forall cmds <- commands(Counter) do
-  :ok == run_commands(Counter, cmds)
-end
-\end{lstlisting}
-\onslide<+->
-where:
-\onslide<+->
-\begin{itemize}
-\item \texttt{commands/1} generates sequences commands:
-\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
-\begin{lstlisting}
-[start(0), inc(), get(), stop()]
-...
-\end{lstlisting}
-\onslide<+->
-\item \texttt{run\_commands} executes the generated sequence.
-\end{itemize}
-\end{column}
-
-\begin{column}{0.38\columnwidth}
-\onslide<+->
-\begin{figure}
-\begin{center}
-  \begin{adjustbox}{max width=\textwidth}
-    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
-
-      \node[initial,state] (i0) {$0$};
-      \node[state] (i1) [below of=i0] {$1$};
-      \node[state] (i2) [below of=i1] {$1$};
-
-      \path []
-      (i0) edge node (inc)  [left] {\lstinline{inc()}} (i1)
-      (i1) edge node (get)  [left] {\lstinline{get()}} (i2);
-
-      % first call
-      \node[] (inc_res)  [right of=inc, xshift=0.5cm] {\lstinline{:ok}};
-      \path[] (inc) edge node (inc_call)  [sloped] {\lstinline{call}} (inc_res);
-      \path[](inc_res)  edge node (inc_post) [sloped, below] {\lstinline{post}} (i1);
-
-      % second call
-      \node[] (get_res)  [right of=get, xshift=0.5cm] {\lstinline{1}};
-      \path[] (get)  edge node (get_call)  [sloped] {\lstinline{call}} (get_res);
-      \path[] (get_res)  edge node (get_post) [sloped, below] {\lstinline{post}} (i2);
-
-      \node[state, accepting] (i3) [below of=i1]{};
-    \end{tikzpicture}
-  \end{adjustbox}
-\end{center}
-\end{figure}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[label={sec:org7aa1136}]{PBT state machines}
+\begin{frame}[label={sec:orgfac5aa2}]{PBT models}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
-\onslide<+->
-\onslide<+->
-A PBT state machine is a program that specifies the behaviour of the implementation.
-\onslide<+->
+Proprety-Based Testing (PBT) is a great testing methodology.
+
 \vspace{10pt}
 
-Behaviour:
+Successful tools widely used:
 \begin{itemize}
-\item precondition.
-\onslide<+->
-\item command generation.
-\onslide<+->
-\item next state.
-\onslide<+->
-\item postcondition
+\item Erlang QuickCheck (EQC)
+\item PropEr
 \end{itemize}
 
 \vspace{10pt}
 
-\onslide<+->
-Executed in two phases:
-\onslide<+->
-\begin{itemize}
-\item symbolic test generation.
-\onslide<+->
-\item dynamic test execution.
-\end{itemize}
+These tools are great for testing pure functions.
+
 \vspace{10pt}
 
-\onslide<+->
-Proven effectiveness.
+They have mechanisms to test stateful programs.
+
+\vspace{10pt}
+
+PBT state-machines or models.
 \end{column}
+
 \begin{column}{0.48\columnwidth}
-\onslide<+->
-Very slow adoption.
-\vspace{10pt}
+A PBT model is like an oracle.
 
-\onslide<+->
-Why?
 \vspace{10pt}
-
-\onslide<+->
-Problems:
-\onslide<+->
-\begin{itemize}
-\item Cryptic errors.
-\onslide<+->
-\item Usually buggy.
-\onslide<+->
-\item Code reuse is very hard.
-\onslide<+->
-\item Hard to maintain.
-\end{itemize}
 \end{column}
 \end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:orgdf5c6fd}]{Problems with PBT models}
+Despite their proven effectiveness:
+\begin{itemize}
+\item Very slow adoption
+\end{itemize}
+
+\vspace{10pt}
+
+Why?
+
+\vspace{10pt}
+
+\begin{enumerate}
+\item Models are hard to reuse.
+\item Bugs in models are hard to detect.
+\item Errors are hard to understand.
+\end{enumerate}
+
+\vspace{10pt}
+
+All these problems made models hard to write and maintain.
 \end{frame}
 
 \section{Introduction to Makina and running example}
-\label{sec:org13844d2}
-\begin{frame}[label={sec:org8b6cbcf},fragile]{Makina}
- \begin{columns}
+\label{sec:orgf41d92e}
+\begin{frame}[label={sec:orga66aa88}]{Our solution: Makina}
+\begin{columns}
 \begin{column}{0.48\columnwidth}
-\onslide<+->
-\texttt{Makina} is a DSL to write PBT state machines.
+Makina is a DSL for writing PBT models.
+
 \vspace{10pt}
-\onslide<+->
-\begin{itemize}
-\item Fully compatible with \texttt{Erlang QuickCheck} and \texttt{PropEr}.
-\onslide<+->
-\item Better error messages.
-\onslide<+->
-\item Better error detection in models.
-\onslide<+->
-\item Improve code reuse.
-\end{itemize}
 \end{column}
 
 \begin{column}{0.48\columnwidth}
-\onslide<+->
-A Makina model contains:
-\onslide<+->
+\begin{enumerate}
+\item Models are hard to reuse.
 \begin{itemize}
-\item \texttt{state}
-\onslide<+->
-\item \texttt{command}
-\onslide<+->
-\item \texttt{invariants}
-\onslide<+->
+\item Model refinement and composition. \vspace{10pt}
 \end{itemize}
-
-\vspace{10pt}
-
-Provides code reuse mechanisms:
-\onslide<+->
+\item Bugs in models are hard to detect.
 \begin{itemize}
-\item imports
-\onslide<+->
-\item extends
-\onslide<+->
-\item composition
+\item Automatic type and specs generation. \vspace{10pt}
 \end{itemize}
+\item Errors are hard to understand.
+\begin{itemize}
+\item Automatic generation of runtime-checks. \vspace{10pt}
+\end{itemize}
+\end{enumerate}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6b22bd4},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:org938edd3}]{Introduction to Makina}
+\end{frame}
+\begin{frame}[label={sec:orgd420cbf},fragile]{Ethereum Blockchain}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -437,8 +291,8 @@ The properties to test:
 \end{frame}
 
 \section{Blocks model}
-\label{sec:org12e49e4}
-\begin{frame}[label={sec:org09ddcd0},fragile]{Mining blocks}
+\label{sec:orge32723c}
+\begin{frame}[label={sec:orga9b7c60},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -491,7 +345,7 @@ defmodule Blocks do #@ \onslide<5->
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org46cb047},fragile]{Mining blocks}
+\begin{frame}[label={sec:org8dfff0c},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 The API:
@@ -538,7 +392,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgf73a384},fragile]{Running the test}
+\begin{frame}[label={sec:org501af93},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -584,7 +438,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org61cb79c},fragile]{Fixing the model}
+\begin{frame}[label={sec:org7ca0fae},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -629,7 +483,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org41e6fea},fragile]{Running the test}
+\begin{frame}[label={sec:orgee404b5},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -670,7 +524,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org71ee0dc},fragile]{Adding type information}
+\begin{frame}[label={sec:orgff89665},fragile]{Adding type information}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<3->
@@ -725,7 +579,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5d93efd},fragile]{Adding documentation}
+\begin{frame}[label={sec:org5758c4e},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<3->
@@ -781,7 +635,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgc208f75},fragile]{Adding documentation}
+\begin{frame}[label={sec:orga2a0473},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<1->
@@ -834,7 +688,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org951b46f},fragile]{Adding documentation}
+\begin{frame}[label={sec:orgfb6acf8},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<1->
@@ -892,8 +746,8 @@ end
 \end{frame}
 
 \section{Accounts model}
-\label{sec:org183c07f}
-\begin{frame}[label={sec:org40544ee},fragile]{Account access}
+\label{sec:org14eaa08}
+\begin{frame}[label={sec:orgbf2ad66},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -939,7 +793,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org7fdcf14},fragile]{Running the test}
+\begin{frame}[label={sec:org5809e5c},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -974,7 +828,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org89766e3},fragile]{Fixing the model}
+\begin{frame}[label={sec:org1de2016},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -1010,7 +864,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org68fd187},fragile]{Running the test}
+\begin{frame}[label={sec:org2b4aa8b},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1049,8 +903,8 @@ end
 \end{frame}
 
 \section{Transactions model}
-\label{sec:org3237b30}
-\begin{frame}[label={sec:org53b94e6},fragile]{Generating transactions}
+\label{sec:org66f5463}
+\begin{frame}[label={sec:orgd1afc9d},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -1111,7 +965,7 @@ iex(1)> h Transactions.Composed
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgaea7404},fragile]{Generating transactions}
+\begin{frame}[label={sec:org7f823e6},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide<+->
@@ -1145,7 +999,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgf2ec66d},fragile]{Running the test}
+\begin{frame}[label={sec:orgf92c75f},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1187,7 +1041,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org38289f5},fragile]{Fixing the model}
+\begin{frame}[label={sec:orga87c4c1},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1228,7 +1082,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org24292d6},fragile]{Running the test}
+\begin{frame}[label={sec:orgd72411c},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1269,7 +1123,6 @@ defmodule Transactions do
 	 value: pos_integer()
     next height: height + 1,
 	 balances: update(balances, from, to, value)
-
   end
 end
 \end{lstlisting}
@@ -1277,7 +1130,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6b60b14},fragile]{Fixing the model}
+\begin{frame}[label={sec:org6cea16a},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \end{column}
@@ -1304,7 +1157,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgbb84db6},fragile]{Fixing the model}
+\begin{frame}[label={sec:org897a3f9},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \end{column}
@@ -1341,7 +1194,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgfe697e3},fragile]{Fixing the model}
+\begin{frame}[label={sec:org46c24a6},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \end{column}
@@ -1371,7 +1224,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6c90ae1},fragile]{Running the test}
+\begin{frame}[label={sec:org369b4b0},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1415,8 +1268,8 @@ end
 \end{columns}
 \end{frame}
 \section{Conclusions}
-\label{sec:org332af46}
-\begin{frame}[label={sec:org30fc2a0}]{Results and conclussions}
+\label{sec:orgdd9b0e6}
+\begin{frame}[label={sec:orgbcd753f}]{Results and conclussions}
 \begin{columns}
 \begin{column}{0.38\columnwidth}
 Before Makina:
