@@ -1,4 +1,4 @@
-% Created 2022-05-18 Wed 12:54
+% Created 2022-05-18 Wed 17:06
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt, handout]{beamer}
 \usepackage[utf8]{inputenc}
@@ -26,6 +26,9 @@
 \usetikzlibrary{overlay-beamer-styles}
 \usepackage{pgfpages}
 \usepackage{pgfplots}
+\usepackage{pifont}
+\newcommand{\cmark}{\text{\ding{51}}}
+\newcommand{\xmark}{\text{\ding{55}}}
 \input{listings_elixir}
 \input{listings_bash}
 \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
@@ -79,8 +82,8 @@
 \whitetheme
 
 \section{Motivation}
-\label{sec:org83b7ca0}
-\begin{frame}[label={sec:orgbdadd48}]{}
+\label{sec:org69709a0}
+\begin{frame}[label={sec:org2b68947}]{}
 \begin{columns}
 \begin{column}{0.38\columnwidth}
 Before:
@@ -105,7 +108,7 @@ files & blank & comment & code\\
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org3379b2c}]{PBT models}
+\begin{frame}[label={sec:org1f69bda}]{PBT models}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -131,17 +134,47 @@ They have mechanisms to test stateful programs.
 \vspace{10pt}
 
 PBT state-machines or models.
+
+\vspace{10pt}
+
+A PBT model works like an oracle.
 \end{column}
 
 \begin{column}{0.48\columnwidth}
-A PBT model works like an oracle.
+\begin{figure}
+\begin{adjustbox}{max width=\textwidth}
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
+    %% implementation
+    \node[visible on=<5->] (il) {Implementation};
+    \node[visible on=<5->] (ml) [right of=il] {Model};
 
-\vspace{10pt}
+    \node[state, visible on=<6->] (i0) [below of=il, yshift=1cm] {i0};
+    \node[state, visible on=<6->] (m0) [below of=ml, yshift=1cm] {m0};
+
+    \node[state, visible on=<7->] (i1) [below of=i0] {i1};
+    \node[state, visible on=<7->] (m1) [below of=m0] {m1};
+
+    \node[state, visible on=<9->] (i2) [below of=i1] {i2};
+    \node[state, visible on=<9->] (m2) [below of=m1] {m2};
+
+    \path[visible on=<7->] (i0) edge (i1);
+    \path[visible on=<7->] (m0) edge (m1);
+
+    \path[visible on=<9->] (i1) edge (i2);
+    \path[visible on=<9->] (m1) edge (m2);
+
+    \path[-, dashed, visible on=<8->] (i1) edge node {$\cmark$} (m1);
+    \path[-, dashed, visible on=<10->] (i2) edge node {$\xmark$} (m2);
+
+  \end{tikzpicture}
+\end{adjustbox}
+\end{figure}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6139db8}]{Problems with PBT models}
+
+\begin{frame}[label={sec:org851b2a8}]{Problems with PBT models}
 \onslide<+->
 \onslide<+->
 Despite their proven effectiveness:
@@ -167,8 +200,8 @@ All these problems made models hard to write and maintain.
 \end{frame}
 
 \section{Introduction to Makina and running example}
-\label{sec:org4489ac3}
-\begin{frame}[label={sec:org28d5101}]{Our solution: Makina}
+\label{sec:orge9c4ec2}
+\begin{frame}[label={sec:orgc4273dd}]{Our solution: Makina}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 Makina is a DSL for writing PBT models.
@@ -202,7 +235,7 @@ Makina is a DSL for writing PBT models.
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9706960},fragile]{Makina: The Language}
+\begin{frame}[label={sec:org0f93747},fragile]{Makina: The Language}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 Makina is implemented using Elixir macros.
@@ -258,7 +291,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org2a0c723},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:orgfdbc1ca},fragile]{Ethereum Blockchain}
  Why Ethereum?
 \begin{itemize}
 \item It is a complex system.
@@ -303,8 +336,8 @@ How \lstinline[language=elixir, style=display]~Makina~ handles this complexity?
 
 
 \section{Blocks model}
-\label{sec:org82b2572}
-\begin{frame}[label={sec:org1ed64e6},fragile]{Mining blocks}
+\label{sec:org11ed8fe}
+\begin{frame}[label={sec:org78e6dfc},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<+->
@@ -357,7 +390,7 @@ defmodule Blocks do #@ \onslide<5->
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org33bf8e4},fragile]{Mining blocks}
+\begin{frame}[label={sec:org49ae1f2},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 The API:
@@ -404,7 +437,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb813882},fragile]{Running the test}
+\begin{frame}[label={sec:org3219394},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<+->
@@ -450,7 +483,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org46c49bb},fragile]{Fixing the model}
+\begin{frame}[label={sec:org0d2397d},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<+->
@@ -494,7 +527,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgd18bb0f},fragile]{Running the test}
+\begin{frame}[label={sec:org132cc48},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -535,7 +568,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org374ef49},fragile]{Adding type information}
+\begin{frame}[label={sec:orgf7570d6},fragile]{Adding type information}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<3->
@@ -590,7 +623,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgd948e23},fragile]{Adding documentation}
+\begin{frame}[label={sec:orgbd8920b},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<3->
@@ -646,7 +679,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org990dbb1},fragile]{Adding documentation}
+\begin{frame}[label={sec:org41f911e},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<1->
@@ -698,7 +731,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org28dde09},fragile]{Adding documentation}
+\begin{frame}[label={sec:orga8042eb},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<1->
@@ -756,8 +789,8 @@ end
 \end{frame}
 
 \section{Accounts model}
-\label{sec:org699e322}
-\begin{frame}[label={sec:orgaa5738c},fragile]{Account access}
+\label{sec:org0f2e076}
+\begin{frame}[label={sec:org4452700},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -805,7 +838,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org971d968},fragile]{Running the test}
+\begin{frame}[label={sec:org181333e},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -844,7 +877,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org24dba54},fragile]{Fixing the model}
+\begin{frame}[label={sec:orgfc7d9e7},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -883,7 +916,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org61dab89},fragile]{Running the test}
+\begin{frame}[label={sec:org6ec8e39},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -923,8 +956,8 @@ end
 \end{frame}
 
 \section{Transactions model}
-\label{sec:org53cb816}
-\begin{frame}[label={sec:orgd394681},fragile]{Generating transactions}
+\label{sec:orgf4df78d}
+\begin{frame}[label={sec:org8538aee},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -985,7 +1018,7 @@ iex(1)> h Transactions.Composed
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5955902},fragile]{Generating transactions}
+\begin{frame}[label={sec:org303b73f},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide<+->
@@ -1023,7 +1056,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org377156b},fragile]{Running the test}
+\begin{frame}[label={sec:org99e7f87},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1065,7 +1098,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orge338ffa},fragile]{Fixing the model}
+\begin{frame}[label={sec:org734b53d},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1108,7 +1141,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9ce6a9b},fragile]{Running the test}
+\begin{frame}[label={sec:orgd20e420},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide<+->
@@ -1157,7 +1190,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org764152b},fragile]{Fixing the model}
+\begin{frame}[label={sec:org5e647c7},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 To fix this error we need to extract the gas cost after producing a transaction.
@@ -1204,7 +1237,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org3baf247},fragile]{Fixing the model}
+\begin{frame}[label={sec:orga90be6f},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide <+->
@@ -1269,7 +1302,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org35c2a4d},fragile]{Fixing the model}
+\begin{frame}[label={sec:org18bffa2},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 We import \lstinline[language=elixir, style=display]~Transactions~ model using \lstinline[language=elixir, style=display]~:extends~.
@@ -1302,7 +1335,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org6d7d698},fragile]{Running the test}
+\begin{frame}[label={sec:org4f92f31},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 \onslide <+->
@@ -1347,8 +1380,8 @@ end
 \end{columns}
 \end{frame}
 \section{Conclusions}
-\label{sec:org26a8c2d}
-\begin{frame}[label={sec:org6a237e0},fragile]{Results}
+\label{sec:org08385e7}
+\begin{frame}[label={sec:orged66774},fragile]{Results}
  \onslide<+->
 \onslide<+->
 
@@ -1380,7 +1413,7 @@ Before \lstinline[language=elixir, style=display]~Makina~ & After \lstinline[lan
 \end{frame}
 
 
-\begin{frame}[label={sec:org5ebcba7}]{Links}
+\begin{frame}[label={sec:orgddb477c}]{Links}
 \begin{columns}
 \begin{column}{0.78\columnwidth}
 Makina library:

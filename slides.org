@@ -88,16 +88,44 @@ They have mechanisms to test stateful programs.
 
 PBT state-machines or models.
 
-# TODO: figure
+\vspace{10pt}
+
+A PBT model works like an oracle.
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
 
-A PBT model works like an oracle.
+    #+begin_figure latex
+      \begin{adjustbox}{max width=\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
+          %% implementation
+          \node[visible on=<5->] (il) {Implementation};
+          \node[visible on=<5->] (ml) [right of=il] {Model};
 
-\vspace{10pt}
+          \node[state, visible on=<6->] (i0) [below of=il, yshift=1cm] {i0};
+          \node[state, visible on=<6->] (m0) [below of=ml, yshift=1cm] {m0};
+
+          \node[state, visible on=<7->] (i1) [below of=i0] {i1};
+          \node[state, visible on=<7->] (m1) [below of=m0] {m1};
+    
+          \node[state, visible on=<9->] (i2) [below of=i1] {i2};
+          \node[state, visible on=<9->] (m2) [below of=m1] {m2};
+
+          \path[visible on=<7->] (i0) edge (i1);
+          \path[visible on=<7->] (m0) edge (m1);
+
+          \path[visible on=<9->] (i1) edge (i2);
+          \path[visible on=<9->] (m1) edge (m2);
+
+          \path[-, dashed, visible on=<8->] (i1) edge node {$\cmark$} (m1);
+          \path[-, dashed, visible on=<10->] (i2) edge node {$\xmark$} (m2);
+
+        \end{tikzpicture}
+      \end{adjustbox}
+    #+end_figure
+
 
 ** Problems with PBT models
 
