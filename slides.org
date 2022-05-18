@@ -66,21 +66,22 @@ After:
 :properties:
 :beamer_col: 0.48
 :end:
-
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Proprety-Based Testing (PBT) is a great testing methodology.
 
 \vspace{10pt}
 
 Successful tools widely used:
-- Erlang QuickCheck (EQC)
+- Quviq QuickCheck
 - PropEr
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 These tools are great for testing pure functions.
 
 \vspace{10pt}
-
+#+beamer: \onslide<+->
 They have mechanisms to test stateful programs.
 
 \vspace{10pt}
@@ -100,19 +101,21 @@ A PBT model works like an oracle.
 
 ** Problems with PBT models
 
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
 Despite their proven effectiveness:
 - Very slow adoption
 
 \vspace{10pt}
-
+#+beamer: \onslide<+->
 Why?
 
 \vspace{10pt}
 
-1. Models are hard to reuse.
+1. Models are hard to reuse. 
 2. Bugs in models are hard to detect.
 3. Errors are hard to understand.
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 
 All these problems made models hard to write and maintain.
@@ -125,7 +128,7 @@ All these problems made models hard to write and maintain.
 :end:
 
 Makina is a DSL for writing PBT models.
-
+#+beamer: \onslide<+->
 # TODO: diagram that shows that the user writes a model and then Makina translates it to a
 # EQC/PropEr state-machine.
 
@@ -136,12 +139,18 @@ Makina is a DSL for writing PBT models.
 :beamer_col: 0.48
 :end:
 
+#+beamer: \onslide<2->
 1. Models are hard to reuse.
-   - Model refinement and composition. \vspace{10pt}
+   #+beamer: \onslide<3->
+   - Modular reusable models. \vspace{10pt}
+   #+beamer: \onslide<2->
 2. Bugs in models are hard to detect.
+   #+beamer: \onslide<4->
    - Automatic type and specs generation. \vspace{10pt}
+   #+beamer: \onslide<2->
 3. Errors are hard to understand.
-   - Automatic generation of runtime-checks. \vspace{10pt}
+   #+beamer: \onslide<5->
+   - Automatic runtime-checks generation. \vspace{10pt}
 
 ** Makina: The Language
 *** column
@@ -149,6 +158,8 @@ Makina is a DSL for writing PBT models.
 :beamer_col: 0.38
 :end:
 
+Makina is implemented using Elixir macros.
+#+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Name do
@@ -163,9 +174,7 @@ Makina is a DSL for writing PBT models.
     end
   end
 #+end_src
-
-#+attr_latex: :options style=display
-
+#+beamer: \onslide<+->
 ~_option_~
 - ~extends: module()~
 - ~extends: [module()]~
@@ -175,76 +184,70 @@ Makina is a DSL for writing PBT models.
 :properties:
 :beamer_col: 0.58
 :end:
-
+#+beamer: \onslide<+->
 ~_attribute_~
 - ~name: expr~
 - ~name: expr  type~
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 ~_declaration_~
 - ~name(arg1, ... , argN)~
 - ~name(arg1 type1, ... , argN typeN) return_type~
-
+#+beamer: \onslide<+->
 \vspace{10pt}
 ~_command_body_~
-| name | access                   | returns     |
-|------+--------------------------+-------------|
-| ~pre~  | state                    | ~boolean()~   |
-| ~args~ | state                    | ~generator()~ |
-| ~call~ | arguments                | ~return_type~ |
-| ~next~ | state, arguments, result | ~[updates()]~ |
-| ~post~ | state, arguments, result | ~boolean()~   |
+- ~pre~    ~boolean()~  
+- ~args~   ~generator()~ 
+- ~call~   ~return_type~ 
+- ~next~   ~[updates()]~ 
+- ~post~   ~boolean()~  
 
 ** Ethereum Blockchain
-*** column
-:properties:
-:beamer_col: 0.48
-:end:
+
 
 Why Ethereum?
 - It is a complex system.
-
-\vspace{10pt}  
-  
-The properties to test:
 #+beamer: \onslide<+->
-1. Mining blocks.
-   #+beamer: \onslide<+->
-2. Account access.
-   #+beamer: \onslide<+->
-3. Transactions between accounts.
+#+beamer: \onslide<+->
+| API                  |                      |                     |
+|----------------------+----------------------+---------------------|
+| ~accounts!/0~          | ~accounts/0~           | ~block_number!/0~     |
+| ~call_transaction!/4~  | ~call_transaction!/5~  | ~call_transaction/4~  |
+| ~client_version!/0~    | ~client_version/0~     | ~compile_solidity!/1~ |
+| ~deploy!/3~            | ~deploy!/4~            | ~deploy/3~            |
+| ~estimate_gas!/4~      | ~estimate_gas!/5~      | ~estimate_gas/4~      |
+| ~estimate_gas_cost!/4~ | ~estimate_gas_cost!/5~ | ~estimate_gas_cost/4~ |
+| ~gas_cost!/1~          | ~gas_cost/1~           | ~gas_price!/0~        |
+| ...                  | ...                  | ...                 |
+
 
 *** column
 :properties:
 :beamer_col: 0.48
 :end:
 
-| API                    |
-|------------------------|
-| ~accounts/0~             |
-| ~block_number/0~         |
-| ~call_transaction/4~     |
-| ~client_version/0~       |
-| ~compile_solidity/1~     |
-| ~deploy/3~               |
-| ~deploy/4~               |
-| ~estimate_gas/4~         |
-| ~estimate_gas_cost/4~    |
-| ~gas_cost/1~             |
-| ~gas_price/0~            |
-| ~get_balance/1~          |
-| ~get_block/0~            |
-| ~get_block/1~            |
-| ~get_bytecode/1~         |
-| ~get_contract_address/1~ |
-| ...
+#+beamer: \onslide<+->
+The properties to test:
+1. Mining blocks.
+2. Account access.
+3. Transactions between accounts.
+
+
+*** column
+:properties:
+:beamer_col: 0.48
+:end:
+
+#+beamer: \onslide<+->
+
+How ~Makina~ handles this complexity?
 
 
 * Blocks model
 ** Mining blocks
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 
 #+beamer: \onslide<+->
@@ -269,7 +272,7 @@ The API:
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 
 #+beamer: \onslide<4->
@@ -294,7 +297,7 @@ The API:
 ** Mining blocks
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 
 The API:
@@ -313,7 +316,7 @@ The API:
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -337,7 +340,7 @@ The API:
 ** Running the test
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 
 #+beamer: \onslide<+->
@@ -355,9 +358,12 @@ The API:
   Last state: %{height: 0}
 #+end_src
 
+#+beamer: \onslide<+->
+This is a runtime check added by ~Makina~!
+
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=display
@@ -383,7 +389,7 @@ The API:
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 
 #+beamer: \onslide<+->
@@ -401,9 +407,11 @@ The API:
   Last state: %{height: 0}
 #+end_src
 
+This is a runtime check added by ~Makina~!
+
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -427,7 +435,7 @@ The API:
 ** Running the test
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 
 #+attr_latex: :options style=shell
@@ -445,7 +453,7 @@ The API:
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=display
@@ -470,7 +478,7 @@ The API:
 ** Adding type information
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 #+beamer: \onslide<3->
 #+attr_latex: :options style=shell
@@ -501,7 +509,7 @@ Something changes in =Etherex=...
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=display, numbers=left
@@ -527,7 +535,7 @@ Something changes in =Etherex=...
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 #+beamer: \onslide<3->
 #+attr_latex: :options style=shell
@@ -554,7 +562,7 @@ Something changes in =Etherex=...
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=display
@@ -584,7 +592,7 @@ Something changes in =Etherex=...
 ** Adding documentation
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=shell
@@ -607,7 +615,7 @@ Something changes in =Etherex=...
 #+end_src
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=display
@@ -624,7 +632,7 @@ Something changes in =Etherex=...
 
     command block_number() :: integer() do
       @moduledoc "Gets the block number."
-      post {:ok, height} == result
+      post height == result
     end
 
     command mine() :: :ok do
@@ -638,7 +646,7 @@ Something changes in =Etherex=...
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.52
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=shell
@@ -666,7 +674,7 @@ Something changes in =Etherex=...
 
 *** column
 :properties:
-:beamer_col: 0.48
+:beamer_col: 0.44
 :end:
 #+beamer: \onslide<1->
 #+attr_latex: :options style=display
@@ -683,7 +691,7 @@ Something changes in =Etherex=...
 
     command block_number() :: integer() do
       @moduledoc "Gets the block number."
-      post {:ok, height} == result
+      post height == result
     end
 
     command mine() :: :ok do
@@ -753,7 +761,9 @@ The API:
   `account` missing in command
   get_balance
 #+end_src
-\vspace{40pt}
+\vspace{20pt}
+#+beamer: \onslide<+->
+This is a runtime-check added by ~Makina~!
 
 *** column
 :properties:
@@ -793,7 +803,8 @@ The API:
   `account` missing in command
   get_balance
 #+end_src
-\vspace{40pt}
+\vspace{20pt}
+This is a runtime-check added by ~Makina~!
 
 *** column
 :properties:
@@ -871,12 +882,12 @@ The API:
 #+beamer: \onslide<+->
 The API to generate and check transactions:
 #+beamer: \onslide<+->
-| Command        | Returns   |
-|----------------+-----------|
-| ~mine/0~         | ~:ok~       |
-| ~block_number/0~ | ~integer()~ |
-| ~get_balance/1~  | ~integer()~ |
-| ~transfer/3~     | ~hash()~    |
+| Command        | Returns   | Implemented  |
+|----------------+-----------+--------------|
+| ~mine/0~         | ~:ok~       | $\checkmark$ |
+| ~block_number/0~ | ~integer()~ | $\checkmark$ |
+| ~get_balance/1~  | ~integer()~ | $\checkmark$ |
+| ~transfer/3~     | ~hash()~    |              |
 #+beamer: \onslide<+->
 We can compose ~Blocks~ and ~Accounts~!
 #+beamer: \onslide<+->
@@ -926,6 +937,10 @@ Generates a model ~Transactions.Composed~.
 :beamer_col: 0.44
 :end:
 #+beamer: \onslide<+->
+~Transactions extends: Transactions.Composed~.
+\vspace{10pt}
+
+#+beamer: \onslide<+->
 | Command        | Returns   |
 |----------------+-----------|
 | =transfer/3=     | =hash()=    |
@@ -933,21 +948,21 @@ Generates a model ~Transactions.Composed~.
 :properties:
 :beamer_col: 0.52
 :end:
-#+beamer: \onslide<+->
+#+beamer: \onslide<1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
     use Makina,
       implemented_by: Etherex,
       extends: [Accounts, Blocks]
-
+    #@\onslide<2->
     command transfer(from, to, value) :: hash() do
       pre accounts != []
       args from: oneof(accounts),
            to: oneof(accounts),
            value: pos_integer()
       next balances: update(balances, from, to, value)
-    end
+    end    #@\onslide<1->
   end
 #+end_src
 
@@ -959,7 +974,7 @@ Generates a model ~Transactions.Composed~.
 #+attr_latex: :options style=shell
 #+begin_src bash
   $ mix test #@\onslide<+->
-
+  #@\onslide<+->
   transfer("0xffcf8fdee72ac11",
            "0x90f8bf6a479f320",
            1)
@@ -976,7 +991,7 @@ Generates a model ~Transactions.Composed~.
 :properties:
 :beamer_col: 0.52
 :end:
-#+beamer: \onslide<+->
+#+beamer: \onslide<1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
@@ -1001,13 +1016,15 @@ Generates a model ~Transactions.Composed~.
 :end:
 #+attr_latex: :options style=shell
 #+begin_src bash
-  $ mix test #@\onslide<+->
-
-  Postcondition failed.
+  $ mix test
 
   transfer("0xffcf8fdee72ac11",
            "0x90f8bf6a479f320",
            1)
+  block_number()
+
+  Postcondition failed.
+
   block_number() -> {:ok, 1}
 
   Last state: %{height: 0, ...}
@@ -1017,7 +1034,7 @@ Generates a model ~Transactions.Composed~.
 :properties:
 :beamer_col: 0.52
 :end:
-#+beamer: \onslide<+->
+#+beamer: \onslide<1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
@@ -1041,12 +1058,13 @@ Generates a model ~Transactions.Composed~.
 :properties:
 :beamer_col: 0.44
 :end:
+#+beamer: \onslide<+->
 #+attr_latex: :options style=shell
 #+begin_src bash
   $ mix test #@\onslide<+->
 
   transfer("0x90f8bf6a479f320",
-           "0x90f8bf6a479f320",
+           "0xffcf8fdee72ac11",
            1),
   get_balance("0x90f8bf6a479f320")
 
@@ -1066,7 +1084,7 @@ Generates a model ~Transactions.Composed~.
 :properties:
 :beamer_col: 0.52
 :end:
-#+beamer: \onslide<+->
+#+beamer: \onslide<1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
@@ -1092,16 +1110,18 @@ Generates a model ~Transactions.Composed~.
 :end:
 
 To fix this error we need to extract the gas cost after producing a transaction.
-
+#+beamer: \onslide <+->
+#+beamer: \onslide <+->
 \vspace{10pt}
+
 
 Model execution is performed in two phases:
 1. Generation of the command sequence.
 2. Real execution of the test.
-
+#+beamer: \onslide <+->
 \vspace{10pt}
 
-PBT libraries make this difference in documentation:
+PBT libraries solve this documenting:
 - symbolic state: state of the model during phase 1.
 - dynamic state: state of the model during phase 2.
 
@@ -1109,7 +1129,7 @@ PBT libraries make this difference in documentation:
 :properties:
 :beamer_col: 0.52
 :end:
-#+beamer: \onslide<+->
+#+beamer: \onslide<1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions do
@@ -1134,29 +1154,33 @@ PBT libraries make this difference in documentation:
 :beamer_col: 0.44
 :end:
 
+#+beamer: \onslide <+->
+#+beamer: \onslide <+->
 ~Makina~ makes the difference between symbolic and dynamic explicit.
 
 \vspace{10pt}
-
+#+beamer: \onslide <+->
 Provides two mechanisms to add information about symbolic state:
 - ~symbolic(t)~ type.
 - ~symbolic(expr)~ macro.
 
+#+beamer: \onslide <+->
 Rules on symbolic state:
 - An attribute with a symbolic type cannot be inspected in ~next~.
 - If we need to update a symbolic attribute we should use symbolic macro.
   
 \vspace{10pt}
-
+#+beamer: \onslide <+->
 To fix our model we need
 1. Add symbolic attributes to the state.
+   #+beamer: \onslide <7->
 2. Store and update symbolic attributes.
 
 *** column
 :properties:
 :beamer_col: 0.52
 :end:
-#+beamer: \onslide<+->
+#+beamer: \onslide<1->
 \vspace{-10pt}
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -1164,19 +1188,19 @@ To fix our model we need
     use Makina,
       implemented_by: Etherex,
       extends: [Accounts, Blocks]
-
+    #@ \onslide<6->
     state transactions: [] :: [symbolic(hash())]
           balances: super() :: symbolic(balances)
-  
+    #@ \onslide<1->
     command transfer(from, to, value) :: hash() do
       pre accounts != []
       args from: oneof(accounts),
            to: oneof(accounts),
            value: pos_integer()
       next height: height + 1,
-           transactions: [result | transactions],
+           #@\onslide<8->{transactions: [result | transactions],}
            balances: update(balances, from, to, value)
-                     |> symbolic()
+                         #@\onslide<8->{|> symbolic()}
     end
 
     command get_balance() do
@@ -1194,7 +1218,8 @@ To fix our model we need
 We import ~Transactions~ model using ~:extends~.
 
 \vspace{10pt}
-
+#+beamer: \onslide <+->
+#+beamer: \onslide <+->
 We add a command that gets the cost of a transaction.
 
 *** column
@@ -1202,11 +1227,12 @@ We add a command that gets the cost of a transaction.
 :beamer_col: 0.58
 :end:
 
+#+beamer: \onslide <1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions.GasCost do
     use Makina, extends: Transactions
-
+    #@ \onslide<3->
     command gas_cost(hash :: hash())
         :: {address(), quantity()} do
       pre transactions != []
@@ -1214,7 +1240,7 @@ We add a command that gets the cost of a transaction.
       next transactions: List.delete(transactions, hash),
            balances: update_gas(balances, result)
                      |> symbolic()
-      end
+      end     #@ \onslide<1->
     end
   end
 #+end_src
@@ -1224,11 +1250,11 @@ We add a command that gets the cost of a transaction.
 :properties:
 :beamer_col: 0.38
 :end:
-
+#+beamer: \onslide <+->
 #+attr_latex: :options style=shell
 #+begin_src bash
   $ mix test
-
+  #@ \onslide<+->
   .........................
   .........................
   .........................
@@ -1247,7 +1273,7 @@ We add a command that gets the cost of a transaction.
 :properties:
 :beamer_col: 0.58
 :end:
-
+#+beamer: \onslide <1->
 #+attr_latex: :options style=display
 #+begin_src elixir
   defmodule Transactions.GasCost do
@@ -1267,20 +1293,40 @@ We add a command that gets the cost of a transaction.
 * Conclusions
 ** Results
 
-We presented a modular approach to write testing models using ~Makina~.
+#+beamer: \onslide<+->
+#+beamer: \onslide<+->
+
+| Problem on PBT models    | ~Makina~ solution                |
+|--------------------------+--------------------------------|
+|                          |                                |
+| Hard to reuse.           | Modular and composable models. |
+|                          |                                |
+| Bugs are hard to detect. | Type and specs generation.     |
+|                          |                                |
+| Generate cryptic errors. | Automatic runtime-checks.      |
 
 \vspace{10pt}
 
-~Makina~ empowers programmers to write better tests using PBT libraries.
+#+beamer: \onslide<+->
 
+| Before ~Makina~      | After ~Makina~        |
+|--------------------+---------------------|
+|                    |                     |
+| 4 files 4513 lines | 18 files 1692 lines |
+
+
+** Links
+
+*** column
+:properties:
+:beamer_col: 0.78
+:end:
+
+Makina library:
+- https://gitlab.com/babel-upm/makina/makina/
 \vspace{10pt}
-
-| Problem on PBT models               | ~Makina~ solution                              |
-|-------------------------------------+----------------------------------------------|
-| PBT models are hard to reuse.       | ~:extends~, ~imports~ and ~composition~ operations |
-|                                     |                                              |
-| PBT models bugs are hard to detect. | Automatic generation of type information.    |
-|                                     |                                              |
-| PBT models generate cryptic errors. | Automatic generation of runtime checks.      |
-
-
+Etherex library:
+- https://gitlab.com/babel-upm/blockchain/etherex
+\vspace{10pt}
+Slides and code examples:
+- https://github.com/lbueso/code_beam_2022

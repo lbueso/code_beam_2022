@@ -1,4 +1,4 @@
-% Created 2022-05-18 Wed 00:27
+% Created 2022-05-18 Wed 12:54
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt, handout]{beamer}
 \usepackage[utf8]{inputenc}
@@ -79,8 +79,8 @@
 \whitetheme
 
 \section{Motivation}
-\label{sec:orgeef3a20}
-\begin{frame}[label={sec:org646551f}]{}
+\label{sec:org83b7ca0}
+\begin{frame}[label={sec:orgbdadd48}]{}
 \begin{columns}
 \begin{column}{0.38\columnwidth}
 Before:
@@ -105,25 +105,27 @@ files & blank & comment & code\\
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org421627e}]{PBT models}
+\begin{frame}[label={sec:org3379b2c}]{PBT models}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
+\onslide<+->
+\onslide<+->
 Proprety-Based Testing (PBT) is a great testing methodology.
 
 \vspace{10pt}
 
 Successful tools widely used:
 \begin{itemize}
-\item Erlang QuickCheck (EQC)
+\item Quviq QuickCheck
 \item PropEr
 \end{itemize}
-
+\onslide<+->
 \vspace{10pt}
 
 These tools are great for testing pure functions.
 
 \vspace{10pt}
-
+\onslide<+->
 They have mechanisms to test stateful programs.
 
 \vspace{10pt}
@@ -139,14 +141,16 @@ A PBT model works like an oracle.
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org48f1cea}]{Problems with PBT models}
+\begin{frame}[label={sec:org6139db8}]{Problems with PBT models}
+\onslide<+->
+\onslide<+->
 Despite their proven effectiveness:
 \begin{itemize}
 \item Very slow adoption
 \end{itemize}
 
 \vspace{10pt}
-
+\onslide<+->
 Why?
 
 \vspace{10pt}
@@ -156,44 +160,53 @@ Why?
 \item Bugs in models are hard to detect.
 \item Errors are hard to understand.
 \end{enumerate}
-
+\onslide<+->
 \vspace{10pt}
 
 All these problems made models hard to write and maintain.
 \end{frame}
 
 \section{Introduction to Makina and running example}
-\label{sec:org5b65cdf}
-\begin{frame}[label={sec:org69a2064}]{Our solution: Makina}
+\label{sec:org4489ac3}
+\begin{frame}[label={sec:org28d5101}]{Our solution: Makina}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 Makina is a DSL for writing PBT models.
+\onslide<+->
 
 \vspace{10pt}
 \end{column}
 
 \begin{column}{0.48\columnwidth}
+\onslide<2->
 \begin{enumerate}
 \item Models are hard to reuse.
+\onslide<3->
 \begin{itemize}
-\item Model refinement and composition. \vspace{10pt}
+\item Modular reusable models. \vspace{10pt}
 \end{itemize}
+\onslide<2->
 \item Bugs in models are hard to detect.
+\onslide<4->
 \begin{itemize}
 \item Automatic type and specs generation. \vspace{10pt}
 \end{itemize}
+\onslide<2->
 \item Errors are hard to understand.
+\onslide<5->
 \begin{itemize}
-\item Automatic generation of runtime-checks. \vspace{10pt}
+\item Automatic runtime-checks generation. \vspace{10pt}
 \end{itemize}
 \end{enumerate}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgba533c1},fragile]{Makina: The Language}
+\begin{frame}[label={sec:org9706960},fragile]{Makina: The Language}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
+Makina is implemented using Elixir macros.
+\onslide<+->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Name do
@@ -208,7 +221,7 @@ defmodule Name do
   end
 end
 \end{lstlisting}
-
+\onslide<+->
 \lstinline[language=elixir, style=display]~_option_~
 \begin{itemize}
 \item \lstinline[language=elixir, style=display]~extends: module()~
@@ -218,91 +231,82 @@ end
 \end{column}
 
 \begin{column}{0.58\columnwidth}
+\onslide<+->
 \lstinline[language=elixir, style=display]~_attribute_~
 \begin{itemize}
 \item \lstinline[language=elixir, style=display]~name: expr~
 \item \lstinline[language=elixir, style=display]~name: expr  type~
 \end{itemize}
-
+\onslide<+->
 \vspace{10pt}
 \lstinline[language=elixir, style=display]~_declaration_~
 \begin{itemize}
 \item \lstinline[language=elixir, style=display]~name(arg1, ... , argN)~
 \item \lstinline[language=elixir, style=display]~name(arg1 type1, ... , argN typeN) return_type~
 \end{itemize}
-
+\onslide<+->
 \vspace{10pt}
 \lstinline[language=elixir, style=display]~_command_body_~
-\begin{center}
-\begin{tabular}{lll}
-name & access & returns\\
-\hline
-\lstinline[language=elixir, style=display]~pre~ & state & \lstinline[language=elixir, style=display]~boolean()~\\
-\lstinline[language=elixir, style=display]~args~ & state & \lstinline[language=elixir, style=display]~generator()~\\
-\lstinline[language=elixir, style=display]~call~ & arguments & \lstinline[language=elixir, style=display]~return_type~\\
-\lstinline[language=elixir, style=display]~next~ & state, arguments, result & \lstinline[language=elixir, style=display]~[updates()]~\\
-\lstinline[language=elixir, style=display]~post~ & state, arguments, result & \lstinline[language=elixir, style=display]~boolean()~\\
-\end{tabular}
-\end{center}
+\begin{itemize}
+\item \lstinline[language=elixir, style=display]~pre~    \lstinline[language=elixir, style=display]~boolean()~
+\item \lstinline[language=elixir, style=display]~args~   \lstinline[language=elixir, style=display]~generator()~
+\item \lstinline[language=elixir, style=display]~call~   \lstinline[language=elixir, style=display]~return_type~
+\item \lstinline[language=elixir, style=display]~next~   \lstinline[language=elixir, style=display]~[updates()]~
+\item \lstinline[language=elixir, style=display]~post~   \lstinline[language=elixir, style=display]~boolean()~
+\end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org16bc210},fragile]{Ethereum Blockchain}
- \begin{columns}
-\begin{column}{0.48\columnwidth}
-Why Ethereum?
+\begin{frame}[label={sec:org2a0c723},fragile]{Ethereum Blockchain}
+ Why Ethereum?
 \begin{itemize}
 \item It is a complex system.
 \end{itemize}
-
-\vspace{10pt}  
-
-The properties to test:
 \onslide<+->
+\onslide<+->
+\begin{center}
+\begin{tabular}{lll}
+API &  & \\
+\hline
+\lstinline[language=elixir, style=display]~accounts!/0~ & \lstinline[language=elixir, style=display]~accounts/0~ & \lstinline[language=elixir, style=display]~block_number!/0~\\
+\lstinline[language=elixir, style=display]~call_transaction!/4~ & \lstinline[language=elixir, style=display]~call_transaction!/5~ & \lstinline[language=elixir, style=display]~call_transaction/4~\\
+\lstinline[language=elixir, style=display]~client_version!/0~ & \lstinline[language=elixir, style=display]~client_version/0~ & \lstinline[language=elixir, style=display]~compile_solidity!/1~\\
+\lstinline[language=elixir, style=display]~deploy!/3~ & \lstinline[language=elixir, style=display]~deploy!/4~ & \lstinline[language=elixir, style=display]~deploy/3~\\
+\lstinline[language=elixir, style=display]~estimate_gas!/4~ & \lstinline[language=elixir, style=display]~estimate_gas!/5~ & \lstinline[language=elixir, style=display]~estimate_gas/4~\\
+\lstinline[language=elixir, style=display]~estimate_gas_cost!/4~ & \lstinline[language=elixir, style=display]~estimate_gas_cost!/5~ & \lstinline[language=elixir, style=display]~estimate_gas_cost/4~\\
+\lstinline[language=elixir, style=display]~gas_cost!/1~ & \lstinline[language=elixir, style=display]~gas_cost/1~ & \lstinline[language=elixir, style=display]~gas_price!/0~\\
+\ldots{} & \ldots{} & \ldots{}\\
+\end{tabular}
+\end{center}
+
+
+\begin{columns}
+\begin{column}{0.48\columnwidth}
+\onslide<+->
+The properties to test:
 \begin{enumerate}
 \item Mining blocks.
-\onslide<+->
 \item Account access.
-\onslide<+->
 \item Transactions between accounts.
 \end{enumerate}
 \end{column}
 
+
 \begin{column}{0.48\columnwidth}
-\begin{center}
-\begin{tabular}{l}
-API\\
-\hline
-\lstinline[language=elixir, style=display]~accounts/0~\\
-\lstinline[language=elixir, style=display]~block_number/0~\\
-\lstinline[language=elixir, style=display]~call_transaction/4~\\
-\lstinline[language=elixir, style=display]~client_version/0~\\
-\lstinline[language=elixir, style=display]~compile_solidity/1~\\
-\lstinline[language=elixir, style=display]~deploy/3~\\
-\lstinline[language=elixir, style=display]~deploy/4~\\
-\lstinline[language=elixir, style=display]~estimate_gas/4~\\
-\lstinline[language=elixir, style=display]~estimate_gas_cost/4~\\
-\lstinline[language=elixir, style=display]~gas_cost/1~\\
-\lstinline[language=elixir, style=display]~gas_price/0~\\
-\lstinline[language=elixir, style=display]~get_balance/1~\\
-\lstinline[language=elixir, style=display]~get_block/0~\\
-\lstinline[language=elixir, style=display]~get_block/1~\\
-\lstinline[language=elixir, style=display]~get_bytecode/1~\\
-\lstinline[language=elixir, style=display]~get_contract_address/1~\\
-\ldots{}\\
-\end{tabular}
-\end{center}
+\onslide<+->
+
+How \lstinline[language=elixir, style=display]~Makina~ handles this complexity?
 \end{column}
 \end{columns}
 \end{frame}
 
 
 \section{Blocks model}
-\label{sec:org992239e}
-\begin{frame}[label={sec:org16c17cf},fragile]{Mining blocks}
+\label{sec:org82b2572}
+\begin{frame}[label={sec:org1ed64e6},fragile]{Mining blocks}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<+->
 \onslide<+->
 The API:
@@ -330,7 +334,7 @@ Command & Returns\\
 \end{enumerate}
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<4->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -353,9 +357,9 @@ defmodule Blocks do #@ \onslide<5->
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgab1f608},fragile]{Mining blocks}
+\begin{frame}[label={sec:org33bf8e4},fragile]{Mining blocks}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 The API:
 
 \begin{center}
@@ -377,7 +381,7 @@ Command & Returns\\
 \end{enumerate}
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
@@ -400,9 +404,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org99c4bfc},fragile]{Running the test}
+\begin{frame}[label={sec:orgb813882},fragile]{Running the test}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<+->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
@@ -417,9 +421,12 @@ block_number/0
 
 Last state: %{height: 0}
 \end{lstlisting}
+
+\onslide<+->
+This is a runtime check added by \lstinline[language=elixir, style=display]~Makina~!
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -443,9 +450,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org090ab58},fragile]{Fixing the model}
+\begin{frame}[label={sec:org46c49bb},fragile]{Fixing the model}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<+->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
@@ -460,9 +467,11 @@ block_number/0
 
 Last state: %{height: 0}
 \end{lstlisting}
+
+This is a runtime check added by \lstinline[language=elixir, style=display]~Makina~!
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Blocks do
@@ -485,9 +494,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9e58103},fragile]{Running the test}
+\begin{frame}[label={sec:orgd18bb0f},fragile]{Running the test}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test #@\onslide<+->
@@ -502,7 +511,7 @@ OK, passed 100 tests
 \end{lstlisting}
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -526,9 +535,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgfadc7cb},fragile]{Adding type information}
+\begin{frame}[label={sec:org374ef49},fragile]{Adding type information}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<3->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
@@ -557,7 +566,7 @@ $
 \end{lstlisting}
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display, numbers=left}
 \begin{lstlisting}
@@ -581,9 +590,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org965f472},fragile]{Adding documentation}
+\begin{frame}[label={sec:orgd948e23},fragile]{Adding documentation}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<3->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
@@ -608,7 +617,7 @@ Checks blocks are mined correctly.
 \end{lstlisting}
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -637,9 +646,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgef9d173},fragile]{Adding documentation}
+\begin{frame}[label={sec:org990dbb1},fragile]{Adding documentation}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<1->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
@@ -660,7 +669,7 @@ Mines a new block.
 - pre
 \end{lstlisting}
 \end{column}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -676,7 +685,7 @@ defmodule Blocks do
 
   command block_number() :: integer() do
     @moduledoc "Gets the block number."
-    post {:ok, height} == result
+    post height == result
   end
 
   command mine() :: :ok do
@@ -689,9 +698,9 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgfc0e765},fragile]{Adding documentation}
+\begin{frame}[label={sec:org28dde09},fragile]{Adding documentation}
  \begin{columns}
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.52\columnwidth}
 \onslide<1->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
@@ -717,7 +726,7 @@ be true after the execution of mine
 \end{lstlisting}
 \end{column}
 
-\begin{column}{0.48\columnwidth}
+\begin{column}{0.44\columnwidth}
 \onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -733,7 +742,7 @@ defmodule Blocks do
 
   command block_number() :: integer() do
     @moduledoc "Gets the block number."
-    post {:ok, height} == result
+    post height == result
   end
 
   command mine() :: :ok do
@@ -747,8 +756,8 @@ end
 \end{frame}
 
 \section{Accounts model}
-\label{sec:orge04b564}
-\begin{frame}[label={sec:org5736623},fragile]{Account access}
+\label{sec:org699e322}
+\begin{frame}[label={sec:orgaa5738c},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -796,7 +805,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgbb4b17c},fragile]{Running the test}
+\begin{frame}[label={sec:org971d968},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -808,7 +817,9 @@ $ mix test
 `account` missing in command
 get_balance
 \end{lstlisting}
-\vspace{40pt}
+\vspace{20pt}
+\onslide<+->
+This is a runtime-check added by \lstinline[language=elixir, style=display]~Makina~!
 \end{column}
 
 \begin{column}{0.58\columnwidth}
@@ -833,7 +844,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org29f7e61},fragile]{Fixing the model}
+\begin{frame}[label={sec:org24dba54},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -845,7 +856,8 @@ $ mix test
 `account` missing in command
 get_balance
 \end{lstlisting}
-\vspace{40pt}
+\vspace{20pt}
+This is a runtime-check added by \lstinline[language=elixir, style=display]~Makina~!
 \end{column}
 
 \begin{column}{0.58\columnwidth}
@@ -871,7 +883,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org1a29cf1},fragile]{Running the test}
+\begin{frame}[label={sec:org61dab89},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -911,8 +923,8 @@ end
 \end{frame}
 
 \section{Transactions model}
-\label{sec:orgd125b6f}
-\begin{frame}[label={sec:orge291fc0},fragile]{Generating transactions}
+\label{sec:org53cb816}
+\begin{frame}[label={sec:orgd394681},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -920,13 +932,13 @@ end
 The API to generate and check transactions:
 \onslide<+->
 \begin{center}
-\begin{tabular}{ll}
-Command & Returns\\
+\begin{tabular}{lll}
+Command & Returns & Implemented\\
 \hline
-\lstinline[language=elixir, style=display]~mine/0~ & \lstinline[language=elixir, style=display]~:ok~\\
-\lstinline[language=elixir, style=display]~block_number/0~ & \lstinline[language=elixir, style=display]~integer()~\\
-\lstinline[language=elixir, style=display]~get_balance/1~ & \lstinline[language=elixir, style=display]~integer()~\\
-\lstinline[language=elixir, style=display]~transfer/3~ & \lstinline[language=elixir, style=display]~hash()~\\
+\lstinline[language=elixir, style=display]~mine/0~ & \lstinline[language=elixir, style=display]~:ok~ & \(\checkmark\)\\
+\lstinline[language=elixir, style=display]~block_number/0~ & \lstinline[language=elixir, style=display]~integer()~ & \(\checkmark\)\\
+\lstinline[language=elixir, style=display]~get_balance/1~ & \lstinline[language=elixir, style=display]~integer()~ & \(\checkmark\)\\
+\lstinline[language=elixir, style=display]~transfer/3~ & \lstinline[language=elixir, style=display]~hash()~ & \\
 \end{tabular}
 \end{center}
 \onslide<+->
@@ -973,9 +985,13 @@ iex(1)> h Transactions.Composed
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org0e4a1ad},fragile]{Generating transactions}
+\begin{frame}[label={sec:org5955902},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
+\onslide<+->
+\lstinline[language=elixir, style=display]~Transactions extends: Transactions.Composed~.
+\vspace{10pt}
+
 \onslide<+->
 \begin{center}
 \begin{tabular}{ll}
@@ -986,7 +1002,49 @@ Command & Returns\\
 \end{center}
 \end{column}
 \begin{column}{0.52\columnwidth}
-\onslide<+->
+\onslide<1->
+\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
+\begin{lstlisting}
+defmodule Transactions do
+  use Makina,
+    implemented_by: Etherex,
+    extends: [Accounts, Blocks]
+  #@\onslide<2->
+  command transfer(from, to, value) :: hash() do
+    pre accounts != []
+    args from: oneof(accounts),
+	 to: oneof(accounts),
+	 value: pos_integer()
+    next balances: update(balances, from, to, value)
+  end    #@\onslide<1->
+end
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org377156b},fragile]{Running the test}
+ \begin{columns}
+\begin{column}{0.44\columnwidth}
+\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
+\begin{lstlisting}
+$ mix test #@\onslide<+->
+#@\onslide<+->
+transfer("0xffcf8fdee72ac11",
+	 "0x90f8bf6a479f320",
+	 1)
+block_number()
+
+Postcondition failed.
+
+block_number() -> {:ok, 1}
+
+Last state: %{height: 0, ...}
+\end{lstlisting}
+\end{column}
+
+\begin{column}{0.52\columnwidth}
+\onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -1007,12 +1065,12 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org8f36582},fragile]{Running the test}
+\begin{frame}[label={sec:orge338ffa},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
-$ mix test #@\onslide<+->
+$ mix test
 
 transfer("0xffcf8fdee72ac11",
 	 "0x90f8bf6a479f320",
@@ -1028,47 +1086,7 @@ Last state: %{height: 0, ...}
 \end{column}
 
 \begin{column}{0.52\columnwidth}
-\onslide<+->
-\lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
-\begin{lstlisting}
-defmodule Transactions do
-  use Makina,
-    implemented_by: Etherex,
-    extends: [Accounts, Blocks]
-
-  command transfer(from, to, value) :: hash() do
-    pre accounts != []
-    args from: oneof(accounts),
-	 to: oneof(accounts),
-	 value: pos_integer()
-    next balances: update(balances, from, to, value)
-  end
-end
-\end{lstlisting}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[label={sec:org3494fc7},fragile]{Fixing the model}
- \begin{columns}
-\begin{column}{0.44\columnwidth}
-\lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
-\begin{lstlisting}
-$ mix test #@\onslide<+->
-
-Postcondition failed.
-
-transfer("0xffcf8fdee72ac11",
-	 "0x90f8bf6a479f320",
-	 1)
-block_number() -> {:ok, 1}
-
-Last state: %{height: 0, ...}
-\end{lstlisting}
-\end{column}
-
-\begin{column}{0.52\columnwidth}
-\onslide<+->
+\onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -1090,15 +1108,16 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org06475be},fragile]{Running the test}
+\begin{frame}[label={sec:org9ce6a9b},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
+\onslide<+->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test #@\onslide<+->
 
 transfer("0x90f8bf6a479f320",
-	 "0x90f8bf6a479f320",
+	 "0xffcf8fdee72ac11",
 	 1),
 get_balance("0x90f8bf6a479f320")
 
@@ -1116,7 +1135,7 @@ Last state: %{
 \end{column}
 
 \begin{column}{0.52\columnwidth}
-\onslide<+->
+\onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -1138,22 +1157,24 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org39f0931},fragile]{Fixing the model}
+\begin{frame}[label={sec:org764152b},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 To fix this error we need to extract the gas cost after producing a transaction.
-
+\onslide <+->
+\onslide <+->
 \vspace{10pt}
+
 
 Model execution is performed in two phases:
 \begin{enumerate}
 \item Generation of the command sequence.
 \item Real execution of the test.
 \end{enumerate}
-
+\onslide <+->
 \vspace{10pt}
 
-PBT libraries make this difference in documentation:
+PBT libraries solve this documenting:
 \begin{itemize}
 \item symbolic state: state of the model during phase 1.
 \item dynamic state: state of the model during phase 2.
@@ -1161,7 +1182,7 @@ PBT libraries make this difference in documentation:
 \end{column}
 
 \begin{column}{0.52\columnwidth}
-\onslide<+->
+\onslide<1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
@@ -1183,19 +1204,22 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb8052e7},fragile]{Fixing the model}
+\begin{frame}[label={sec:org3baf247},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
+\onslide <+->
+\onslide <+->
 \lstinline[language=elixir, style=display]~Makina~ makes the difference between symbolic and dynamic explicit.
 
 \vspace{10pt}
-
+\onslide <+->
 Provides two mechanisms to add information about symbolic state:
 \begin{itemize}
 \item \lstinline[language=elixir, style=display]~symbolic(t)~ type.
 \item \lstinline[language=elixir, style=display]~symbolic(expr)~ macro.
 \end{itemize}
 
+\onslide <+->
 Rules on symbolic state:
 \begin{itemize}
 \item An attribute with a symbolic type cannot be inspected in \lstinline[language=elixir, style=display]~next~.
@@ -1203,16 +1227,17 @@ Rules on symbolic state:
 \end{itemize}
 
 \vspace{10pt}
-
+\onslide <+->
 To fix our model we need
 \begin{enumerate}
 \item Add symbolic attributes to the state.
+\onslide <7->
 \item Store and update symbolic attributes.
 \end{enumerate}
 \end{column}
 
 \begin{column}{0.52\columnwidth}
-\onslide<+->
+\onslide<1->
 \vspace{-10pt}
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
@@ -1220,19 +1245,19 @@ defmodule Transactions do
   use Makina,
     implemented_by: Etherex,
     extends: [Accounts, Blocks]
-
+  #@ \onslide<6->
   state transactions: [] :: [symbolic(hash())]
 	balances: super() :: symbolic(balances)
-
+  #@ \onslide<1->
   command transfer(from, to, value) :: hash() do
     pre accounts != []
     args from: oneof(accounts),
 	 to: oneof(accounts),
 	 value: pos_integer()
     next height: height + 1,
-	 transactions: [result | transactions],
+	 #@\onslide<8->{transactions: [result | transactions],}
 	 balances: update(balances, from, to, value)
-		   |> symbolic()
+		       #@\onslide<8->{|> symbolic()}
   end
 
   command get_balance() do
@@ -1244,22 +1269,24 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org153fd9e},fragile]{Fixing the model}
+\begin{frame}[label={sec:org35c2a4d},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 We import \lstinline[language=elixir, style=display]~Transactions~ model using \lstinline[language=elixir, style=display]~:extends~.
 
 \vspace{10pt}
-
+\onslide <+->
+\onslide <+->
 We add a command that gets the cost of a transaction.
 \end{column}
 
 \begin{column}{0.58\columnwidth}
+\onslide <1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions.GasCost do
   use Makina, extends: Transactions
-
+  #@ \onslide<3->
   command gas_cost(hash :: hash())
       :: {address(), quantity()} do
     pre transactions != []
@@ -1267,7 +1294,7 @@ defmodule Transactions.GasCost do
     next transactions: List.delete(transactions, hash),
 	 balances: update_gas(balances, result)
 		   |> symbolic()
-    end
+    end     #@ \onslide<1->
   end
 end
 \end{lstlisting}
@@ -1275,13 +1302,14 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgf18b261},fragile]{Running the test}
+\begin{frame}[label={sec:org6d7d698},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
+\onslide <+->
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
 \begin{lstlisting}
 $ mix test
-
+#@ \onslide<+->
 .........................
 .........................
 .........................
@@ -1298,6 +1326,7 @@ OK, passed 100 tests
 \end{column}
 
 \begin{column}{0.58\columnwidth}
+\onslide <1->
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions.GasCost do
@@ -1318,26 +1347,57 @@ end
 \end{columns}
 \end{frame}
 \section{Conclusions}
-\label{sec:org391210c}
-\begin{frame}[label={sec:org7580229},fragile]{Results}
- We presented a modular approach to write testing models using \lstinline[language=elixir, style=display]~Makina~.
-
-\vspace{10pt}
-
-\lstinline[language=elixir, style=display]~Makina~ empowers programmers to write better tests using PBT libraries.
-
-\vspace{10pt}
+\label{sec:org26a8c2d}
+\begin{frame}[label={sec:org6a237e0},fragile]{Results}
+ \onslide<+->
+\onslide<+->
 
 \begin{center}
 \begin{tabular}{ll}
 Problem on PBT models & \lstinline[language=elixir, style=display]~Makina~ solution\\
 \hline
-PBT models are hard to reuse. & \lstinline[language=elixir, style=display]~:extends~, \lstinline[language=elixir, style=display]~imports~ and \lstinline[language=elixir, style=display]~composition~ operations\\
  & \\
-PBT models bugs are hard to detect. & Automatic generation of type information.\\
+Hard to reuse. & Modular and composable models.\\
  & \\
-PBT models generate cryptic errors. & Automatic generation of runtime checks.\\
+Bugs are hard to detect. & Type and specs generation.\\
+ & \\
+Generate cryptic errors. & Automatic runtime-checks.\\
 \end{tabular}
 \end{center}
+
+\vspace{10pt}
+
+\onslide<+->
+
+\begin{center}
+\begin{tabular}{ll}
+Before \lstinline[language=elixir, style=display]~Makina~ & After \lstinline[language=elixir, style=display]~Makina~\\
+\hline
+ & \\
+4 files 4513 lines & 18 files 1692 lines\\
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[label={sec:org5ebcba7}]{Links}
+\begin{columns}
+\begin{column}{0.78\columnwidth}
+Makina library:
+\begin{itemize}
+\item \url{https://gitlab.com/babel-upm/makina/makina/}
+\end{itemize}
+\vspace{10pt}
+Etherex library:
+\begin{itemize}
+\item \url{https://gitlab.com/babel-upm/blockchain/etherex}
+\end{itemize}
+\vspace{10pt}
+Slides and code examples:
+\begin{itemize}
+\item \url{https://github.com/lbueso/code\_beam\_2022}
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 \end{document}
