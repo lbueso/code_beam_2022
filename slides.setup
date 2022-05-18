@@ -1,6 +1,6 @@
 #+options: H:2 toc:nil author:Luis Eduardo Bueso de Barrio
 #+latex_class: beamer
-#+latex_class_options: [aspectratio=169, 10pt, handout]
+#+latex_class_options: [aspectratio=169, 10pt]
 #+latex_header: \usepackage[english]{babel}
 #+latex_header: \usepackage[utf8]{inputenc}
 #+latex_header: \usepackage{roboto}
@@ -17,6 +17,7 @@
 #+latex_header: \usepackage{pifont}
 #+latex_header: \newcommand{\cmark}{\text{\ding{51}}}
 #+latex_header: \newcommand{\xmark}{\text{\ding{55}}}
+#+latex_header: \usepackage{graphicx}
 # listings
 # #+latex_header: \usepackage{lstlinebgrd}
 #+latex_header: \input{listings_elixir}

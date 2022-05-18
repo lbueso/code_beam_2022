@@ -109,7 +109,7 @@ A PBT model works like an oracle.
 
           \node[state, visible on=<7->] (i1) [below of=i0] {i1};
           \node[state, visible on=<7->] (m1) [below of=m0] {m1};
-    
+
           \node[state, visible on=<9->] (i2) [below of=i1] {i2};
           \node[state, visible on=<9->] (m2) [below of=m1] {m2};
 
@@ -125,7 +125,6 @@ A PBT model works like an oracle.
         \end{tikzpicture}
       \end{adjustbox}
     #+end_figure
-
 
 ** Problems with PBT models
 
@@ -161,6 +160,21 @@ Makina is a DSL for writing PBT models.
 # EQC/PropEr state-machine.
 
 \vspace{10pt}
+
+#+begin_export latex
+\vspace{1cm}
+\begin{adjustbox}{max width=\textwidth}
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
+    \node[inner sep=0pt] (makina) at (0,0) {\includegraphics[width=.25\textwidth]{logos/file.jpg}};
+    \node[inner sep=0pt] (proper) at (5,0) {\includegraphics[width=.25\textwidth]{logos/file.jpg}};
+
+    \path[->] (1,0) edge (4,0);
+
+    \node (labelm) [below of=makina, yshift=0.5cm] {Makina model};
+    \node (labelp) [below of=proper, yshift=0.5cm] {Proper/QuickCheck model};    
+  \end{tikzpicture}
+\end{adjustbox}
+#+end_export
 
 *** column
 :properties:
@@ -269,7 +283,6 @@ The properties to test:
 #+beamer: \onslide<+->
 
 How ~Makina~ handles this complexity?
-
 
 * Blocks model
 ** Mining blocks
@@ -1341,7 +1354,6 @@ We add a command that gets the cost of a transaction.
 |--------------------+---------------------|
 |                    |                     |
 | 4 files 4513 lines | 18 files 1692 lines |
-
 
 ** Links
 
