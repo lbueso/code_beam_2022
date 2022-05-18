@@ -42,26 +42,28 @@
 
 * Motivation
 ** 
-*** column
-:properties:
-:beamer_col: 0.38
-:end:
+#+begin_export latex
+\begin{center}
+\begin{adjustbox}{max width=\textwidth}
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,semithick]
+    %% implementation
+    \node[visible on=<1->] (original) {files: 4};
+    \node[visible on=<1->] (originallocs) [below of=original] {lines of code: 4513};    
 
-Before:
-| files | blank | comment | code |
-|-------+-------+---------+------|
-|     4 |   760 |     383 | 4513 |
-*** column
-:properties:
-:beamer_col: 0.38
-:end:
+    \node[visible on=<2->] (after) [right of=original, xshift=6cm] {files: 18};
+    \node[visible on=<2->] (afterlocs) [below of=after] {lines of code: 1692};
 
-After:
-| files | blank | comment | code |
-|-------+-------+---------+------|
-|    18 |   500 |     408 | 1692 |
+    \node[visible on=<2->] (a)  [below of=original, yshift=0.5cm, xshift=1.5cm] {};
+    \node[visible on=<2->] (b)  [below of=after, yshift=0.5cm, xshift=-1.5cm] {};    
+        
+    \path[visible on=<2->] (a) edge (b);
 
-** PBT models
+  \end{tikzpicture}
+\end{adjustbox}
+\end{center}
+#+end_export
+
+** Property Based Testing
 *** column
 :properties:
 :beamer_col: 0.48
@@ -72,7 +74,7 @@ Proprety-Based Testing (PBT) is a great testing methodology.
 
 \vspace{10pt}
 
-Successful tools widely used:
+Successful tools:
 - Quviq QuickCheck
 - PropEr
 #+beamer: \onslide<+->
@@ -101,8 +103,8 @@ A PBT model works like an oracle.
       \begin{adjustbox}{max width=\textwidth}
         \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
           %% implementation
-          \node[visible on=<5->] (il) {Implementation};
-          \node[visible on=<5->] (ml) [right of=il] {Model};
+          \node[visible on=<5->] (il) {Real counter};
+          \node[visible on=<5->] (ml) [right of=il, xshift=1cm] {PBT Model};
 
           \node[state, visible on=<6->] (i0) [below of=il, yshift=1cm] {i0};
           \node[state, visible on=<6->] (m0) [below of=ml, yshift=1cm] {m0};
@@ -113,11 +115,11 @@ A PBT model works like an oracle.
           \node[state, visible on=<9->] (i2) [below of=i1] {i2};
           \node[state, visible on=<9->] (m2) [below of=m1] {m2};
 
-          \path[visible on=<7->] (i0) edge (i1);
-          \path[visible on=<7->] (m0) edge (m1);
+          \path[visible on=<7->] (i0) edge node {\texttt{inc/0}} (i1);
+          \path[visible on=<7->] (m0) edge node {\texttt{inc/0}} (m1);
 
-          \path[visible on=<9->] (i1) edge (i2);
-          \path[visible on=<9->] (m1) edge (m2);
+          \path[visible on=<9->] (i1) edge node {\texttt{get/0}} (i2);
+          \path[visible on=<9->] (m1) edge node {\texttt{get/0}} (m2);
 
           \path[-, dashed, visible on=<8->] (i1) edge node {$\cmark$} (m1);
           \path[-, dashed, visible on=<10->] (i2) edge node {$\xmark$} (m2);
@@ -141,7 +143,7 @@ Why?
 
 1. Models are hard to reuse. 
 2. Bugs in models are hard to detect.
-3. Errors are hard to understand.
+3. Generate cryptic errors.
 #+beamer: \onslide<+->
 \vspace{10pt}
 
@@ -156,8 +158,7 @@ All these problems made models hard to write and maintain.
 
 Makina is a DSL for writing PBT models.
 #+beamer: \onslide<+->
-# TODO: diagram that shows that the user writes a model and then Makina translates it to a
-# EQC/PropEr state-machine.
+#+beamer: \onslide<+->
 
 \vspace{10pt}
 
@@ -165,8 +166,8 @@ Makina is a DSL for writing PBT models.
 \vspace{1cm}
 \begin{adjustbox}{max width=\textwidth}
   \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2cm,semithick]
-    \node[inner sep=0pt] (makina) at (0,0) {\includegraphics[width=.25\textwidth]{logos/file.jpg}};
-    \node[inner sep=0pt] (proper) at (5,0) {\includegraphics[width=.25\textwidth]{logos/file.jpg}};
+    \node[inner sep=0pt] (makina) at (0,0) {\includegraphics[width=.25\textwidth]{logos/file-cropped.png}};
+    \node[inner sep=0pt] (proper) at (5,0) {\includegraphics[width=.25\textwidth]{logos/file-cropped.png}};
 
     \path[->] (1,0) edge (4,0);
 
@@ -181,26 +182,25 @@ Makina is a DSL for writing PBT models.
 :beamer_col: 0.48
 :end:
 
-#+beamer: \onslide<2->
+#+beamer: \onslide<3->
 1. Models are hard to reuse.
-   #+beamer: \onslide<3->
-   - Modular reusable models. \vspace{10pt}
-   #+beamer: \onslide<2->
-2. Bugs in models are hard to detect.
    #+beamer: \onslide<4->
-   - Automatic type and specs generation. \vspace{10pt}
-   #+beamer: \onslide<2->
-3. Errors are hard to understand.
+   - Modular reusable models. \vspace{10pt}
+   #+beamer: \onslide<3->
+2. Bugs in models are hard to detect.
    #+beamer: \onslide<5->
+   - Automatic type and specs generation. \vspace{10pt}
+   #+beamer: \onslide<3->
+3. Errors are hard to understand.
+   #+beamer: \onslide<6->
    - Automatic runtime-checks generation. \vspace{10pt}
 
 ** Makina: The Language
 *** column
 :properties:
-:beamer_col: 0.38
+:beamer_col: 0.48
 :end:
 
-Makina is implemented using Elixir macros.
 #+beamer: \onslide<+->
 #+attr_latex: :options style=display
 #+begin_src elixir
@@ -216,6 +216,7 @@ Makina is implemented using Elixir macros.
     end
   end
 #+end_src
+\vspace{10pt}
 #+beamer: \onslide<+->
 ~_option_~
 - ~extends: module()~
@@ -224,17 +225,17 @@ Makina is implemented using Elixir macros.
 
 *** column
 :properties:
-:beamer_col: 0.58
+:beamer_col: 0.48
 :end:
+
+
 #+beamer: \onslide<+->
 ~_attribute_~
 - ~name: expr~
-- ~name: expr  type~
 #+beamer: \onslide<+->
 \vspace{10pt}
 ~_declaration_~
 - ~name(arg1, ... , argN)~
-- ~name(arg1 type1, ... , argN typeN) return_type~
 #+beamer: \onslide<+->
 \vspace{10pt}
 ~_command_body_~
@@ -1023,7 +1024,7 @@ Generates a model ~Transactions.Composed~.
 
   Postcondition failed.
 
-  block_number() -> {:ok, 1}
+  block_number() -> 1
 
   Last state: %{height: 0, ...}
 #+end_src
@@ -1066,7 +1067,7 @@ Generates a model ~Transactions.Composed~.
 
   Postcondition failed.
 
-  block_number() -> {:ok, 1}
+  block_number() -> 1
 
   Last state: %{height: 0, ...}
 #+end_src
@@ -1111,8 +1112,7 @@ Generates a model ~Transactions.Composed~.
 
   Postcondition failed.
 
-  get_balance("0x90f8bf6a479f320")
-  -> {:ok, 979000}
+  get_balance("0x90f8bf6a479f320") -> 979000
 
   Last state: %{
       balances: %{
@@ -1365,8 +1365,9 @@ We add a command that gets the cost of a transaction.
 Makina library:
 - https://gitlab.com/babel-upm/makina/makina/
 \vspace{10pt}
+Makina examples:
+- https://gitlab.com/babel-upm/makina/examples/
+\vspace{10pt}
 Etherex library:
 - https://gitlab.com/babel-upm/blockchain/etherex
 \vspace{10pt}
-Slides and code examples:
-- https://github.com/lbueso/code_beam_2022
