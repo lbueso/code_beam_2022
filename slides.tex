@@ -1,4 +1,4 @@
-% Created 2022-05-19 Thu 01:30
+% Created 2022-05-20 Fri 00:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[aspectratio=169, 10pt]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,6 +34,8 @@
 \input{listings_bash}
 \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
 \lstdefinestyle{shell}{basicstyle=\footnotesize\ttfamily}
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
 \usetheme{default}
 \author{Luis Eduardo Bueso de Barrio}
 \date{\today}
@@ -83,8 +85,8 @@
 \whitetheme
 
 \section{Motivation}
-\label{sec:org69f9ffb}
-\begin{frame}[label={sec:org9a141fb}]{}
+\label{sec:orgfb97c5d}
+\begin{frame}[label={sec:org179ef51}]{}
 \begin{center}
 \begin{adjustbox}{max width=\textwidth}
   \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm,semithick]
@@ -105,7 +107,7 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org205fca0}]{Property Based Testing}
+\begin{frame}[label={sec:org45845d6}]{Property Based Testing}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -170,7 +172,7 @@ A PBT model works like an oracle.
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgdcfad98}]{Problems with PBT models}
+\begin{frame}[label={sec:org12940b9}]{Problems with PBT models}
 \onslide<+->
 \onslide<+->
 Despite their proven effectiveness:
@@ -192,12 +194,12 @@ Why?
 \onslide<+->
 \vspace{10pt}
 
-All these problems made models hard to write and maintain.
+All these problems make models hard to write and maintain.
 \end{frame}
 
 \section{Introduction to Makina and running example}
-\label{sec:org873ef6a}
-\begin{frame}[label={sec:orgbf094da}]{Our solution: Makina}
+\label{sec:orgf0f3a44}
+\begin{frame}[label={sec:orgf78e59a}]{Our solution: Makina}
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 Makina is a DSL for writing PBT models.
@@ -235,7 +237,7 @@ Makina is a DSL for writing PBT models.
 \item Automatic type and specs generation. \vspace{10pt}
 \end{itemize}
 \onslide<3->
-\item Errors are hard to understand.
+\item Generate cryptic errors.
 \onslide<6->
 \begin{itemize}
 \item Automatic runtime-checks generation. \vspace{10pt}
@@ -245,7 +247,7 @@ Makina is a DSL for writing PBT models.
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orge4e06c2},fragile]{Makina: The Language}
+\begin{frame}[label={sec:orgc336b5d},fragile]{Makina: The Language}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -299,7 +301,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9bd5038},fragile]{Ethereum Blockchain}
+\begin{frame}[label={sec:org3222455},fragile]{Ethereum Blockchain}
  Why Ethereum?
 \begin{itemize}
 \item It is a complex system.
@@ -325,6 +327,11 @@ API &  & \\
 \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
+
+How \lstinline[language=elixir, style=display]~Makina~ handles this complexity?
+\end{column}
+
+\begin{column}{0.48\columnwidth}
 The properties to test:
 \begin{enumerate}
 \item Mining blocks.
@@ -332,19 +339,12 @@ The properties to test:
 \item Transactions between accounts.
 \end{enumerate}
 \end{column}
-
-
-\begin{column}{0.48\columnwidth}
-\onslide<+->
-
-How \lstinline[language=elixir, style=display]~Makina~ handles this complexity?
-\end{column}
 \end{columns}
 \end{frame}
 
 \section{Blocks model}
-\label{sec:org088646a}
-\begin{frame}[label={sec:org63d5421},fragile]{Mining blocks}
+\label{sec:org1364048}
+\begin{frame}[label={sec:org080a65a},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<+->
@@ -397,7 +397,7 @@ defmodule Blocks do #@ \onslide<5->
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org33634c1},fragile]{Mining blocks}
+\begin{frame}[label={sec:orgbd23f04},fragile]{Mining blocks}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 The API:
@@ -444,7 +444,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org28fab94},fragile]{Running the test}
+\begin{frame}[label={sec:org05bfd94},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<+->
@@ -490,7 +490,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgd066579},fragile]{Fixing the model}
+\begin{frame}[label={sec:org43da678},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<+->
@@ -534,7 +534,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgf96ccd1},fragile]{Running the test}
+\begin{frame}[label={sec:org7a5117a},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -575,7 +575,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgf214857},fragile]{Adding type information}
+\begin{frame}[label={sec:orgf702fe9},fragile]{Adding type information}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<3->
@@ -630,7 +630,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgbdac58e},fragile]{Adding documentation}
+\begin{frame}[label={sec:org6856c6c},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<3->
@@ -673,7 +673,7 @@ defmodule Blocks do
 
   command block_number() :: integer() do #@ \onslide<2->
     @moduledoc "Gets the block number." #@ \onslide<1->
-    post {:ok, height} == result
+    post height == result
   end
 
   command mine() :: :ok do #@ \onslide<2->
@@ -686,7 +686,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgca0f064},fragile]{Adding documentation}
+\begin{frame}[label={sec:orgc1f071a},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<1->
@@ -738,7 +738,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org9860251},fragile]{Adding documentation}
+\begin{frame}[label={sec:org2363ea2},fragile]{Adding documentation}
  \begin{columns}
 \begin{column}{0.52\columnwidth}
 \onslide<1->
@@ -796,8 +796,8 @@ end
 \end{frame}
 
 \section{Accounts model}
-\label{sec:org74e0b48}
-\begin{frame}[label={sec:org9c2311c},fragile]{Account access}
+\label{sec:orge0a2f1e}
+\begin{frame}[label={sec:orge7da738},fragile]{Account access}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -845,7 +845,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org461ac71},fragile]{Running the test}
+\begin{frame}[label={sec:org8c0863f},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -884,7 +884,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org0bfa6f6},fragile]{Fixing the model}
+\begin{frame}[label={sec:orgd7083d6},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \onslide<+->
@@ -923,7 +923,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org58f7dca},fragile]{Running the test}
+\begin{frame}[label={sec:org79fbcd6},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.28\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -963,8 +963,8 @@ end
 \end{frame}
 
 \section{Transactions model}
-\label{sec:orge274ddf}
-\begin{frame}[label={sec:org1bc1e39},fragile]{Generating transactions}
+\label{sec:orga2d94fc}
+\begin{frame}[label={sec:orgd6f1f36},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.48\columnwidth}
 \onslide<+->
@@ -987,9 +987,7 @@ We can compose \lstinline[language=elixir, style=display]~Blocks~ and \lstinline
 \lstset{language=elixir,label= ,caption= ,captionpos=b,numbers=none,style=display}
 \begin{lstlisting}
 defmodule Transactions do
-  use Makina,
-    extends: [Blocks, Accounts],
-    implemented_by: Etherex
+  use Makina, extends: [Blocks, Accounts]
 end
 \end{lstlisting}
 \onslide<+->
@@ -1025,7 +1023,7 @@ iex(1)> h Transactions.Composed
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgc4c71e4},fragile]{Generating transactions}
+\begin{frame}[label={sec:orgdfae3e2},fragile]{Generating transactions}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide<+->
@@ -1063,7 +1061,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgab365cd},fragile]{Running the test}
+\begin{frame}[label={sec:orgab33a51},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1105,7 +1103,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org8af31fb},fragile]{Fixing the model}
+\begin{frame}[label={sec:org8544ec2},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \lstset{language=bash,label= ,caption= ,captionpos=b,numbers=none,style=shell}
@@ -1148,7 +1146,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org727d3b8},fragile]{Running the test}
+\begin{frame}[label={sec:org38e2c75},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide<+->
@@ -1167,7 +1165,7 @@ get_balance("0x90f8bf6a479f320") -> 979000
 
 Last state: %{
     balances: %{
-	"0x90f8bf6a479f320" => 1000000
+	"0x90f8bf6a479f320" => 999999
 	.. }
     .. }
 \end{lstlisting}
@@ -1196,7 +1194,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgb702cbb},fragile]{Fixing the model}
+\begin{frame}[label={sec:org7e82ab8},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 To fix this error we need to extract the gas cost after producing a transaction.
@@ -1243,7 +1241,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgd263921},fragile]{Fixing the model}
+\begin{frame}[label={sec:org22b6b9c},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.44\columnwidth}
 \onslide <+->
@@ -1308,7 +1306,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5f23036},fragile]{Fixing the model}
+\begin{frame}[label={sec:orgda905f5},fragile]{Fixing the model}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 We import \lstinline[language=elixir, style=display]~Transactions~ model using \lstinline[language=elixir, style=display]~:extends~.
@@ -1341,7 +1339,7 @@ end
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org94c69e0},fragile]{Running the test}
+\begin{frame}[label={sec:org39ac162},fragile]{Running the test}
  \begin{columns}
 \begin{column}{0.38\columnwidth}
 \onslide <+->
@@ -1386,10 +1384,24 @@ end
 \end{columns}
 \end{frame}
 \section{Conclusions}
-\label{sec:org0b609be}
-\begin{frame}[label={sec:org7d49b79},fragile]{Results}
+\label{sec:org14f97a9}
+\begin{frame}[label={sec:org5a6a7ff},fragile]{Results}
  \onslide<+->
 \onslide<+->
+
+\begin{center}
+\begin{tabular}{ll}
+Before \lstinline[language=elixir, style=display]~Makina~ & After \lstinline[language=elixir, style=display]~Makina~\\
+\hline
+ & \\
+4 files 4513 lines & 18 files 1692 lines\\
+\end{tabular}
+\end{center}
+
+\vspace{10pt}
+
+\onslide<+->
+
 
 \begin{center}
 \begin{tabular}{ll}
@@ -1405,38 +1417,8 @@ Generate cryptic errors. & Automatic runtime-checks.\\
 \end{center}
 
 \vspace{10pt}
-
-\onslide<+->
-
 \begin{center}
-\begin{tabular}{ll}
-Before \lstinline[language=elixir, style=display]~Makina~ & After \lstinline[language=elixir, style=display]~Makina~\\
-\hline
- & \\
-4 files 4513 lines & 18 files 1692 lines\\
-\end{tabular}
+\url{https://gitlab.com/babel-upm/makina/makina/}
 \end{center}
-\end{frame}
-
-\begin{frame}[label={sec:org47f3ce3}]{Links}
-\begin{columns}
-\begin{column}{0.78\columnwidth}
-Makina library:
-\begin{itemize}
-\item \url{https://gitlab.com/babel-upm/makina/makina/}
-\end{itemize}
-\vspace{10pt}
-Makina examples:
-\begin{itemize}
-\item \url{https://gitlab.com/babel-upm/makina/examples/}
-\end{itemize}
-\vspace{10pt}
-Etherex library:
-\begin{itemize}
-\item \url{https://gitlab.com/babel-upm/blockchain/etherex}
-\end{itemize}
-\vspace{10pt}
-\end{column}
-\end{columns}
 \end{frame}
 \end{document}

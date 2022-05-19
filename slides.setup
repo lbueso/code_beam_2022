@@ -25,6 +25,9 @@
 #+latex_header: \lstdefinestyle{display}{style=color,basicstyle=\footnotesize\ttfamily}
 #+latex_header: \lstdefinestyle{shell}{basicstyle=\footnotesize\ttfamily}
 
+#+latex_header: \definecolor{links}{HTML}{2A1B81}
+#+latex_header: \hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
 # Local Variables:
 # mode: org
 # End:
